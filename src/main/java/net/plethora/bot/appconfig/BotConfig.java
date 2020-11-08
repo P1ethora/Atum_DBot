@@ -1,8 +1,9 @@
-package net.plethora.atumBot.appconfig;
+package net.plethora.bot.appconfig;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.plethora.atumBot.AtumBot;
+import net.plethora.bot.AtumBot;
+import net.plethora.bot.dao.Dialog;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,7 @@ import org.telegram.telegrambots.meta.ApiContext;
 @Getter
 @Setter
 @Configuration
-@ConfigurationProperties("telegrambot")
+@ConfigurationProperties(prefix = "telegrambot")
 public class BotConfig {
 
     private String botPath;
@@ -24,7 +25,7 @@ public class BotConfig {
     private int proxyPort;
 
     @Bean
-    public AtumBot atumBot(){
+    public AtumBot atumBot() {
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
         botOptions.setProxyType(proxyType);
@@ -35,8 +36,14 @@ public class BotConfig {
         atumBot.setBotPath(botPath);
         atumBot.setBotUsername(botUsername);
         atumBot.setBotToken(botToken);
+        atumBot.setDialog(dialog());//хз че как
 
         return atumBot;
+    }
+
+    @Bean
+    public Dialog dialog() {
+        return new Dialog();
     }
 
 }

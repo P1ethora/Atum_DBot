@@ -1,7 +1,6 @@
-package net.plethora.atumBot.controller;
+package net.plethora.bot.controller;
 
-import com.google.inject.internal.cglib.reflect.$FastMethod;
-import net.plethora.atumBot.AtumBot;
+import net.plethora.bot.AtumBot;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +19,7 @@ public class WebController {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public BotApiMethod<?> onUpdateReceived(@RequestBody Update update){
+    public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         return atumBot.onWebhookUpdateReceived(update);
     }
 
