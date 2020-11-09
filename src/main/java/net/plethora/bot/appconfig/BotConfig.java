@@ -3,7 +3,7 @@ package net.plethora.bot.appconfig;
 import lombok.Getter;
 import lombok.Setter;
 import net.plethora.bot.AtumBot;
-import net.plethora.bot.dao.Dialog;
+import net.plethora.bot.dao.HandlerMsg;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,14 +36,13 @@ public class BotConfig {
         atumBot.setBotPath(botPath);
         atumBot.setBotUsername(botUsername);
         atumBot.setBotToken(botToken);
-        atumBot.setDialog(dialog());//хз че как
+        atumBot.setDialog(dialog());
 
         return atumBot;
     }
 
     @Bean
-    public Dialog dialog() {
-        return new Dialog();
+    public HandlerMsg dialog() {
+        return new HandlerMsg();
     }
-
 }
