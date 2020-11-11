@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends MongoRepository<Answer, String> {
 
     @Query("{ 'ask': ?0}")
-    public Answer findAnswerByAsk(String ask);
+    Answer findAnswerByAsk(String ask);
 }

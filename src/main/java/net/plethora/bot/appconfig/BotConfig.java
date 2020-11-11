@@ -3,7 +3,6 @@ package net.plethora.bot.appconfig;
 import lombok.Getter;
 import lombok.Setter;
 import net.plethora.bot.AtumBot;
-import net.plethora.bot.dao.HandlerMsg;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +27,7 @@ public class BotConfig {
     public AtumBot atumBot() {
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
+
         botOptions.setProxyType(proxyType);
         botOptions.setProxyHost(proxyHost);
         botOptions.setProxyPort(proxyPort);
@@ -36,13 +36,7 @@ public class BotConfig {
         atumBot.setBotPath(botPath);
         atumBot.setBotUsername(botUsername);
         atumBot.setBotToken(botToken);
-        atumBot.setDialog(dialog());
 
         return atumBot;
-    }
-
-    @Bean
-    public HandlerMsg dialog() {
-        return new HandlerMsg();
     }
 }
