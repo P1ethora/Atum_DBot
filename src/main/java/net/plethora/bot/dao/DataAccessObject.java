@@ -17,7 +17,7 @@ public class DataAccessObject {
         this.postRepository = postRepository;
     }
 
-    public Answer handleRequest(String ask){
-      return postRepository.findAnswerByAsk(ask);
+    public Answer handleRequest(String ask) {
+        return postRepository.findAnswerByAsk(ask);
     }
 }

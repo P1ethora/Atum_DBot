@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi;
+package net.plethora.bot.botapi.handler;
 
 import net.plethora.bot.dao.DataAccessObject;
 import net.plethora.bot.model.Answer;
@@ -12,13 +12,13 @@ import java.util.List;
 
 
 @Component
-public class HandlerMessage {
+public class HandlerAskMessage {
 
     private Answer answer;
     private final String NEGATIVE_ANSWER = "хм... Про это ничего не знаю";
     private final DataAccessObject dao;
 
-    public HandlerMessage(DataAccessObject dao) {
+    public HandlerAskMessage(DataAccessObject dao) {
         this.dao = dao;
     }
 

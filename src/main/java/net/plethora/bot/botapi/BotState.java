@@ -1,9 +1,10 @@
 package net.plethora.bot.botapi;
 
+/**
+ * Возможные состояния
+ */
 public enum BotState {
-    START,
-    DIALOG,
+    ASK,
     TASKS,
     JOBS,
-    SEARCH_COMPANY
 }

@@ -7,6 +7,10 @@ import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
+/**
+ * Метод поиска по базе данных
+ */
+
 @Repository
 public interface PostRepository extends MongoRepository<Answer, String> {
 
