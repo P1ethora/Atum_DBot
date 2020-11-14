@@ -5,6 +5,6 @@ package net.plethora.bot.botapi;
  */
 public enum BotState {
     ASK,
-    TASKS,
-    JOBS,
+    TASK,
+    JOB,
 }

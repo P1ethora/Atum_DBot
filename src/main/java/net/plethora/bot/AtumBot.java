@@ -30,7 +30,6 @@ public class AtumBot extends TelegramWebhookBot {
     @SneakyThrows
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
 
-
         SendMessage sendMessage = botExecution.process(update);
 
         assert sendMessage != null;

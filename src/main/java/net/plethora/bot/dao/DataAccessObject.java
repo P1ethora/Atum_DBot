@@ -1,7 +1,7 @@
 package net.plethora.bot.dao;
 
 import net.plethora.bot.model.Answer;
-import net.plethora.bot.repo.PostRepository;
+import net.plethora.bot.repo.PostRepositoryAnswer;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataAccessObject {
 
-    private final PostRepository postRepository;
+    private final PostRepositoryAnswer postRepositoryAnswer;
 
-    public DataAccessObject(PostRepository postRepository) {
-        this.postRepository = postRepository;
+    public DataAccessObject(PostRepositoryAnswer postRepositoryAnswer) {
+        this.postRepositoryAnswer = postRepositoryAnswer;
     }
 
     public Answer handleRequest(String ask) {
-        return postRepository.findAnswerByAsk(ask);
+        return postRepositoryAnswer.findAnswerByAsk(ask);
     }
 }

@@ -7,27 +7,27 @@ import org.springframework.stereotype.Component;
 @Component
 public class ProcessingStates {
 
-    private AskService askService;
-    private TaskService taskService;
-    private JobService jobService;
+    private AskServiceMenu askService;
+    private TaskServiceMenu taskService;
+    private JobServiceMenu jobService;
 
     /**
      * Определяем состояние и возвращаем сервис
      */
-    public ProcessingStates(AskService askService, TaskService taskService, JobService jobService) {
+    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService) {
         this.askService = askService;
         this.taskService = taskService;
         this.jobService = jobService;
     }
 
-    Service processing(BotState botState) {
+    ServiceMenu processing(BotState botState) {
 
         switch (botState) {
             case ASK:
                 return askService;
-            case TASKS:
+            case TASK:
                 return taskService;
-            case JOBS:
+            case JOB:
                 return jobService;
 
         }

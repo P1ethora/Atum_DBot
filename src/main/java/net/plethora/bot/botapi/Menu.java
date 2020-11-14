@@ -1,26 +1,45 @@
 package net.plethora.bot.botapi;
 
 
-import net.plethora.bot.cache.CacheUsersState;
-import org.springframework.stereotype.Service;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
-@Service
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+@Component
 public class Menu {
-    //TODO сделать меню
-    private ProcessingStates processingStates;
-    private CacheUsersState cacheUsersState;
 
-    public Menu(ProcessingStates processingStates, CacheUsersState cacheUsersState) {
-        this.processingStates = processingStates;
-        this.cacheUsersState = cacheUsersState;
-    }
+    private ReplyKeyboardMarkup keyboard;
+    private boolean toggleMenu;
 
-    public String start(Update update) {
+    public SendMessage process(Update update) {
         long idChat = update.getMessage().getChatId();
-        String enteredCommand = update.getMessage().getText();
+        SendMessage sendMessage = new SendMessage(idChat,"keyboard on");
 
+        keyboard = new ReplyKeyboardMarkup();
+        keyboard.setSelective(true);
+        keyboard.setResizeKeyboard(true);
 
-        return "Вы вошли в меню";
+        List<KeyboardRow> rows = new ArrayList<>();
+
+        KeyboardRow first = new KeyboardRow();
+        first.add("ASK");
+        first.add("TASK");
+        first.add("JOB");
+        first.add("HELP");
+
+        rows.add(first);
+
+        keyboard.setKeyboard(rows);
+        toggleMenu = true;
+        return sendMessage.setReplyMarkup(keyboard);
     }
 }

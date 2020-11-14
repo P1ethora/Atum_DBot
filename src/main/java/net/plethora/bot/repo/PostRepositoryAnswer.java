@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public interface PostRepository extends MongoRepository<Answer, String> {
+public interface PostRepositoryAnswer extends MongoRepository<Answer, String> {
 
     @Query("{ 'ask': ?0}")
     Answer findAnswerByAsk(String ask);
