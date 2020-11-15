@@ -2,6 +2,7 @@ package net.plethora.bot.botapi.handler;
 
 import net.plethora.bot.dao.DataAccessObject;
 import net.plethora.bot.model.Answer;
+import net.plethora.bot.service.PhrasesService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -15,11 +16,12 @@ import java.util.List;
 public class HandlerAskMessage {
 
     private Answer answer;
-    private final String NEGATIVE_ANSWER = "хм... Про это ничего не знаю";
     private final DataAccessObject dao;
+    private PhrasesService phrasesService;
 
-    public HandlerAskMessage(DataAccessObject dao) {
+    public HandlerAskMessage(DataAccessObject dao, PhrasesService phrasesService) {
         this.dao = dao;
+        this.phrasesService = phrasesService;
     }
 
     /**
@@ -30,7 +32,7 @@ public class HandlerAskMessage {
      */
     private String getStrAnswer(String ask) {
         answer = assignAnswer(ask);  //присваиваем объект из mongodb
-        return answer != null ? answer.getAnswer() : NEGATIVE_ANSWER;
+        return answer != null ? answer.getAnswer() : phrasesService.getMessage("phrase.AskNegativeAnswer");
     }
 
     /**
@@ -92,7 +94,7 @@ public class HandlerAskMessage {
     /**
      * Наполняем массив пустыми рядами
      *
-     * @param rows
+     * @param rows лист с кнопками
      */
     private void fillRows(List<List<InlineKeyboardButton>> rows) {
         int numberRows = (answer.getKeyWords().length / 3) + 1;//делим на 3 и округляем в большую сторону

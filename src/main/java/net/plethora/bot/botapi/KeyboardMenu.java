@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -15,14 +14,13 @@ import java.util.List;
 @Getter
 @Setter
 @Component
-public class Menu {
+public class KeyboardMenu {
 
     private ReplyKeyboardMarkup keyboard;
     private boolean toggleMenu;
 
-    public SendMessage process(Update update) {
-        long idChat = update.getMessage().getChatId();
-        SendMessage sendMessage = new SendMessage(idChat,"keyboard on");
+    SendMessage process(long chatId) {
+        SendMessage sendMessage = new SendMessage(chatId,"keyboard on");
 
         keyboard = new ReplyKeyboardMarkup();
         keyboard.setSelective(true);

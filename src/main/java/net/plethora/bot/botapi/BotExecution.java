@@ -1,7 +1,7 @@
 package net.plethora.bot.botapi;
 
 import net.plethora.bot.cache.CacheUsersState;
-import net.plethora.bot.service.Help;
+import net.plethora.bot.service.PhrasesService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -12,13 +12,23 @@ public class BotExecution {
 
     private CacheUsersState cacheUsersState;
     private ProcessingStates processingStates;
-    private Menu menu;
+    private KeyboardMenu keyboardMenu;
 
-    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, Menu menu) {
+    private PhrasesService phrases;
+
+    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardMenu keyboardMenu,PhrasesService phrases) {
         this.cacheUsersState = cacheUsersState;
         this.processingStates = processingStates;
-        this.menu = menu;
+        this.keyboardMenu = keyboardMenu;
+        this.phrases = phrases;
     }
+
+    /**
+     * Исполнение запроса: сообщение(hasText) или кнопка(hasCallbackQuery)
+     *
+     * @param update пакет от пользователя
+     * @return телеграмм сообщение для пользователя
+     */
 
     public SendMessage process(Update update) {
 
@@ -32,30 +42,31 @@ public class BotExecution {
             chatId = callbackQuery.getMessage().getChatId();          //id кнопки
             askUser = callbackQuery.getData().toLowerCase();          //содержимое кнопки(переводим в нижни реестр)
 
-            if (checkCommand(update, chatId, askUser) != null) {
-                sendMessage = checkCommand(update, chatId, askUser);
-            } else {
+            if (checkCommand(chatId, askUser) != null) {     //является ли командой
+                sendMessage = checkCommand(chatId, askUser);  //соглассно введенной команды
+            } else {                                         //Иначе запрос согласно сервиса меню
+                //TODO дубль кода
                 if (cacheUsersState.getStateUsers().get(chatId) != null) {//Если активировано состояние
                     sendMessage = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем состояние из кэша по id
                             .start(chatId, askUser);                                                       //запускаем соответствующий сервис
-                } else return null;
+                } else return null;//на всякий случай
             }
 
             //если пришло соощение или нажата кнопка меню
         } else if (update.getMessage() != null && update.getMessage().hasText()) {  //если отправленно сообщение
-            chatId = update.getMessage().getChatId();
-            askUser = update.getMessage().getText().toLowerCase();
+            chatId = update.getMessage().getChatId();  //id чата
+            askUser = update.getMessage().getText().toLowerCase();   //запрос пользователя
 
-            if (checkCommand(update, chatId, askUser) != null) { //Сперва проверяются команды
-                sendMessage = checkCommand(update, chatId, askUser);
-            } else {                                                 //Если не является командой проверяется состояние
-
+            if (checkCommand(chatId, askUser) != null) { //Сперва проверяются команды
+                sendMessage = checkCommand(chatId, askUser);   //запрос -> команда
+            } else {                                                 //Если не является командой, запрос согласно сервиса меню
+//TODO вынести в метод
                 if (cacheUsersState.getStateUsers().get(chatId) != null) {  //Если имеется состояние
                     sendMessage = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем и запускаем сервис
                             .start(chatId, askUser);
 
-                } else
-                    sendMessage = new SendMessage(chatId, "войдите в один из сервисов:\n/ask\n/task\n/job\nили воспользуйтесь /help");  //если сообщение из неопр сост не команда
+                } else   //Если варианты не совпадают пользователь не подключил сервис
+                    sendMessage = new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService"));
 
             }
         }
@@ -63,32 +74,38 @@ public class BotExecution {
         return sendMessage;
     }
 
-    private SendMessage checkCommand(Update update, long chatId, String askUser) {
-        if (askUser.equals("/start")) {
+    /**
+     * Проверка на ввод команд
+     *
+     * @param chatId  id чата пользователя
+     * @param askUser сообщение пользователя
+     * @return готовое телеграм сообщение к отправке
+     */
+    private SendMessage checkCommand(long chatId, String askUser) {
+        if (askUser.equals(phrases.getMessage("phrase.commandStart"))) {
             if (cacheUsersState.getStateUsers().get(chatId) != null) {
                 cacheUsersState.getStateUsers().remove(chatId); //переходим в неопределенное сотояние
             }
-            return new SendMessage(chatId, "Неопределенное состояние, используй команды:\n" +
-                    "/menu\n/ask\n/task\n/job\n/help");
+            return new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService"));
 
-        } else if (askUser.equals("/menu")) {
-            return menu.process(update);   //открываем меню
+        } else if (askUser.equals(phrases.getMessage("phrase.commandMenu"))) {
+            return keyboardMenu.process(chatId);   //открываем меню
 
-        } else if (askUser.equals("/help")||askUser.equals("help")) {
-            return new SendMessage(chatId, Help.help);   //открываем меню
+        } else if (askUser.equals(phrases.getMessage("phrase.commandHelp")) || askUser.equals(phrases.getMessage("phrase.commandHelpButton"))) {
+            return new SendMessage(chatId, phrases.getMessage("phrase.help"));   //открываем меню
 
-        } else if (askUser.equals("/ask") || askUser.equals("ask")) {   //Состояние вопрос-ответ
+        } else if (askUser.equals(phrases.getMessage("phrase.commandAsk")) || askUser.equals(phrases.getMessage("phrase.commandAskButton"))) {   //Состояние вопрос-ответ
             cacheUsersState.getStateUsers().put(chatId, BotState.ASK);
-            return new SendMessage(chatId, "Спроси меня про теорию java");
+            return new SendMessage(chatId, phrases.getMessage("phrase.AskEnableService"));
 
             //TODO подключить inline клаву к сообщению(перечень тем)
-        } else if (askUser.equals("/task") || askUser.equals("task")) {   //Состояние задача
+        } else if (askUser.equals(phrases.getMessage("phrase.commandTask")) || askUser.equals(phrases.getMessage("phrase.commandTaskButton"))) {   //Состояние задача
             cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
-            return new SendMessage(chatId, "На какую тему нужна задача?");
+            return new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService"));
 
-        } else if (askUser.equals("/job") || askUser.equals("job")) {   //Состояние поиск работы
+        } else if (askUser.equals(phrases.getMessage("phrase.commandJob")) || askUser.equals(phrases.getMessage("phrase.commandJobButton"))) {   //Состояние поиск работы
             cacheUsersState.getStateUsers().put(chatId, BotState.JOB);
-            return new SendMessage(chatId, "Ваша страна?");
+            return new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService"));
         }
 
         return null;
