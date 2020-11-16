@@ -1,5 +1,6 @@
 package net.plethora.bot.botapi;
 
+import net.plethora.bot.botapi.commands.Cmd;
 import net.plethora.bot.cache.CacheUsersState;
 import net.plethora.bot.service.PhrasesService;
 import org.springframework.stereotype.Component;
@@ -82,28 +83,28 @@ public class BotExecution {
      * @return готовое телеграм сообщение к отправке
      */
     private SendMessage checkCommand(long chatId, String askUser) {
-        if (askUser.equals(phrases.getMessage("phrase.commandStart"))) {
+        if (askUser.equals(Cmd.START)) {
             if (cacheUsersState.getStateUsers().get(chatId) != null) {
                 cacheUsersState.getStateUsers().remove(chatId); //переходим в неопределенное сотояние
             }
             return new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService"));
 
-        } else if (askUser.equals(phrases.getMessage("phrase.commandMenu"))) {
+        } else if (askUser.equals(Cmd.MENU)) {
             return keyboardMenu.process(chatId);   //открываем меню
 
-        } else if (askUser.equals(phrases.getMessage("phrase.commandHelp")) || askUser.equals(phrases.getMessage("phrase.commandHelpButton"))) {
+        } else if (askUser.equals(Cmd.HELP) || askUser.equals(Cmd.HELP_BUTTON)) {
             return new SendMessage(chatId, phrases.getMessage("phrase.help"));   //открываем меню
 
-        } else if (askUser.equals(phrases.getMessage("phrase.commandAsk")) || askUser.equals(phrases.getMessage("phrase.commandAskButton"))) {   //Состояние вопрос-ответ
+        } else if (askUser.equals(Cmd.ASK) || askUser.equals(Cmd.ASK_BUTTON)) {   //Состояние вопрос-ответ
             cacheUsersState.getStateUsers().put(chatId, BotState.ASK);
             return new SendMessage(chatId, phrases.getMessage("phrase.AskEnableService"));
 
             //TODO подключить inline клаву к сообщению(перечень тем)
-        } else if (askUser.equals(phrases.getMessage("phrase.commandTask")) || askUser.equals(phrases.getMessage("phrase.commandTaskButton"))) {   //Состояние задача
+        } else if (askUser.equals(Cmd.TASK) || askUser.equals(Cmd.TASK_BUTTON)) {   //Состояние задача
             cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
             return new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService"));
 
-        } else if (askUser.equals(phrases.getMessage("phrase.commandJob")) || askUser.equals(phrases.getMessage("phrase.commandJobButton"))) {   //Состояние поиск работы
+        } else if (askUser.equals(Cmd.JOB) || askUser.equals(Cmd.JOB_BUTTON)) {   //Состояние поиск работы
             cacheUsersState.getStateUsers().put(chatId, BotState.JOB);
             return new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService"));
         }
