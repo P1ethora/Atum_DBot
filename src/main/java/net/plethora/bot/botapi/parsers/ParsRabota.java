@@ -8,6 +8,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.io.IOException;
@@ -24,17 +25,19 @@ private String area = "1003";  //код города на сайте
 private String text = "Java";
 private String connection = webAddressRabota +"search/vacancy?area="+area+"&fromSearchLine=true&st=searchVacancy&text=" + text;
 
-public SendMessage vacancyListMsg(long idChat,String area){
+public List<SendMessage> vacancyListMsg(long idChat,String area){
     this.area = area;
-    return new SendMessage(idChat,parse().toString()).enableHtml(true).disableWebPagePreview();
+    return parse(idChat);
 }
 
 @SneakyThrows
-private StringBuilder parse(){
+    private List<SendMessage> parse(long idChat) {
 
-    StringBuilder stringBuilder = new StringBuilder();
+    //StringBuilder stringBuilder = new StringBuilder();
+    List<SendMessage> listMessage = new ArrayList<>();
 
     for(String urlVacancy : getUrlVacancy()){          //перебор страниц вакансий
+        StringBuilder stringBuilder = new StringBuilder();
         Document doc = Jsoup.connect(urlVacancy).get();                                           //заходим на адрес вакансии
         Element title = doc.getElementsByAttributeValue("data-qa","vacancy-title").first();              //заголовок вакансии
         Element salary = doc.getElementsByAttributeValue("class","vacancy-salary").first();              //зарплата
@@ -65,7 +68,7 @@ private StringBuilder parse(){
         stringBuilder.append("\n");
         stringBuilder.append("\n");
 
-
+        listMessage.add(new SendMessage(idChat,stringBuilder.toString()).enableHtml(true).disableWebPagePreview());
 //        System.out.println(title.text());//
 //        System.out.println(salary.text());//
 //        System.out.println(companyName.text()+" " + urlCompanyName);//
@@ -75,7 +78,7 @@ private StringBuilder parse(){
 //        System.out.println(vacancySection.text());
 //        System.out.println("-----------------------------------------------");
     }
-    return stringBuilder;
+    return listMessage;
 }
 
     private List<String> getUrlVacancy() throws IOException {

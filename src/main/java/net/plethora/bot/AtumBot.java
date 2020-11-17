@@ -12,6 +12,9 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import javax.validation.constraints.Max;
+import java.util.List;
+
 @Getter
 @Setter
 public class AtumBot extends TelegramWebhookBot {
@@ -30,11 +33,19 @@ public class AtumBot extends TelegramWebhookBot {
     @SneakyThrows
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
 
-        SendMessage sendMessage = botExecution.process(update);
+        send(botExecution.process(update));
 
-        assert sendMessage != null;
-        execute(sendMessage);
+        //assert sendMessage != null;
+        //execute(sendMessage);
 
         return null;
+    }
+
+    @SneakyThrows
+    private void send(List<SendMessage> list){
+        for (SendMessage sendMessage : list) {
+            execute(sendMessage);
+        }
+        list.clear();
     }
 }

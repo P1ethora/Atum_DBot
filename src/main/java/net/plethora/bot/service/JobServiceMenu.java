@@ -4,6 +4,8 @@ import net.plethora.bot.botapi.parsers.ParsRabota;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
+import java.util.List;
+
 @Service
 public class JobServiceMenu implements ServiceMenu {
 
@@ -14,7 +16,8 @@ public class JobServiceMenu implements ServiceMenu {
     }
 
     @Override
-    public SendMessage start(long chatId, String msgUser) {
+    public List<SendMessage> start(long chatId, String msgUser) {
+//List<SendMessage> messages = parsRabota.vacancyListMsg(chatId,msgUser);
         return parsRabota.vacancyListMsg(chatId,msgUser);
     }
 }
