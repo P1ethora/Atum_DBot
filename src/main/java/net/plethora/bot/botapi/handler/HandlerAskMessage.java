@@ -1,6 +1,6 @@
 package net.plethora.bot.botapi.handler;
 
-import net.plethora.bot.dao.DataAccessObject;
+import net.plethora.bot.dao.DataAccessAnswer;
 import net.plethora.bot.model.Answer;
 import net.plethora.bot.service.PhrasesService;
 import org.springframework.stereotype.Component;
@@ -16,10 +16,10 @@ import java.util.List;
 public class HandlerAskMessage {
 
     private Answer answer;
-    private final DataAccessObject dao;
+    private final DataAccessAnswer dao;
     private PhrasesService phrasesService;
 
-    public HandlerAskMessage(DataAccessObject dao, PhrasesService phrasesService) {
+    public HandlerAskMessage(DataAccessAnswer dao, PhrasesService phrasesService) {
         this.dao = dao;
         this.phrasesService = phrasesService;
     }

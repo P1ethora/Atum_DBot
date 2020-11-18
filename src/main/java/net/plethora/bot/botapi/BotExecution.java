@@ -22,7 +22,7 @@ public class BotExecution {
 
     private PhrasesService phrases;
 
-    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardMenu keyboardMenu,PhrasesService phrases) {
+    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardMenu keyboardMenu, PhrasesService phrases) {
         this.cacheUsersState = cacheUsersState;
         this.processingStates = processingStates;
         this.keyboardMenu = keyboardMenu;
@@ -35,14 +35,12 @@ public class BotExecution {
      * @param update пакет от пользователя
      * @return телеграмм сообщение для пользователя
      */
-
     public List<SendMessage> process(Update update) {
 
         long chatId;
         String askUser;
-        //SendMessage sendMessage = null;
         List<SendMessage> messages = new ArrayList<>();
-        //если нажата inline кнопка
+        //если нажата кнопка
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();  //данные нажатия кнопки
             chatId = callbackQuery.getMessage().getChatId();          //id кнопки
@@ -89,42 +87,53 @@ public class BotExecution {
      * @return готовое телеграм сообщение к отправке
      */
     private List<SendMessage> checkCommand(long chatId, String askUser) {
-        if (askUser.equals(Cmd.START)) {
-            List<SendMessage> messages = new ArrayList<>();
-            if (cacheUsersState.getStateUsers().get(chatId) != null) {
-                cacheUsersState.getStateUsers().remove(chatId); //переходим в неопределенное сотояние
+        switch (askUser) {
+            case Cmd.START: {
+                List<SendMessage> messages = new ArrayList<>();
+                if (cacheUsersState.getStateUsers().get(chatId) != null) {
+                    cacheUsersState.getStateUsers().remove(chatId); //переходим в неопределенное сотояние
+                }
+                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
+                return messages;
+
             }
-            messages.add(new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
-            return messages;
+            case Cmd.MENU: {
+                List<SendMessage> messages = new ArrayList<>();
+                messages.add(keyboardMenu.process(chatId));
+                return messages;   //открываем меню
 
-        } else if (askUser.equals(Cmd.MENU)) {
-            List<SendMessage> messages = new ArrayList<>();
-            messages.add(keyboardMenu.process(chatId));
-            return messages;   //открываем меню
+            }
+            case Cmd.HELP:
+            case Cmd.HELP_BUTTON: {
+                List<SendMessage> messages = new ArrayList<>();
+                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.help")));
+                return messages;
 
-        } else if (askUser.equals(Cmd.HELP) || askUser.equals(Cmd.HELP_BUTTON)) {
-            List<SendMessage> messages = new ArrayList<>();
-            messages.add(new SendMessage(chatId, phrases.getMessage("phrase.help")));
-            return messages;
+            }
+            case Cmd.ASK:
+            case Cmd.ASK_BUTTON: {   //Состояние вопрос-ответ
+                List<SendMessage> messages = new ArrayList<>();
+                cacheUsersState.getStateUsers().put(chatId, BotState.ASK);
+                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.AskEnableService")));
+                return messages;
 
-        } else if (askUser.equals(Cmd.ASK) || askUser.equals(Cmd.ASK_BUTTON)) {   //Состояние вопрос-ответ
-            List<SendMessage> messages = new ArrayList<>();
-            cacheUsersState.getStateUsers().put(chatId, BotState.ASK);
-            messages.add(new SendMessage(chatId, phrases.getMessage("phrase.AskEnableService")));
-            return messages;
+                //TODO подключить inline клаву к сообщению(перечень тем)
+            }
+            case Cmd.TASK:
+            case Cmd.TASK_BUTTON: {   //Состояние задача
+                List<SendMessage> messages = new ArrayList<>();
+                cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
+                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService")));
+                return messages;
 
-            //TODO подключить inline клаву к сообщению(перечень тем)
-        } else if (askUser.equals(Cmd.TASK) || askUser.equals(Cmd.TASK_BUTTON)) {   //Состояние задача
-            List<SendMessage> messages = new ArrayList<>();
-            cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
-            messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService")));
-            return messages;
-
-        } else if (askUser.equals(Cmd.JOB) || askUser.equals(Cmd.JOB_BUTTON)) {   //Состояние поиск работы
-            List<SendMessage> messages = new ArrayList<>();
-            cacheUsersState.getStateUsers().put(chatId, BotState.JOB);
-            messages.add(new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService")));
-            return messages;
+            }
+            case Cmd.JOB:
+            case Cmd.JOB_BUTTON: {   //Состояние поиск работы
+                List<SendMessage> messages = new ArrayList<>();
+                cacheUsersState.getStateUsers().put(chatId, BotState.JOB);
+                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService")));
+                return messages;
+            }
         }
 
         return null;

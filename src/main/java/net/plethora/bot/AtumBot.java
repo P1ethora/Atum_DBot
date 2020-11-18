@@ -1,6 +1,5 @@
 package net.plethora.bot;
 
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -12,7 +11,6 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import javax.validation.constraints.Max;
 import java.util.List;
 
 @Getter
@@ -32,19 +30,14 @@ public class AtumBot extends TelegramWebhookBot {
 
     @SneakyThrows
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-
         send(botExecution.process(update));
-
-        //assert sendMessage != null;
-        //execute(sendMessage);
-
         return null;
     }
 
     @SneakyThrows
-    private void send(List<SendMessage> list){
-        for (SendMessage sendMessage : list) {
-            execute(sendMessage);
+    private void send(List<SendMessage> list) {
+        for (SendMessage sendMessage : list) { //перебор сообщений
+            execute(sendMessage);  //отправка сообщения
         }
         list.clear();
     }

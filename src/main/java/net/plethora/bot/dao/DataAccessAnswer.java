@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class DataAccessObject {
+public class DataAccessAnswer {
 
     private final PostRepositoryAnswer postRepositoryAnswer;
 
-    public DataAccessObject(PostRepositoryAnswer postRepositoryAnswer) {
+    public DataAccessAnswer(PostRepositoryAnswer postRepositoryAnswer) {
         this.postRepositoryAnswer = postRepositoryAnswer;
     }
 
