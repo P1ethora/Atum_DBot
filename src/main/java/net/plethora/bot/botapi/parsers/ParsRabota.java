@@ -20,18 +20,35 @@ import java.util.List;
 public class ParsRabota {
 
     private final String webAddressRabota = "https://rabota.by/";
-    //private int code;  //код города на сайте
-    private String text = "Java";
-    //private String connection = webAddressRabota + "search/vacancy?area=" + code + "&fromSearchLine=true&st=searchVacancy&text=" + text;
 
-    public List<SendMessage> vacancyListMsg(long idChat, int code) {
-        //this.code = code;
-        return parse(idChat, code);
+    private final String MONTH = "search_period=30&clusters=true&";
+    private final String WEEK = "search_period=7&clusters=true&";
+    private final String THREE_DAY = "search_period=3&clusters=true&";
+    private final String DAY = "search_period=1&clusters=true&";
+    private String text = "Java";
+
+    public List<SendMessage> vacancyListMsg(long idChat, int code, String period) {
+        return parse(idChat, code, period);
     }
 
     @SneakyThrows
-    private List<SendMessage> parse(long idChat, int code) {
-        String connection = webAddressRabota + "search/vacancy?area=" + code + "&fromSearchLine=true&st=searchVacancy&text=" + text;
+    private List<SendMessage> parse(long idChat, int code, String period) {
+        //TODO: возможно стоит перенести или в метод или в другой класс
+        String linePeriod;
+        switch (period) {
+            case "месяц":
+                linePeriod = MONTH;
+                break;
+            case "3 дня":
+                linePeriod = THREE_DAY;
+                break;
+            case "сутки":
+                linePeriod = DAY;
+                break;
+            default:
+                linePeriod = WEEK;
+        }
+        String connection = webAddressRabota + "search/vacancy?" + linePeriod + "area=" + code + "&fromSearchLine=true&st=searchVacancy&text=" + text;
         StringBuilder stringBuilder = new StringBuilder();
         List<SendMessage> listMessage = new ArrayList<>();   //список на отправку
         int numberVacancy = getUrlVacancy(connection).size();  //количество вакансий
@@ -40,7 +57,6 @@ public class ParsRabota {
         int countMsg = 0;  //счетчик сообщени
 
         int fullMessage = numberVacancy / 5;  //количество полных сообщений
-        //int remains = numberVacancy - (fullMessage * 5); //количество вакансий в последнем сообщении
 
         for (String urlVacancy : getUrlVacancy(connection)) {          //подключение и парс страницы согласно url
 
@@ -60,23 +76,31 @@ public class ParsRabota {
             Element expEmp = blockDescription.getElementsByAttributeValue("class", "bloko-gap bloko-gap_bottom").first();  //участок опыт-занятость
             Element experience = expEmp.getElementsByAttributeValue("data-qa", "vacancy-experience").first();           //требуемый опыт
             Element employment = expEmp.getElementsByAttributeValue("data-qa", "vacancy-view-employment-mode").first(); //занятость
+            Elements mainSkills = blockDescription.getElementsByAttributeValue("class", "bloko-tag__section bloko-tag__section_text");//ключевые навыки
+            // Element data =doc.getElementsByAttributeValue("class","bloko-column bloko-column_xs-4 bloko-column_s-8 bloko-column_m-8 bloko-column_l-8vacancy-creation-time").first();
+            //TODO: не могу вытянуть дату
             //Element vacancySection = blockDescription.getElementsByAttributeValue("class","vacancy-section").first(); //полное описание
-//TODO проблема в ограничении на передачу символов в телеграм сообщении
-            stringBuilder.append(title.text()).append("\n");
+            stringBuilder.append("<b>").append(title.text()).append("</b>").append("\n");
             stringBuilder.append(salary.text()).append("\n");
             //TODO в html длинновато както попробовать через маркдоун
             stringBuilder.append("<a href=\"").append(urlCompanyName).append("\">").append(companyName.text()).append("</a>").append("\n"); //гиперссылка html
             stringBuilder.append(address.text()).append("\n");
-            stringBuilder.append("Требуемый опыт: ").append(experience.text()).append("\n");
+            stringBuilder.append("<b>Требуемый опыт: </b>").append(experience.text()).append("\n");
             stringBuilder.append(employment.text()).append("\n");
-            //stringBuilder.append(vacancySection.text()).append("\n"); //слишком много текста
-            stringBuilder.append("<a href=\"").append(requestLink).append("\">").append("Откликнуться").append("</a>").append("\n");  //гиперссылка html
+            //stringBuilder.append(vacancySection.text()).append("\n"); //слишком много
+            stringBuilder.append("<b>Ключевые навыки:</b>").append("\n");
 
+            for (Element element : mainSkills) {
+                stringBuilder.append(element.text()).append("\n");
+            }
+            stringBuilder.append("<a href=\"").append(requestLink).append("\">").append("Откликнуться").append("</a>").append("                ")
+                    .append("<a href=\"").append(urlVacancy).append("\">").append("Подробнее...").append("</a>").append("\n");  //гиперссылка html
+//stringBuilder.append(data.text()).append("\n");
             countVac++;
             countVacGlobal++;
 
             if (countVac != 5 && countMsg != fullMessage || countMsg == fullMessage && countVacGlobal != numberVacancy) {
-                stringBuilder.append("------------------------------------------------------------").append("\n"); //раздилитель вакансий
+                stringBuilder.append("--------------------------------------------------------------").append("\n"); //раздилитель вакансий
             }
             if (countVac == 5 || countMsg == fullMessage && countVacGlobal == numberVacancy) {
                 listMessage.add(new SendMessage(idChat, stringBuilder.toString()).enableHtml(true).disableWebPagePreview());  //включаем обработку html и выключаем представление сайта
@@ -109,5 +133,29 @@ public class ParsRabota {
 
         return bytes;
     }
+
+//    public void downloadFiles(String strURL, String strPath, int buffSize) {
+//        try {
+//            URL connection = new URL(strURL);
+//            HttpURLConnection urlconn;
+//            urlconn = (HttpURLConnection) connection.openConnection();
+//            urlconn.setRequestMethod("GET");
+//            urlconn.connect();
+//            InputStream in = null;
+//            in = urlconn.getInputStream();
+//            OutputStream writer = new FileOutputStream(strPath);
+//            byte buffer[] = new byte[buffSize];
+//            int c = in.read(buffer);
+//            while (c > 0) {
+//                writer.write(buffer, 0, c);
+//                c = in.read(buffer);
+//            }
+//            writer.flush();
+//            writer.close();
+//            in.close();
+//        } catch (IOException e) {
+//            System.out.println(e);
+//        }
+//    }
 
 }
