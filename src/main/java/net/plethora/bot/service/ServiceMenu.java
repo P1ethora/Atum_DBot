@@ -1,12 +1,10 @@
 package net.plethora.bot.service;
 
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
 import java.util.List;
 
 
-public interface ServiceMenu {
+public interface ServiceMenu<T> {
 
-    List<SendMessage> start(long chatId, String msgUser);
+    List<T> start(long chatId, String msgUser);
 
 }

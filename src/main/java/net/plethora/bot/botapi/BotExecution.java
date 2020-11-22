@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class BotExecution {
+public class BotExecution<T> {
 
     private CacheUsersState cacheUsersState;
     private ProcessingStates processingStates;
@@ -35,11 +35,11 @@ public class BotExecution {
      * @param update пакет от пользователя
      * @return телеграмм сообщение для пользователя
      */
-    public List<SendMessage> process(Update update) {
+    public List<T> process(Update update) {
 
         long chatId;
         String askUser;
-        List<SendMessage> messages = new ArrayList<>();
+        List<T> messages = new ArrayList<>();
         //если нажата кнопка
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();  //данные нажатия кнопки
@@ -47,13 +47,14 @@ public class BotExecution {
             askUser = callbackQuery.getData().toLowerCase();          //содержимое кнопки(переводим в нижни реестр)
 
             if (checkCommand(chatId, askUser) != null) {     //является ли командой
-                messages = checkCommand(chatId, askUser);  //соглассно введенной команды
+                messages = (List<T>) checkCommand(chatId, askUser);  //соглассно введенной команды
             } else {                                         //Иначе запрос согласно сервиса меню
                 //TODO дубль кода
                 if (cacheUsersState.getStateUsers().get(chatId) != null) {//Если активировано состояние
                     messages = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем состояние из кэша по id
                             .start(chatId, askUser);                                                       //запускаем соответствующий сервис
-                } else return null;//на всякий случай
+                } else {messages.add((T) new SendMessage(chatId,"Необходимо активировать состояние"));
+                    return messages;};//на всякий случай
             }
 
             //если пришло соощение или нажата кнопка меню
@@ -62,7 +63,7 @@ public class BotExecution {
             askUser = update.getMessage().getText().toLowerCase();   //запрос пользователя
 
             if (checkCommand(chatId, askUser) != null) { //Сперва проверяются команды
-                messages = checkCommand(chatId, askUser);   //запрос -> команда
+                messages = (List<T>) checkCommand(chatId, askUser);   //запрос -> команда
             } else {                                                 //Если не является командой, запрос согласно сервиса меню
 //TODO вынести в метод
                 if (cacheUsersState.getStateUsers().get(chatId) != null) {  //Если имеется состояние
@@ -70,13 +71,13 @@ public class BotExecution {
                             .start(chatId, askUser);
 
                 } else {  //Если варианты не совпадают пользователь не подключил сервис
-                    messages.add(new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
+                    messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
                 }
 
             }
         }
 
-        return messages;
+        return (List<T>) messages;
     }
 
     /**

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class AtumBot extends TelegramWebhookBot {
+public class AtumBot<T> extends TelegramWebhookBot {
 
     private String botPath;
     private String botUsername;
@@ -30,14 +31,22 @@ public class AtumBot extends TelegramWebhookBot {
 
     @SneakyThrows
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
+        update.getMessage().getFrom().getFirstName();
+        update.getMessage().getFrom().getLastName();
+        update.getMessage().getFrom().getUserName();
+        update.getMessage().getFrom().getId();
         send(botExecution.process(update));
         return null;
     }
 
     @SneakyThrows
-    private void send(List<SendMessage> list) {
-        for (SendMessage sendMessage : list) { //перебор сообщений
-            execute(sendMessage);  //отправка сообщения
+    private void send(List<T> list) {
+        for (T sendMessage : list) { //перебор сообщений
+            if(sendMessage instanceof SendMessage)
+            execute((SendMessage)sendMessage);  //отправка сообщения
+            if(sendMessage instanceof SendDocument)
+                execute((SendDocument) sendMessage);
+
         }
         list.clear();
     }

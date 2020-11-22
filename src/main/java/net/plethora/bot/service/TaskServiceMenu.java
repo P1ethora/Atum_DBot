@@ -1,14 +1,28 @@
 package net.plethora.bot.service;
 
+import net.plethora.bot.botapi.handler.HandlerTaskMessage;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.List;
 
 @Service
-public class TaskServiceMenu implements ServiceMenu {
+public class TaskServiceMenu<T> implements ServiceMenu {
+
+    private HandlerTaskMessage handlerTaskMessage;
+
+    public TaskServiceMenu(HandlerTaskMessage handlerTaskMessage){
+        this.handlerTaskMessage = handlerTaskMessage;
+    }
+
     @Override
-    public List<SendMessage> start(long chatId, String msgUser) {
-        return null;
+    public List<T> start(long chatId, String msgUser) {
+        List<T> list = handlerTaskMessage.go(chatId,msgUser);
+
+        if(list.size()==0){
+            list.add((T) new SendMessage(chatId,"Не Найдено"));
+        }
+
+        return list;
     }
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 
 /**
- * Соединяется с базой данных areacode
+ * Соединяется с коллекцией areacode
  */
 
 @Component

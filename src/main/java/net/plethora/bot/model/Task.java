@@ -12,15 +12,21 @@ public class Task {
 
     @Id
     private String id;
-    @Field("task")
-    private String task;
+    @Field("problem")
+    private String problem;
     @Field("solution")
     private String solution;
+    @Field("fileName")
+    private String fileName;
+    @Field("subject")
+    private String subject;
 
 
-    public Task(String task, String solution) {
-        this.task = task;
+    public Task(String problem, String solution,String fileName,String subject) {
+        this.problem = problem;
         this.solution = solution;
+        this.fileName = fileName;
+        this.subject = subject;
     }
 
     public Task() {
