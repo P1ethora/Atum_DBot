@@ -31,22 +31,17 @@ public class AtumBot<T> extends TelegramWebhookBot {
 
     @SneakyThrows
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-//        update.getMessage().getFrom().getFirstName();
-//        update.getMessage().getFrom().getLastName();
-//        update.getMessage().getFrom().getUserName();
-//        update.getMessage().getFrom().getId();
         send(botExecution.process(update));
         return null;
     }
 
     @SneakyThrows
     private void send(List<T> list) {
-        for (T sendMessage : list) { //перебор сообщений
+        for (T sendMessage : list) {
             if(sendMessage instanceof SendMessage)
-            execute((SendMessage)sendMessage);  //отправка сообщения
+            execute((SendMessage)sendMessage);
             if(sendMessage instanceof SendDocument)
                 execute((SendDocument) sendMessage);
-
         }
         list.clear();
     }

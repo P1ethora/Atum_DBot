@@ -13,13 +13,15 @@ public class User {
 
     @Id
     private String id;
+
+    private int idUser;
     private String firstName;
     private String LastName;
     private String userName;
     private String[] receivedTasks;
 
-    public User(String id, String firstName, String lastName, String userName, String[] receivedTasks) {
-        this.id = id;
+    public User(int idUser, String firstName, String lastName, String userName, String[] receivedTasks) {
+        this.idUser = idUser;
         this.firstName = firstName;
         LastName = lastName;
         this.userName = userName;

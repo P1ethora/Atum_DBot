@@ -1,11 +1,13 @@
 package net.plethora.bot.dao;
 
+import lombok.Getter;
 import net.plethora.bot.model.Task;
 import net.plethora.bot.repo.PostRepositoryTask;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Getter
 @Component
 public class DataAccessTask {
 
@@ -17,5 +19,9 @@ public class DataAccessTask {
 
     public List<Task> handleRequest(String subject) {
         return postRepositoryTask.findBySubject(subject);
+    }
+
+    public Task findById(String id){
+       return postRepositoryTask.findById(id).orElseThrow(() -> new IllegalStateException("missing"));
     }
 }

@@ -4,7 +4,6 @@ import net.plethora.bot.model.User;
 import net.plethora.bot.repo.PostRepositoryUser;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
 
 @Component
 public class DataAccessUser {
@@ -15,8 +14,8 @@ public class DataAccessUser {
         this.postRepositoryUser = postRepositoryUser;
     }
 
-    public Optional<User> findUser(String id) {
-        return postRepositoryUser.findById(id);
+    public User findUser(int idUser) {
+        return postRepositoryUser.findByIdUser(idUser);
     }
 
     public User findUserByName(String userName){
@@ -27,4 +26,10 @@ public class DataAccessUser {
         postRepositoryUser.save(user);
     }
 
+    public void editUser(User user, String[] newArray) {
+        User oldUser = postRepositoryUser.findById(user.getId()).orElseThrow(() -> new IllegalStateException("missing"));
+
+        oldUser.setReceivedTasks(newArray);
+        postRepositoryUser.save(oldUser);
+    }
 }

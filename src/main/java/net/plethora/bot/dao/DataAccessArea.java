@@ -4,9 +4,6 @@ import net.plethora.bot.model.Area;
 import net.plethora.bot.repo.PostRepositoryArea;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-
-
 /**
  * Соединяется с коллекцией areacode
  */

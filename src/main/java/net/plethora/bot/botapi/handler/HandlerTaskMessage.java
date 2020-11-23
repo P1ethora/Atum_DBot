@@ -18,6 +18,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class HandlerTaskMessage<T> {
@@ -25,39 +27,54 @@ public class HandlerTaskMessage<T> {
     private DataAccessTask dataAccessTask;
     private DataAccessUser dataAccessUser;
 
-    public HandlerTaskMessage(DataAccessTask dataAccessTask,DataAccessUser dataAccessUser){
+    public HandlerTaskMessage(DataAccessTask dataAccessTask, DataAccessUser dataAccessUser) {
         this.dataAccessTask = dataAccessTask;
         this.dataAccessUser = dataAccessUser;
     }
 
     @SneakyThrows
-    public List<T> go(long chatId, String msgUser) {
-        List<T> msg = null;
-User user = dataAccessUser.findUser("fdfdfdfdfdf").get();
-List<String> idTaskUser = Arrays.asList(user.getReceivedTasks());
-        if(checkSubject(msgUser)){   //если прилетела тема задачи
+    public List<T> go(long chatId, String msgUser, User user) {
+        List<T> msg = new ArrayList<>();
+        List<String> idTaskUser = Arrays.asList(user.getReceivedTasks());
+//TODO раскидать по методам
+        List<String> newListForUser = new ArrayList<>();
+        if (idTaskUser.size() != 0) {
+            newListForUser.addAll(idTaskUser);
+        }
+        if (checkSubject(msgUser)) {   //если прилетела тема задачи
             List<Task> tasks = dataAccessTask.handleRequest(msgUser);
+
             boolean check = false;
-            for (Task task:tasks) {
-                for (String id:idTaskUser) {
-                    if(!id.equals(task.getId())){
-                        String problem = task.getProblem();
-                        msg.add((T) new SendMessage(chatId,problem));
-                        check = true;
-                        break;
+            for (Task task : tasks) {
+                if (idTaskUser.size() == 0) {
+                    String problem = task.getProblem();
+                    msg.add((T) new SendMessage(chatId, problem).setReplyMarkup(keyboard(task.getId())));
+                    check = true;
+                } else {
+                    for (String id : idTaskUser) {
+                        if (!id.equals(task.getId())) {
+                            String problem = task.getProblem();
+                            msg.add((T) new SendMessage(chatId, problem).setReplyMarkup(keyboard(task.getId())));
+                            check = true;
+                            break;
+                        }
                     }
                 }
-                        if(check){break;}
+                if (check) {
+                    newListForUser.add(task.getId());
+                    // idTaskUser.add(task.getId());
+                    String[] newList = newListForUser.toArray(new String[0]);
+                    dataAccessUser.editUser(user, newList);
+                    break;
+                }
             }
             check = false;
+            return msg;
         }
-
-        if (msgUser.equals("дай задачу")) {
-            msg = getProblem(chatId);
-
-        }
-        else if (msgUser.equals("solution")) {
-            msg = getSolution(chatId);
+        if (msgUser.substring(0, 6).equals(":!awr{")) {   //нужна регулярка на проверку шифра и достать id от туда
+            String idTask = idTask(msgUser);
+            System.out.println("Поиск " + idTask);
+            msg = getSolution(chatId, idTask);
 
         } else {
             msg.add((T) new SendMessage(chatId, "Напиши дай задачу"));
@@ -68,19 +85,20 @@ List<String> idTaskUser = Arrays.asList(user.getReceivedTasks());
     }
 
 
-    public List<T> getProblem(long idChat) {
+//    public List<T> getProblem(long idChat) {
+//
+//        List<SendMessage> problem = new ArrayList<>();
+//        SendMessage sendMessage = new SendMessage(idChat, "Это задача").setReplyMarkup(keyboard());
+//        problem.add(sendMessage);
+//        return (List<T>) problem;
+//    }
 
-        List<SendMessage> problem = new ArrayList<>();
-        SendMessage sendMessage = new SendMessage(idChat, "Это задача").setReplyMarkup(keyboard());
-        problem.add(sendMessage);
-        return (List<T>) problem;
-    }
+    private List<T> getSolution(long idChat, String idTask) throws IOException {
+        Task task = dataAccessTask.findById(idTask);
+        System.out.println(task);
+        String urlDownload = task.getSolution();
+        File file = downloadFile(urlDownload, task.getFileName());
 
-    public List<T> getSolution(long idChat) throws IOException {
-        //String path = "E:\\";
-        //String fileName = "solution.txt";
-String urlDownload = "https://drive.google.com/uc?export=download&id=1uNSHPkgEu9F36tt1TmiNnkXwyEXRbgAc";
-        File file = downloadFile(urlDownload + "1uNSHPkgEu9F36tt1TmiNnkXwyEXRbgAc");
         List<SendDocument> solution = new ArrayList<>();
         SendDocument sendDocument = new SendDocument();
         sendDocument.setChatId(idChat);
@@ -90,14 +108,14 @@ String urlDownload = "https://drive.google.com/uc?export=download&id=1uNSHPkgEu9
         return (List<T>) solution;
     }
 
-    private InlineKeyboardMarkup keyboard() {
+    private InlineKeyboardMarkup keyboard(String idTask) {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();
         List<InlineKeyboardButton> row = new ArrayList<>();
 
         InlineKeyboardButton keyboardButton = new InlineKeyboardButton("Решение");
-        keyboardButton.setCallbackData("solution");
+        keyboardButton.setCallbackData(":!awr{" + idTask + "}");  //ответка в виде id задачи и небольшога шифра
         row.add(keyboardButton);
         rows.add(row);
 
@@ -106,14 +124,12 @@ String urlDownload = "https://drive.google.com/uc?export=download&id=1uNSHPkgEu9
         return inlineKeyboardMarkup;
     }
 
-    private File downloadFile(String url) throws IOException {
+    private File downloadFile(String url, String fileName) throws IOException {
         //Загрузка картинки
         //String filePath = "resources" + File.pathSeparator + "filetask";
-        String filePath = "./resources/filetask";
-        //String filePath = "F:\\atumBot\\src\\main\\resources\\filetask";
-        String fileName = "solution";
+        //String filePath = "./resources/filetask";
+        String filePath = "F:\\atumBot\\src\\main\\resources\\filetask";
         File file = new File(filePath + "\\" + fileName);
-
         int bufferSize = 1;
 
         URL connection = new URL(url);
@@ -136,13 +152,29 @@ String urlDownload = "https://drive.google.com/uc?export=download&id=1uNSHPkgEu9
         return file;
     }
 
-    private boolean checkSubject(String msgUser){
+    private boolean checkSubject(String msgUser) {
 
-        switch (msgUser){
-            case "ветвления": return true;
+        switch (msgUser) {
+            case "ветвления":
+                return true;
 
         }
         return false;
     }
+
+    private String idTask(String msgUser) {
+
+        Pattern regex = Pattern.compile("\\{([^}]*)");
+        Matcher regexMatcher = regex.matcher(msgUser);
+
+        String idTask = null;
+        while (regexMatcher.find()) {
+            idTask = (regexMatcher.group());
+            idTask = idTask.substring(1);
+        }
+
+        return idTask;
+    }
+
 
 }
