@@ -31,10 +31,10 @@ public class AtumBot<T> extends TelegramWebhookBot {
 
     @SneakyThrows
     public BotApiMethod<?> onWebhookUpdateReceived(Update update) {
-        update.getMessage().getFrom().getFirstName();
-        update.getMessage().getFrom().getLastName();
-        update.getMessage().getFrom().getUserName();
-        update.getMessage().getFrom().getId();
+//        update.getMessage().getFrom().getFirstName();
+//        update.getMessage().getFrom().getLastName();
+//        update.getMessage().getFrom().getUserName();
+//        update.getMessage().getFrom().getId();
         send(botExecution.process(update));
         return null;
     }
