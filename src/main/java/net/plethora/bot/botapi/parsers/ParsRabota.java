@@ -1,12 +1,13 @@
 package net.plethora.bot.botapi.parsers;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.SneakyThrows;
+import lombok.*;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.NonNullFields;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.polls.SendPoll;
 import org.telegram.telegrambots.meta.api.methods.send.SendMediaGroup;
@@ -14,6 +15,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 
+import javax.validation.constraints.NotNull;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -42,28 +44,19 @@ public class ParsRabota {
 
     @SneakyThrows
     private List<SendMessage> parse(long idChat, int code, String period) {
-        //TODO: возможно стоит перенести или в метод или в другой класс
-        String linePeriod;
-        switch (period) {
-            case "месяц":
-                linePeriod = MONTH;
-                break;
-            case "три дня":
-                linePeriod = THREE_DAY;
-                break;
-            case "сутки":
-                linePeriod = DAY;
-                break;
-            default:
-                linePeriod = WEEK;
-        }
-        //https://rabota.by/search/vacancy?area=1006&text=Java&enable_snippets=true
-        //https://rabota.by/search/vacancy?search_period=3&clusters=true&area=1003&text=Java&enable_snippets=true
-        String connection = webAddressRabota + "search/vacancy?" + linePeriod + "area=" + code +"&text=" + text +"&enable_snippets=true";
-        //String connection = webAddressRabota + "search/vacancy?" + linePeriod + "area=" + code + "&fromSearchLine=true&st=searchVacancy&text=" + text;
+        //TODO нужно либо увеличить в сообщении вакансии либо придумать что то еще
+        //TODO т к если будет свыше 150 вакансий телег не станет принимать сообщения пока не спадет ограничение
+        //TODO можно добавить сообщение про ограничение сообщений и кнопку "продолжить" и что через 1 минуту можно нажать на продолжить
+        //TODO для этого нужен счетчик отправленых сообщений и таймер
+        //TODO в сообщение указать сколько вакансий показал и сколько осталось показать
+        //TODO потому непопавшие вакансии нужно сохранить либо в кеш либо в базу данных
+        String linePeriod = checkPeriod(period);
+
+        String connection = webAddressRabota + "search/vacancy?" + linePeriod + "area=" + code + "&text=" + text + "&enable_snippets=true";
+
         StringBuilder stringBuilder = new StringBuilder();
         List<SendMessage> listMessage = new ArrayList<>();   //список на отправку
-        List<String> urls = getUrlVacancy(connection);
+        List<String> urls = getUrlVacancy(connection); //получаем список ссылок вакансий
         int numberVacancy = urls.size();  //количество вакансий
         int countVacGlobal = 0; //счетчик вакансий
         int countVac = 0;  //счетчик вакансий до 5
@@ -72,14 +65,13 @@ public class ParsRabota {
         int fullMessage = numberVacancy / 5;  //количество полных сообщений
 
         for (String urlVacancy : urls) {          //подключение и парс страницы согласно url
-
+            System.setProperty("https.protocols", "TLSv1,TLSv1.1,TLSv1.2");
             Document doc = Jsoup.connect(urlVacancy).get();//заходим на адрес вакансии
-            System.out.println("Подключился, обрабатываю вакансию");
             Element title = doc.getElementsByAttributeValue("data-qa", "vacancy-title").first();              //заголовок вакансии
             Element salary = doc.getElementsByAttributeValue("class", "vacancy-salary").first();              //зарплата
             Element companyName = doc.getElementsByAttributeValue("data-qa", "vacancy-company-name").first(); //компания
             String urlCompanyName = webAddressRabota + companyName.attr("href");           //ссылка на компанию в сайте
-            Element address = doc.getElementsByAttributeValue("data-qa", "vacancy-view-location").first();    //адрес
+            Element address = doc.getElementsByAttributeValue("data-qa", "vacancy-view-raw-address").first();    //адрес
             //TODO не могу понять как отправить текст и картинку вместе одним сообщением. У сендФОто есть поле caption -описание но из за ограничения 30 сообщений в минуту скорее всего реализация невозможна
 //            String logo = doc.getElementsByAttributeValue("class", "vacancy-company-logo")
 //                    .attr("src");                                                         //логотип картинка
@@ -99,18 +91,25 @@ public class ParsRabota {
             stringBuilder.append(salary.text()).append("\n");
             //TODO в html длинновато както попробовать через маркдоун
             stringBuilder.append("<a href=\"").append(urlCompanyName).append("\">").append(companyName.text()).append("</a>").append("\n"); //гиперссылка html
-            stringBuilder.append(address.text()).append("\n");
-            stringBuilder.append("<b>Требуемый опыт: </b>").append(experience.text()).append("\n");
-            stringBuilder.append(employment.text()).append("\n");
-            //stringBuilder.append(vacancySection.text()).append("\n"); //слишком много
-            stringBuilder.append("<b>Ключевые навыки:</b>").append("\n");
+            if (address != null) {
+                stringBuilder.append(address.text()).append("\n");
+            }
+            if (experience != null) {
+                stringBuilder.append("<b>Требуемый опыт: </b>").append(experience.text()).append("\n");
+            }
+            if (employment != null) {
+                stringBuilder.append(employment.text()).append("\n");
+            }
 
-            for (Element element : mainSkills) {
-                stringBuilder.append(element.text()).append("\n");
+            stringBuilder.append("<b>Ключевые навыки:</b>").append("\n");
+            if (mainSkills != null) {
+                for (Element element : mainSkills) {
+                    stringBuilder.append(element.text()).append("\n");
+                }
             }
             stringBuilder.append("<a href=\"").append(requestLink).append("\">").append("Откликнуться").append("</a>").append("                ")
                     .append("<a href=\"").append(urlVacancy).append("\">").append("Подробнее...").append("</a>").append("\n");  //гиперссылка html
-//stringBuilder.append(data.text()).append("\n");
+
             countVac++;
             countVacGlobal++;
 
@@ -124,7 +123,6 @@ public class ParsRabota {
                 countVac = 0;
                 stringBuilder.delete(0, stringBuilder.length());
                 System.out.println("Стринг билдер очищен");
-                //stringBuilder = new StringBuilder();
             }
         }
         System.out.println("Передаю готовый лист сообщений из " + listMessage.size());
@@ -133,15 +131,13 @@ public class ParsRabota {
 
     private List<String> getUrlVacancy(String connection) throws IOException {
         ArrayList<String> vacancy = new ArrayList<>();
-
-        for (int i = 0; i < 10; i++) {  //Костыль на 5 попыток
+//TODO не всегд jsoup может найти список вакансий
+        for (int i = 0; i < 10; i++) {  //Костыль на 10 попыток
             System.out.println("Круг " + i);
             Document doc = Jsoup.connect(connection).get();
             System.out.println("Подключился к " + connection);
             Element tabl = doc.getElementsByAttributeValue("class", "vacancy-serp").first();  //получил таблицу
             Elements elements = tabl.getElementsByAttributeValue("data-qa", "vacancy-serp__vacancy");
-
-            //Elements els = tabl.get(0).getElementsByAttributeValue("class", "bloko-link HH-LinkModifier"); //блок со ссылкой
 
             for (Element el : elements) {
 
@@ -150,38 +146,32 @@ public class ParsRabota {
                 Element link = name.getElementsByAttributeValue("class", "bloko-link HH-LinkModifier").first();
                 String url = link.attr("href");  //получил саму ссылку
                 vacancy.add(url);
-                System.out.println(url);
             }
-            System.out.println("Передаю список ссылок вакансий из " + vacancy.size());
-           if(vacancy.size()!=0){return vacancy;}
+            if (vacancy.size() != 0) {
+                System.out.println("Передаю список ссылок вакансий из " + vacancy.size());
+                return vacancy;
+            }
         }
         System.out.println("Передаю список ссылок вакансий из " + vacancy.size());
         return vacancy;
     }
-//Загрузка картинки
-//    public void downloadFiles(String strURL, String strPath, int buffSize) {
-    //создать тут File file  ретерн готовыйй
-//        try {
-//            URL connection = new URL(strURL);
-//            HttpURLConnection urlconn;
-//            urlconn = (HttpURLConnection) connection.openConnection();
-//            urlconn.setRequestMethod("GET");
-//            urlconn.connect();
-//            InputStream in = null;
-//            in = urlconn.getInputStream();
-//            OutputStream writer = new FileOutputStream(strPath);
-//            byte buffer[] = new byte[buffSize];
-//            int c = in.read(buffer);
-//            while (c > 0) {
-//                writer.write(buffer, 0, c);
-//                c = in.read(buffer);
-//            }
-//            writer.flush();
-//            writer.close();
-//            in.close();
-//        } catch (IOException e) {
-//            System.out.println(e);
-//        }
-//    }
+
+    private String checkPeriod(String period) {
+        String linePeriod;
+        switch (period) {
+            case "месяц":
+                linePeriod = MONTH;
+                break;
+            case "три дня":
+                linePeriod = THREE_DAY;
+                break;
+            case "сутки":
+                linePeriod = DAY;
+                break;
+            default:
+                linePeriod = WEEK;
+        }
+        return linePeriod;
+    }
 
 }

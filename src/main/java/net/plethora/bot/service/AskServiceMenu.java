@@ -20,6 +20,7 @@ public class AskServiceMenu<T> implements ServiceMenu {
 
     @Override
     public List<T> start(long chatId, String askUser, User user){
+        //TODO можно переделать handler на отправку списка а не SendMessage
         List<SendMessage> messages = new ArrayList<>();
         messages.add(handlerAskMessage.sendMessage(chatId,askUser));//запрос в базу
       return (List<T>) messages;

@@ -20,50 +20,55 @@ public class HandlerJobMessage {
     private DataAccessArea dataAccessArea;
     private ParsRabota parsRabota;
 
-    public HandlerJobMessage(CacheSearchJob cacheSearchJob, DataAccessArea dataAccessArea,ParsRabota parsRabota){
+    public HandlerJobMessage(CacheSearchJob cacheSearchJob, DataAccessArea dataAccessArea, ParsRabota parsRabota) {
         this.cacheSearchJob = cacheSearchJob;
         this.dataAccessArea = dataAccessArea;
         this.parsRabota = parsRabota;
     }
 
-public List<SendMessage> handler(long chatId, String msgUser){
-    List<SendMessage> list = new ArrayList<>();
-    //TODO: вынести в handlers
-    InfoForSearch info = cacheSearchJob.getInfos().get(chatId);
+    public List<SendMessage> handler(long chatId, String msgUser) {
+        List<SendMessage> list = new ArrayList<>();
+
+        InfoForSearch info = cacheSearchJob.getInfos().get(chatId); //Информация для поиска
 
         if (info == null) { //если нет в списке
-        cacheSearchJob.getInfos().put(chatId, new InfoForSearch());//создаем
-        cacheSearchJob.getInfos().get(chatId).setArea(msgUser);//добавляем
-        //TODO:добавить текст в ресурсы
-        //TODO проверка на период или оставить с неделей по умолчанию
-        list.add(new SendMessage(chatId, "Выберите период:").setReplyMarkup(addKeyBoard()));
-        return list;
-    }  if (info.getPeriod() == null && info.getArea() != null) { //если нет периода
-        info.setPeriod(msgUser); //добавляем
-    } if (info.getArea() != null && info.getPeriod() != null) {
+            cacheSearchJob.getInfos().put(chatId, new InfoForSearch());//создаем пустое инфо в кеше
 
-        //TODO если название составное этот IgnoreCase не сраотает(должно быть каждое слово с большой буквы)
-        //TODO проще переписать базу везде ловерCase
-        //String areaName = info.getArea().substring(0, 1).toUpperCase() + info.getArea().substring(1).toLowerCase(); //перевод case
-        String areaName = info.getArea(); //перевод case
-        Area areaObj = dataAccessArea.handleRequest(areaName); //достаем из базы модель по запросу
-        if (areaObj == null) {
-            //TODO забросить сообщения в ресурс
-            //TODO проверку на город выше
-            list.add(new SendMessage(chatId, "Город " + areaName + " не найден"));
-        } else {
-            int code = dataAccessArea.handleRequest(areaName).getCode();
-            list = parsRabota.vacancyListMsg(chatId, code, info.getPeriod());
-            if (list.size() == 0) {
-                list.add(new SendMessage(chatId, "В городе " + areaName + " вакансий java engineer не обнаружено "));
+            if (dataAccessArea.handleRequest(msgUser) == null){ //если город не найден
+                list.add(new SendMessage(chatId, "Город " + msgUser + " не найден"));
+                return list;
             }
-        }
-        cacheSearchJob.getInfos().remove(chatId);
-    }
-        return list;
-}
 
-    private InlineKeyboardMarkup addKeyBoard(){
+            cacheSearchJob.getInfos().get(chatId).setArea(msgUser);//добавляем город в инфо кэш
+            //TODO:добавить текст в ресурсы
+            //TODO проверка на период или оставить с неделей по умолчанию
+            list.add(new SendMessage(chatId, "Выберите период:").setReplyMarkup(addKeyBoard()));
+            return list;
+        }
+        if (info.getPeriod() == null && info.getArea() != null) { //если в инфо нет периода
+            info.setPeriod(msgUser); //добавляем
+        }
+        if (info.getArea() != null && info.getPeriod() != null) {
+
+            //TODO если название составное этот IgnoreCase не сраотает(должно быть каждое слово с большой буквы)
+            //TODO проще переписать базу везде ловерCase
+            //String areaName = info.getArea().substring(0, 1).toUpperCase() + info.getArea().substring(1).toLowerCase(); //перевод case
+            String areaName = info.getArea(); //получаем название нужного города
+
+//                //TODO забросить сообщения в ресурс
+                int code = dataAccessArea.handleRequest(areaName).getCode();
+                list = parsRabota.vacancyListMsg(chatId, code, info.getPeriod());
+                if (list.size() == 0) {
+                    list.add(new SendMessage(chatId, "В городе " + areaName + " вакансий java engineer не обнаружено "));
+                }
+ //           }
+            cacheSearchJob.getInfos().remove(chatId); //Пока просто удаляем инфо в конце
+            //TODO можно оставить инфо и дать пользователю возможность менять период или город
+        }
+        return list;
+    }
+
+    private InlineKeyboardMarkup addKeyBoard() {
 
         InlineKeyboardMarkup keyBoardMsg = new InlineKeyboardMarkup();   //наша клава под msg
         List<List<InlineKeyboardButton>> rows = new ArrayList<>(); //формируем ряды

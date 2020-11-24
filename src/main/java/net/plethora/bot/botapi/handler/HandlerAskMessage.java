@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Component
-public class HandlerAskMessage {
+public class HandlerAskMessage<T> {
 
     private Answer answer;
     private final DataAccessAnswer dao;

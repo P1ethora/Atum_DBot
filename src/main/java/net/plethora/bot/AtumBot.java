@@ -38,9 +38,9 @@ public class AtumBot<T> extends TelegramWebhookBot {
     @SneakyThrows
     private void send(List<T> list) {
         for (T sendMessage : list) {
-            if(sendMessage instanceof SendMessage)
+            if(sendMessage instanceof SendMessage) //если является SendMessage
             execute((SendMessage)sendMessage);
-            if(sendMessage instanceof SendDocument)
+            if(sendMessage instanceof SendDocument) //если SendDocument
                 execute((SendDocument) sendMessage);
         }
         list.clear();

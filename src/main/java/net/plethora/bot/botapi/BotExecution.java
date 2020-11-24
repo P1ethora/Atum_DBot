@@ -1,6 +1,7 @@
 package net.plethora.bot.botapi;
 
 import net.plethora.bot.botapi.commands.Cmd;
+import net.plethora.bot.botapi.keyboards.KeyboardBot;
 import net.plethora.bot.cache.CacheUsersState;
 import net.plethora.bot.dao.DataAccessUser;
 import net.plethora.bot.model.User;
@@ -11,6 +12,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 
 import javax.xml.crypto.Data;
 import java.util.ArrayList;
@@ -24,13 +26,15 @@ public class BotExecution<T> {
     private KeyboardMenu keyboardMenu;
     private PhrasesService phrases;
     private DataAccessUser dataAccessUser;
+    private KeyboardBot keyboardBot;
 
-    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardMenu keyboardMenu, PhrasesService phrases, DataAccessUser dataAccessUser) {
+    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardMenu keyboardMenu, PhrasesService phrases, DataAccessUser dataAccessUser, KeyboardBot keyboardBot) {
         this.cacheUsersState = cacheUsersState;
         this.processingStates = processingStates;
         this.keyboardMenu = keyboardMenu;
         this.phrases = phrases;
         this.dataAccessUser = dataAccessUser;
+        this.keyboardBot = keyboardBot;
     }
 
     /**
@@ -54,19 +58,14 @@ public class BotExecution<T> {
             if (checkCommand(chatId, askUser) != null) {     //является ли командой
                 messages = (List<T>) checkCommand(chatId, askUser);  //соглассно введенной команды
             } else {                                         //Иначе запрос согласно сервиса меню
-                //TODO дубль кода
-                if (cacheUsersState.getStateUsers().get(chatId) != null) {//Если активировано состояние
-                    String firstName = update.getCallbackQuery().getFrom().getFirstName();
-                    String lastName = update.getCallbackQuery().getFrom().getLastName();
-                    String userName = update.getCallbackQuery().getFrom().getUserName();
-                    int idUser = update.getCallbackQuery().getFrom().getId();
-                    messages = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем состояние из кэша по id
-                            .start(chatId, askUser,checkUser(idUser,firstName,lastName,userName));                                                       //запускаем соответствующий сервис
-                } else {
-                    messages.add((T) new SendMessage(chatId, "Необходимо активировать состояние"));
-                    return messages;
-                }
-                ;//на всякий случай
+               //Определяем данные пользователя
+                String firstName = update.getCallbackQuery().getFrom().getFirstName();
+                String lastName = update.getCallbackQuery().getFrom().getLastName();
+                String userName = update.getCallbackQuery().getFrom().getUserName();
+                int idUser = update.getCallbackQuery().getFrom().getId();
+                //включаем сервис
+                messages = enabledService(chatId,firstName,lastName,userName,idUser,askUser);
+                  return messages;
             }
 
             //если пришло соощение или нажата кнопка меню
@@ -82,19 +81,13 @@ public class BotExecution<T> {
             if (checkCommand(chatId, askUser) != null) { //Сперва проверяются команды
                 messages = (List<T>) checkCommand(chatId, askUser);   //запрос -> команда
             } else {                                                 //Если не является командой, запрос согласно сервиса меню
-//TODO вынести в метод
-                if (cacheUsersState.getStateUsers().get(chatId) != null) {  //Если имеется состояние
-                    messages = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем и запускаем сервис
-                            .start(chatId, askUser,checkUser(idUser,firstName,lastName,userName));
 
-                } else {  //Если варианты не совпадают пользователь не подключил сервис
-                    messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
-                }
+               messages = enabledService(chatId,firstName,lastName,userName,idUser,askUser);
 
             }
         }
 
-        return (List<T>) messages;
+        return messages;
     }
 
     /**
@@ -141,7 +134,8 @@ public class BotExecution<T> {
             case Cmd.TASK_BUTTON: {   //Состояние задача
                 List<SendMessage> messages = new ArrayList<>();
                 cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
-                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService")));
+                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService"))
+                        .setReplyMarkup(keyboardBot.inlineKeyboardSubjectTask())); //кнопки
                 return messages;
 
             }
@@ -157,8 +151,38 @@ public class BotExecution<T> {
         return null;
     }
 
-    private User checkUser(int idUser, String firstName, String lastName, String userName) { //Создает юзера если такого нет
+    /**
+     * Включаем сервис или отправляем сообщение с запросом включить сервис
+     * Параметры из пакета update
+     * @param chatId id чата
+     * @param firstName имя
+     * @param lastName фамилия
+     * @param userName псевдоним
+     * @param idUser id пользователя
+     * @param askUser сообщение пользователя
+     * @return список с сообщениями
+     */
+    private List<T> enabledService(long chatId,String firstName,String lastName, String userName, int idUser, String askUser){
+List<T> messages = new ArrayList<>();
+        if (cacheUsersState.getStateUsers().get(chatId) != null) {//Если активировано состояние
+            messages = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем состояние из кэша по id
+                    .start(chatId, askUser,checkUser(idUser,firstName,lastName,userName));                                                       //запускаем соответствующий сервис
+        } else {
+            messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
+        }
+        return messages;
+    }
 
+    /**
+     * Проверка наличия пользователя. Если не найден создается
+     * Параметры из пакета update
+     * @param idUser id
+     * @param firstName имя
+     * @param lastName фамилия
+     * @param userName псевдоним
+     * @return пользователя
+     */
+    private User checkUser(int idUser, String firstName, String lastName, String userName) { //Создает юзера если такого нет
         if(dataAccessUser.findUser(idUser)==null){
             User user = new User();
             user.setFirstName(firstName);
@@ -171,4 +195,5 @@ public class BotExecution<T> {
         }
         return dataAccessUser.findUser(idUser);
     }
+
 }
