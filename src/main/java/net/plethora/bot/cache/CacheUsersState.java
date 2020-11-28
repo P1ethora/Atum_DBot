@@ -2,7 +2,7 @@ package net.plethora.bot.cache;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.plethora.bot.botapi.BotState;
+import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.botapi.ProcessingStates;
 import org.springframework.stereotype.Component;
 

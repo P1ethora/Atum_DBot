@@ -22,6 +22,6 @@ public class DataAccessTask {
     }
 
     public Task findById(String id){
-       return postRepositoryTask.findById(id).orElseThrow(() -> new IllegalStateException("missing"));
+       return postRepositoryTask.findById(id).orElseThrow(() -> new IllegalStateException("Task with id " +id + " not found"));
     }
 }

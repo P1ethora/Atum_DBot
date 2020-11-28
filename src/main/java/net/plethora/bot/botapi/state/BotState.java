@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi;
+package net.plethora.bot.botapi.state;
 
 /**
  * Возможные состояния

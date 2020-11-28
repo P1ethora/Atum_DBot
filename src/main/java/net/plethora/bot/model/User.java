@@ -2,6 +2,8 @@ package net.plethora.bot.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.plethora.bot.botapi.handler.handtask.SubjectTaskUser;
+import net.plethora.bot.botapi.state.BotState;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -15,17 +17,22 @@ public class User {
     private String id;
 
     private int idUser;
+    private BotState state;
+    private Enum subState;
+    private long idChat;
     private String firstName;
     private String LastName;
     private String userName;
-    private String[] receivedTasks;
+    //private String[] receivedTasks;
+    private SubjectTaskUser[] subjectTask;
 
-    public User(int idUser, String firstName, String lastName, String userName, String[] receivedTasks) {
+    public User(int idUser, String firstName, String lastName, String userName, SubjectTaskUser[] subjectTask) {
         this.idUser = idUser;
         this.firstName = firstName;
         LastName = lastName;
         this.userName = userName;
-        this.receivedTasks = receivedTasks;
+        this.subjectTask = subjectTask;
+      //  this.receivedTasks = receivedTasks;
     }
 
     public User(){}

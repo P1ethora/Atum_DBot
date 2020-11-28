@@ -59,6 +59,7 @@ public class HandlerAskMessage<T> {
         return sendMessage;
     }
 
+
     /**
      * Создаем клавиатуру под сообщением на основе ключевых слов в документе Mongodb
      *

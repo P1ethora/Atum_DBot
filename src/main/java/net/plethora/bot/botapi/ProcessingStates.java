@@ -1,5 +1,6 @@
 package net.plethora.bot.botapi;
 
+import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.service.*;
 import org.springframework.stereotype.Component;
 
