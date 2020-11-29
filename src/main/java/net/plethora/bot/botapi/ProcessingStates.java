@@ -12,15 +12,17 @@ public class ProcessingStates {
     private TaskServiceMenu taskService;
     private JobServiceMenu jobService;
 
-    /**
-     * Определяем состояние и возвращаем сервис
-     */
     public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService) {
         this.askService = askService;
         this.taskService = taskService;
         this.jobService = jobService;
     }
 
+    /**
+     * Определяем состояние
+     * @param botState Enum состояние
+     * @return сервис
+     */
     ServiceMenu processing(BotState botState) {
 
         switch (botState) {

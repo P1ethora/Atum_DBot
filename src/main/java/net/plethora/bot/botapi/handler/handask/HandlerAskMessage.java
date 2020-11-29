@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.handler;
+package net.plethora.bot.botapi.handler.handask;
 
 import net.plethora.bot.dao.DataAccessAnswer;
 import net.plethora.bot.model.Answer;

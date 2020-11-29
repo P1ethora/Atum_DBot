@@ -1,11 +1,8 @@
-package net.plethora.bot.repo;
+package net.plethora.bot.dao.repo;
 
 import net.plethora.bot.model.Area;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 
 @Repository

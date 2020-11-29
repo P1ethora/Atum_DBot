@@ -3,7 +3,7 @@ package net.plethora.bot.dao;
 import net.plethora.bot.botapi.handler.handtask.SubjectTaskUser;
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.model.User;
-import net.plethora.bot.repo.PostRepositoryUser;
+import net.plethora.bot.dao.repo.PostRepositoryUser;
 import org.springframework.stereotype.Component;
 
 
@@ -43,13 +43,13 @@ public class DataAccessUser {
         postRepositoryUser.save(oldUser);
     }
 
-    public void editUser(User user,Enum subState){
-        User oldUser = postRepositoryUser.findById(user.getId())
-                .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
-
-        oldUser.setSubState(subState);
-        postRepositoryUser.save(oldUser);
-    }
+//    public void editUser(User user,Enum subState){
+//        User oldUser = postRepositoryUser.findById(user.getId())
+//                .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
+//
+//        oldUser.setSubState(subState);
+//        postRepositoryUser.save(oldUser);
+//    }
 
     public void editUser(User user,long chatId){
         User oldUser = postRepositoryUser.findById(user.getId())

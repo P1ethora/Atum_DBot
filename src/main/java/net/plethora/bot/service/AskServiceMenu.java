@@ -1,6 +1,6 @@
 package net.plethora.bot.service;
 
-import net.plethora.bot.botapi.handler.HandlerAskMessage;
+import net.plethora.bot.botapi.handler.handask.HandlerAskMessage;
 import net.plethora.bot.model.User;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -19,7 +19,7 @@ public class AskServiceMenu<T> implements ServiceMenu {
     }
 
     @Override
-    public List<T> start(long chatId, String askUser, User user){
+    public List<T> start(long chatId, String askUser, User user, int messageId){
         //TODO можно переделать handler на отправку списка а не SendMessage
         List<SendMessage> messages = new ArrayList<>();
         messages.add(handlerAskMessage.sendMessage(chatId,askUser));//запрос в базу

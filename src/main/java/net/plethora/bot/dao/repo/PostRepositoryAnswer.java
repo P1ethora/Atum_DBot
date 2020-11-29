@@ -1,4 +1,4 @@
-package net.plethora.bot.repo;
+package net.plethora.bot.dao.repo;
 
 
 import net.plethora.bot.model.Answer;

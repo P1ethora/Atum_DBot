@@ -17,17 +17,13 @@ public class TaskServiceMenu<T> implements ServiceMenu {
     }
 
     @Override
-    public List<T> start(long chatId, String msgUser, User user) {
-        List<T> list = handlerTaskMessage.go(chatId,msgUser,user);
+    public List<T> start(long chatId, String msgUser, User user, int messageId) {
+        List<T> list = handlerTaskMessage.go(chatId,msgUser,user, messageId);
 
         if(list.size()==0){
             list.add((T) new SendMessage(chatId,"Не Найдено"));
         }
 
         return list;
-    }
-
-    private String start(int gff,String fdfdf){
-        return new String();
     }
 }

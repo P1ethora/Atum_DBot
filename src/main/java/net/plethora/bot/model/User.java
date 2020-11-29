@@ -18,21 +18,19 @@ public class User {
 
     private int idUser;
     private BotState state;
-    private Enum subState;
-    private long idChat;
+    //private Enum subState;
+    private long idChat;  //совпадает с id пользователя возможно стоит убрать
     private String firstName;
-    private String LastName;
+    private String lastName;
     private String userName;
-    //private String[] receivedTasks;
     private SubjectTaskUser[] subjectTask;
 
     public User(int idUser, String firstName, String lastName, String userName, SubjectTaskUser[] subjectTask) {
         this.idUser = idUser;
         this.firstName = firstName;
-        LastName = lastName;
+        this.lastName = lastName;
         this.userName = userName;
         this.subjectTask = subjectTask;
-      //  this.receivedTasks = receivedTasks;
     }
 
     public User(){}

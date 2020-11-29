@@ -55,19 +55,20 @@ public class BotExecution<T> {
             CallbackQuery callbackQuery = update.getCallbackQuery();  //данные нажатия кнопки
             chatId = callbackQuery.getMessage().getChatId();          //id кнопки
             askUser = callbackQuery.getData().toLowerCase();          //содержимое кнопки(переводим в нижни реестр)
+            int messageId = callbackQuery.getMessage().getMessageId();
 
             if (checkCommand(chatId, askUser) != null) {     //является ли командой
                 messages = (List<T>) checkCommand(chatId, askUser);  //соглассно введенной команды
             } else {                                         //Иначе запрос согласно сервиса меню
-               //Определяем данные пользователя
+                //Определяем данные пользователя
                 String firstName = update.getCallbackQuery().getFrom().getFirstName();
                 String lastName = update.getCallbackQuery().getFrom().getLastName();
                 String userName = update.getCallbackQuery().getFrom().getUserName();
                 int idUser = update.getCallbackQuery().getFrom().getId();
-                user  = checkUser(chatId,idUser,firstName,lastName, userName);
+                user = checkUser(chatId, idUser, firstName, lastName, userName);
                 //включаем сервис
-                messages = enabledService(chatId,askUser);
-                  return messages;
+                messages = enabledService(chatId, askUser,messageId);
+                return messages;
             }
 
             //если пришло соощение или нажата кнопка меню
@@ -79,13 +80,13 @@ public class BotExecution<T> {
             String lastName = update.getMessage().getFrom().getLastName();
             String userName = update.getMessage().getFrom().getUserName();
             int idUser = update.getMessage().getFrom().getId();
-            user  = checkUser(chatId,idUser,firstName,lastName, userName);
+            user = checkUser(chatId, idUser, firstName, lastName, userName);
 //TODO поменять это снизу
             if (checkCommand(chatId, askUser) != null) { //Сперва проверяются команды
                 messages = (List<T>) checkCommand(chatId, askUser);   //запрос -> команда
             } else {                                                 //Если не является командой, запрос согласно сервиса меню
 
-               messages = enabledService(chatId,askUser);
+                messages = enabledService(chatId, askUser,0);
 
             }
         }
@@ -127,7 +128,7 @@ public class BotExecution<T> {
             case Cmd.ASK:
             case Cmd.ASK_BUTTON: {   //Состояние вопрос-ответ
                 List<SendMessage> messages = new ArrayList<>();
-                dataAccessUser.editUser(user,BotState.ASK);
+                dataAccessUser.editUser(user, BotState.ASK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.ASK);
                 messages.add(new SendMessage(chatId, phrases.getMessage("phrase.AskEnableService")));
                 return messages;
@@ -137,7 +138,7 @@ public class BotExecution<T> {
             case Cmd.TASK:
             case Cmd.TASK_BUTTON: {   //Состояние задача
                 List<SendMessage> messages = new ArrayList<>();
-                dataAccessUser.editUser(user,BotState.TASK);
+                dataAccessUser.editUser(user, BotState.TASK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
                 messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService"))
                         .setReplyMarkup(keyboardBot.inlineKeyboardSubjectTask())); //кнопки
@@ -148,7 +149,7 @@ public class BotExecution<T> {
             case Cmd.JOB_BUTTON: {   //Состояние поиск работы
                 List<SendMessage> messages = new ArrayList<>();
 
-                dataAccessUser.editUser(user,BotState.JOB);
+                dataAccessUser.editUser(user, BotState.JOB);
                 cacheUsersState.getStateUsers().put(chatId, BotState.JOB);
                 messages.add(new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService")));
                 return messages;
@@ -161,16 +162,18 @@ public class BotExecution<T> {
     /**
      * Включаем сервис или отправляем сообщение с запросом включить сервис
      * Параметры из пакета update
-     * @param chatId id чата
+     *
+     * @param chatId  id чата
      * @param askUser сообщение пользователя
      * @return список с сообщениями
      */
-    private List<T> enabledService(long chatId,String askUser){
-List<T> messages = new ArrayList<>();
+    private List<T> enabledService(long chatId, String askUser, int messageId) {
+        List<T> messages = new ArrayList<>();
         if (cacheUsersState.getStateUsers().get(chatId) != null) {//Если активировано состояние
+
             messages = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем состояние из кэша по id
-                    .start(chatId, askUser,user);                                                       //запускаем соответствующий сервис
-        } else {
+                    .start(chatId, askUser, user,messageId);}//запускаем соответствующий сервис
+        else {
             messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
         }
         return messages;
@@ -179,21 +182,22 @@ List<T> messages = new ArrayList<>();
     /**
      * Проверка наличия пользователя. Если не найден создается
      * Параметры из пакета update
-     * @param idUser id
+     *
+     * @param idUser    id
      * @param firstName имя
-     * @param lastName фамилия
-     * @param userName псевдоним
+     * @param lastName  фамилия
+     * @param userName  псевдоним
      * @return пользователя
      */
-    private User checkUser(long idChat,int idUser, String firstName, String lastName, String userName) { //Создает юзера если такого нет
-        if(dataAccessUser.findUser(idUser)==null){
+    private User checkUser(long idChat, int idUser, String firstName, String lastName, String userName) { //Создает юзера если такого нет
+        if (dataAccessUser.findUser(idUser) == null) {
             User user = new User();
             user.setFirstName(firstName);
             user.setLastName(lastName);
             user.setUserName(userName);
             user.setIdUser(idUser);
             user.setState(null);
-            user.setSubState(null);
+            //user.setSubState(null);
             user.setSubjectTask(new SubjectTaskUser[0]);
             user.setIdChat(idChat);
             dataAccessUser.addUser(user);

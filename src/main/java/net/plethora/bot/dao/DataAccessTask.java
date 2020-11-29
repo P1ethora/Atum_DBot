@@ -2,7 +2,7 @@ package net.plethora.bot.dao;
 
 import lombok.Getter;
 import net.plethora.bot.model.Task;
-import net.plethora.bot.repo.PostRepositoryTask;
+import net.plethora.bot.dao.repo.PostRepositoryTask;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

@@ -10,6 +10,8 @@ import net.plethora.bot.model.User;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageReplyMarkup;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -38,50 +40,43 @@ public class HandlerTaskMessage<T> {
     }
 
     @SneakyThrows
-    public List<T> go(long chatId, String msgUser, User user) {
+    public List<T> go(long chatId, String msgUser, User user, int messageId) {
         List<T> msg = new ArrayList<>();
 //TODO зашифровать сосстояние тему и тд то бы из любого состояния можно было кнопеой переключатся автоматически
         if (msgUser.substring(0, 9).equals("%n->ex!t{")) {
-            //Определить тему, метод есть
-            String subject = getValueMsg(msgUser);
-            for (SubjectTaskUser subjectTaskUser : user.getSubjectTask()) {
-                if (subjectTaskUser.getSubjectTask().equals(subject)) {
-                  msg = (List<T>) getProblem(chatId, subject, user, true, false);
-                }
-            }
-
-        }
-        if (msgUser.substring(0, 9).equals("%b->ac!k{")) {
 
             String subject = getValueMsg(msgUser);
             for (SubjectTaskUser subjectTaskUser : user.getSubjectTask()) {
                 if (subjectTaskUser.getSubjectTask().equals(subject)) {
-                  msg = (List<T>) getProblem(chatId, subject, user, false, true);
+                    msg = getProblem(chatId, subject, user,messageId, true, false);
+                   // editMessage(messageId,chatId,user,subject,dataAccessTask.handleRequest(subject));
                 }
             }
-        }
 
-        if (checkSubject(msgUser)) {   //если прилетела тема задачи
-            // if(u)
+        } else if (msgUser.substring(0, 9).equals("%b->ac!k{")) {
+            String subject = getValueMsg(msgUser);
+            for (SubjectTaskUser subjectTaskUser : user.getSubjectTask()) {
+                if (subjectTaskUser.getSubjectTask().equals(subject)) {
+                    msg = (List<T>) getProblem(chatId, subject, user,messageId, false, true);
+                }
+            }
+        } else if (checkSubject(msgUser)) {   //если прилетела тема задачи
             //TODO в идеале все задачи темы перебирать прямо в базе
 //TODO можно добавить кнопку далее и назад и изменить раздел(а на последней задаче убрать далее и на первой убрать назад)
-            msg = (List<T>) getProblem(chatId, msgUser, user, false, false);
-            //msg.add((T) new SendMessage(chatId, "Выберите раздел следующей задачи")
-            //     .setReplyMarkup(keyboardBot.inlineKeyboardSubjectTask()));
+            msg = (List<T>) getProblem(chatId, msgUser, user,messageId, false, false);
         } else if (msgUser.substring(0, 6).equals(":!awr{")) {   //если сообщение является ответом к задаче
             msg = (List<T>) getSolution(chatId, getValueMsg(msgUser));  //вытягиваем id Task, получаем ответ и ложим его в список
-
+        } else if (msgUser.equals(":выбор")) {
+            msg.add((T) new SendMessage(chatId, "Выберите раздел следующей задачи")
+                    .setReplyMarkup(keyboardBot.inlineKeyboardSubjectTask()));
         } else {
-            if(msg.size()==0)
             msg.add((T) new SendMessage(chatId, "Неверная форма ввода, нажмите на нужный раздел выше или измените сервис"));
         }
-
-
         return msg;
     }
 
 
-    private List<SendMessage> getProblem(long chatId, String subject, User user, boolean next, boolean back) {
+    private List<T> getProblem(long chatId, String subject, User user,int messageId, boolean next, boolean back) {
 
         List<Task> allTasks = dataAccessTask.handleRequest(subject);  //все задачи на заданную тему
         List<SubjectTaskUser> allSubjectUsers = Arrays.asList(user.getSubjectTask());   //список id решенных задач user
@@ -91,32 +86,33 @@ public class HandlerTaskMessage<T> {
             newListSubjectTaskForUser.addAll(allSubjectUsers);
         }
 
-        List<SendMessage> msgForSend = new ArrayList<>();
+        List<T> msgForSend = new ArrayList<>();
 
         if (!next && !back) {
 
-            msgForSend = getTask(chatId, subject, user, allSubjectUsers, allTasks, newListSubjectTaskForUser);
+            msgForSend = (List<T>) getTask(chatId, subject, user, allSubjectUsers, allTasks, newListSubjectTaskForUser);
 
-        } else if (next&&!back) {
+        } else if (next && !back) {
             boolean check = false;
             for (SubjectTaskUser subjectTaskUser : newListSubjectTaskForUser) {
                 if (subjectTaskUser.getSubjectTask().equals(subject)) {
+
                     for (int i = 0; i < allTasks.size(); i++) {
                         if (subjectTaskUser.getIdTask().equals(allTasks.get(i).getId())) {
-                            System.out.println("Был ->  " + subjectTaskUser);
                             subjectTaskUser.setIdTask(allTasks.get(i + 1).getId());
-                            System.out.println("Стал -> " + subjectTaskUser);
-                            System.out.println("Новый список  -> " + newListSubjectTaskForUser);
                             updateUser(user, newListSubjectTaskForUser);
                             check = true;
                             break;
                         }
                     }
-                   msgForSend = getTask(chatId, subject, user, allSubjectUsers, allTasks, newListSubjectTaskForUser);
-                    if(check){break;}
+                    //msgForSend = getTask(chatId, subject, user, allSubjectUsers, allTasks, newListSubjectTaskForUser);
+                   msgForSend = editMessage(messageId,chatId,user,subject,allTasks,allSubjectUsers);
+                    if (check) {
+                        break;
+                    }
                 }
             }
-        } else if (back&&!next) {
+        } else if (back && !next) {
             for (SubjectTaskUser subjectTaskUser : newListSubjectTaskForUser) {
                 if (subjectTaskUser.getSubjectTask().equals(subject)) {
                     for (int i = 0; i < allTasks.size(); i++) {
@@ -126,7 +122,7 @@ public class HandlerTaskMessage<T> {
                             break;
                         }
                     }
-                   msgForSend = getTask(chatId, subject, user, allSubjectUsers, allTasks, newListSubjectTaskForUser);
+                    msgForSend = editMessage(messageId,chatId,user,subject,allTasks,allSubjectUsers);
                 }
             }
         }
@@ -162,7 +158,7 @@ public class HandlerTaskMessage<T> {
      * @param idTask id задачи
      * @return готовую кнопку для сообщения
      */
-    private InlineKeyboardMarkup keyboard(String idTask,String subject) {
+    private InlineKeyboardMarkup keyboard(String idTask, String subject) {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(); //клава
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();  //ряды
@@ -174,8 +170,8 @@ public class HandlerTaskMessage<T> {
         InlineKeyboardButton keyboardButtonBack = new InlineKeyboardButton("Назад"); //сама кнопка
         InlineKeyboardButton keyboardButtonNext = new InlineKeyboardButton("Далее"); //сама кнопка
 
-        keyboardButtonBack.setCallbackData("%b->ac!k{" + subject+"}");
-        keyboardButtonNext.setCallbackData("%n->ex!t{"+ subject +"}");
+        keyboardButtonBack.setCallbackData("%b->ac!k{" + subject + "}");
+        keyboardButtonNext.setCallbackData("%n->ex!t{" + subject + "}");
         keyboardButton.setCallbackData(":!awr{" + idTask + "}");  //ответка в виде id задачи и небольшога шифра
         row1.add(keyboardButton);
         row.add(keyboardButtonBack);
@@ -258,30 +254,55 @@ public class HandlerTaskMessage<T> {
     private List<SendMessage> getTask(long chatId, String subject, User user, List<SubjectTaskUser> allSubjectUsers, List<Task> allTasks, List<SubjectTaskUser> newListSubjectTaskForUser) {
         List<SendMessage> msgForSend = new ArrayList<>();
 
-        boolean check = false;
         int count = 0;
         for (SubjectTaskUser subjectTaskUser : allSubjectUsers) {
             if (subjectTaskUser.getSubjectTask().equals(subject)) {
-                for (Task task1 : allTasks) { //по сути можно просто вытянуть задачу из базы монго
+                for (Task task1 : allTasks) {
                     if (subjectTaskUser.getIdTask().equals(task1.getId())) {
                         count++;
-                        msgForSend.add(new SendMessage(chatId, task1.getProblem()).setReplyMarkup(keyboard(task1.getId(),subject)));
+                        msgForSend.add(new SendMessage(chatId, task1.getProblem()).setReplyMarkup(keyboard(task1.getId(), subject)));
                         break;
                     }
                 }
             }
         }
         if (count == 0) {
-            System.out.println("Совпадений не было");
             newListSubjectTaskForUser.add(new SubjectTaskUser(allTasks.get(0).getId(), allTasks.get(0).getSubject()));
-            msgForSend.add(new SendMessage(chatId, allTasks.get(0).getProblem()).setReplyMarkup(keyboard(allTasks.get(0).getId(),subject)));
-            check = true;
-        }
-        if (check) {
+            msgForSend.add(new SendMessage(chatId, allTasks.get(0).getProblem()).setReplyMarkup(keyboard(allTasks.get(0).getId(), subject)));
             updateUser(user, newListSubjectTaskForUser);
         }
 
         return msgForSend;
+    }
+
+    private List<T> editMessage(int messageId,long chatId,User user,String subject, List<Task> allTasks, List<SubjectTaskUser> allSubjectUsers){
+        List<T> messageTexts = new ArrayList<>();
+        EditMessageText editMessageText = new EditMessageText();
+
+        int count = 0;
+        for (SubjectTaskUser subjectTaskUser : allSubjectUsers) {
+            if (subjectTaskUser.getSubjectTask().equals(subject)) {
+                for (Task task1 : allTasks) {
+                    if (subjectTaskUser.getIdTask().equals(task1.getId())) {
+                        count++;
+                        editMessageText.setChatId(chatId);
+                        editMessageText.setMessageId(messageId);
+                        editMessageText.setText(task1.getProblem());
+                        editMessageText.setReplyMarkup(keyboard(task1.getId(), subject));
+                        messageTexts.add((T) editMessageText);
+                       // messageTexts.add(new SendMessage(chatId, task1.getProblem()).setReplyMarkup(keyboard(task1.getId(), subject)));
+                        break;
+                    }
+                }
+            }
+        }
+        if (count == 0) {
+            messageTexts.add((T) new SendMessage(chatId,"Неверно"));
+//            newListSubjectTaskForUser.add(new SubjectTaskUser(allTasks.get(0).getId(), allTasks.get(0).getSubject()));
+//            msgForSend.add(new SendMessage(chatId, allTasks.get(0).getProblem()).setReplyMarkup(keyboard(allTasks.get(0).getId(), subject)));
+//            updateUser(user, newListSubjectTaskForUser);
+        }
+        return messageTexts;
     }
 
     private void updateUser(User user, List<SubjectTaskUser> newListSubjectTaskForUser) {

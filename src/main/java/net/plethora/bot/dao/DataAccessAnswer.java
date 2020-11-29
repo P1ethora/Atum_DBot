@@ -1,7 +1,7 @@
 package net.plethora.bot.dao;
 
 import net.plethora.bot.model.Answer;
-import net.plethora.bot.repo.PostRepositoryAnswer;
+import net.plethora.bot.dao.repo.PostRepositoryAnswer;
 import org.springframework.stereotype.Component;
 
 /**

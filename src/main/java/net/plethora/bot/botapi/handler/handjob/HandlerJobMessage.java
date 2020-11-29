@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.handler;
+package net.plethora.bot.botapi.handler.handjob;
 
 import net.plethora.bot.botapi.parsers.InfoForSearch;
 import net.plethora.bot.botapi.parsers.ParsRabota;
@@ -50,9 +50,6 @@ public class HandlerJobMessage {
         }
         if (info.getArea() != null && info.getPeriod() != null) {
 
-            //TODO если название составное этот IgnoreCase не сраотает(должно быть каждое слово с большой буквы)
-            //TODO проще переписать базу везде ловерCase
-            //String areaName = info.getArea().substring(0, 1).toUpperCase() + info.getArea().substring(1).toLowerCase(); //перевод case
             String areaName = info.getArea(); //получаем название нужного города
 
 //                //TODO забросить сообщения в ресурс
@@ -92,5 +89,4 @@ public class HandlerJobMessage {
         keyBoardMsg.setKeyboard(rows);
         return keyBoardMsg;
     }
-
 }
