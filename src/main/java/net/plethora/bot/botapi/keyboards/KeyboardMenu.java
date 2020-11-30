@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi;
+package net.plethora.bot.botapi.keyboards;
 
 
 import lombok.Getter;
@@ -17,9 +17,8 @@ import java.util.List;
 public class KeyboardMenu {
 
     private ReplyKeyboardMarkup keyboard;
-    private boolean toggleMenu;
 
-    SendMessage process(long chatId) {
+    public SendMessage process(long chatId) {
         SendMessage sendMessage = new SendMessage(chatId,"keyboard on");
 
         keyboard = new ReplyKeyboardMarkup();
@@ -37,7 +36,6 @@ public class KeyboardMenu {
         rows.add(first);
 
         keyboard.setKeyboard(rows);
-        toggleMenu = true;
         return sendMessage.setReplyMarkup(keyboard);
     }
 }

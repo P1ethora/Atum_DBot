@@ -2,6 +2,7 @@ package net.plethora.bot.botapi;
 
 import net.plethora.bot.botapi.commands.Cmd;
 import net.plethora.bot.botapi.handler.handtask.SubjectTaskUser;
+import net.plethora.bot.botapi.keyboards.KeyboardMenu;
 import net.plethora.bot.botapi.keyboards.KeyboardSubjectTask;
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.cache.CacheUsersState;
@@ -48,8 +49,8 @@ public class BotExecution<T> {
         long chatId;
         String askUser;
         List<T> messages = new ArrayList<>();
-
-        //если нажата кнопка
+//------------------------------------------------------------------------------------------------//
+        //КНОПКА
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();  //данные нажатия кнопки
             chatId = callbackQuery.getMessage().getChatId();          //id кнопки
@@ -66,11 +67,11 @@ public class BotExecution<T> {
                 int idUser = update.getCallbackQuery().getFrom().getId();
                 user = checkUser(chatId, idUser, firstName, lastName, userName);
                 //включаем сервис
-                messages = enabledService(chatId, askUser,messageId);
+                messages = enabledService(chatId, askUser, messageId);
                 return messages;
             }
-
-            //если пришло соощение или нажата кнопка меню
+//-----------------------------------------------------------------------------------------------------//
+            //СООБЩЕНИЕ
         } else if (update.getMessage() != null && update.getMessage().hasText()) {  //если отправленно сообщение
             chatId = update.getMessage().getChatId();  //id чата
             askUser = update.getMessage().getText().toLowerCase();   //запрос пользователя
@@ -85,11 +86,11 @@ public class BotExecution<T> {
                 messages = (List<T>) checkCommand(chatId, askUser);   //запрос -> команда
             } else {                                                 //Если не является командой, запрос согласно сервиса меню
 
-                messages = enabledService(chatId, askUser,0);
+                messages = enabledService(chatId, askUser, 0);
 
             }
         }
-
+//---------------------------------------------------------------------------------------------------------//
         return messages;
     }
 
@@ -139,7 +140,8 @@ public class BotExecution<T> {
                 List<SendMessage> messages = new ArrayList<>();
                 dataAccessUser.editUser(user, BotState.TASK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
-                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService"))
+                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService")));
+                messages.add(new SendMessage(chatId, "Разделы с задачами:")
                         .setReplyMarkup(keyboardSubjectTask.inlineKeyboardSubjectTask())); //кнопки
                 return messages;
 
@@ -171,7 +173,8 @@ public class BotExecution<T> {
         if (cacheUsersState.getStateUsers().get(chatId) != null) {//Если активировано состояние
 
             messages = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем состояние из кэша по id
-                    .start(chatId, askUser, user,messageId);}//запускаем соответствующий сервис
+                    .start(chatId, askUser, user, messageId);
+        }//запускаем соответствующий сервис
         else {
             messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
         }
@@ -196,7 +199,6 @@ public class BotExecution<T> {
             user.setUserName(userName);
             user.setIdUser(idUser);
             user.setState(null);
-            //user.setSubState(null);
             user.setSubjectTask(new SubjectTaskUser[0]);
             user.setIdChat(idChat);
             dataAccessUser.addUser(user);
@@ -204,5 +206,4 @@ public class BotExecution<T> {
         }
         return dataAccessUser.findUser(idUser);
     }
-
 }

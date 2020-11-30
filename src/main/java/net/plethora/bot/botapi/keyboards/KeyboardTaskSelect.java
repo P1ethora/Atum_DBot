@@ -33,18 +33,22 @@ public class KeyboardTaskSelect {
         List<InlineKeyboardButton> rowTop = new ArrayList<>(); //ряд
         List<InlineKeyboardButton> rowDown = new ArrayList<>(); //ряд
 
-        InlineKeyboardButton keyboardButton = new InlineKeyboardButton("Решение"); //сама кнопка
+        InlineKeyboardButton keyboardButtonBackToSubject = new InlineKeyboardButton("К разделам");
+        keyboardButtonBackToSubject.setCallbackData(":BackToSubject");
+        rowDown.add(keyboardButtonBackToSubject);
+
+        InlineKeyboardButton keyboardButton = new InlineKeyboardButton("Решение"); //кнопка
         keyboardButton.setCallbackData(":!awr{" + idTask + "}");  //ответка в виде id задачи и небольшога шифра
         rowDown.add(keyboardButton);
 
         if (numberTask != 1) {
-            InlineKeyboardButton keyboardButtonBack = new InlineKeyboardButton("Назад"); //сама кнопка
+            InlineKeyboardButton keyboardButtonBack = new InlineKeyboardButton("Назад"); // кнопка
             keyboardButtonBack.setCallbackData("%b->ac!k{" + subject + "}");
             rowTop.add(keyboardButtonBack);
         }
 
         if (numberTask != limit) {
-            InlineKeyboardButton keyboardButtonNext = new InlineKeyboardButton("Далее"); //сама кнопка
+            InlineKeyboardButton keyboardButtonNext = new InlineKeyboardButton("Далее"); //кнопка
             keyboardButtonNext.setCallbackData("%n->ex!t{" + subject + "}");
             rowTop.add(keyboardButtonNext);
         }
@@ -56,5 +60,4 @@ public class KeyboardTaskSelect {
 
         return inlineKeyboardMarkup;
     }
-
 }

@@ -60,11 +60,15 @@ public class HandlerTaskMessage<T> {
             msg = getProblem(chatId, msgUser, user, messageId, false, false);
         } else if (msgUser.length() > 6 && msgUser.substring(0, 6).equals(":!awr{")) {   //если сообщение является ответом к задаче
             msg = (List<T>) getSolution(chatId, getValueMsg(msgUser));  //вытягиваем id Task, получаем ответ и ложим его в список
-        } else if (msgUser.equals(":выбор")) {
-            msg.add((T) new SendMessage(chatId, "Выберите раздел следующей задачи")
-                    .setReplyMarkup(keyboardSubjectTask.inlineKeyboardSubjectTask()));
+        } else if (msgUser.equals(":backtosubject")) {
+            EditMessageText editMessageText = new EditMessageText();
+            editMessageText.setChatId(chatId);
+            editMessageText.setMessageId(messageId);
+            editMessageText.setText("Разделы с задачами:");
+            editMessageText.setReplyMarkup(new KeyboardSubjectTask().inlineKeyboardSubjectTask());
+            msg.add((T) editMessageText);
         } else {
-            msg.add((T) new SendMessage(chatId, "Неверная форма ввода, нажмите на нужный раздел выше или измените сервис"));
+            msg.add((T) new SendMessage(chatId, "Неверная форма ввода, задачи предоставляются посредством выбора раздела"));
         }
         return msg;
     }
@@ -83,8 +87,14 @@ public class HandlerTaskMessage<T> {
         List<T> msgForSend = new ArrayList<>();
 
         if (!next && !back) {
-
-            msgForSend = (List<T>) createMessageTask(chatId, subject, user, allTasks, newListSubjectTaskForUser);
+            msgForSend = editMessage(messageId,chatId,subject,allTasks,allSubjectUsers);
+            if(msgForSend.size()==0){
+                newListSubjectTaskForUser.add(new SubjectTaskUser(allTasks.get(0).getId(), allTasks.get(0).getSubject()));
+                msgForSend.add((T) new SendMessage(chatId, allTasks.get(0).getProblem())
+                        .setReplyMarkup(new KeyboardTaskSelect(allTasks.get(0).getId(), subject, allTasks.size(), 1).keyboard()));
+                updateUser(user, newListSubjectTaskForUser);
+            }
+           // msgForSend = (List<T>) createMessageTask(chatId, subject, user, allTasks, newListSubjectTaskForUser);
 
         } else if (next && !back) {
             boolean check = false;
@@ -254,7 +264,7 @@ public class HandlerTaskMessage<T> {
         List<T> messageTexts = new ArrayList<>();
         EditMessageText editMessageText = new EditMessageText();
 
-        int count = 0;
+       // int count = 0;
         int limit = allTasks.size();
         int numberTask = 0;
         for (SubjectTaskUser subjectTaskUser : allSubjectUsers) {
@@ -262,24 +272,24 @@ public class HandlerTaskMessage<T> {
                 for (Task task1 : allTasks) {
                     numberTask++;
                     if (subjectTaskUser.getIdTask().equals(task1.getId())) {
-                        count++;
+                        //count++;
                         editMessageText.setChatId(chatId);
                         editMessageText.setMessageId(messageId);
                         editMessageText.setText("[" + numberTask + "/" + limit + "] " + task1.getProblem());
                         editMessageText.setReplyMarkup(new KeyboardTaskSelect(task1.getId(), subject, limit, numberTask).keyboard());
                         messageTexts.add((T) editMessageText);
-                        // messageTexts.add(new SendMessage(chatId, task1.getProblem()).setReplyMarkup(keyboard(task1.getId(), subject)));
                         break;
                     }
                 }
             }
         }
-        if (count == 0) {
-            messageTexts.add((T) new SendMessage(chatId, "Неверно"));
+//        if (count == 0) {
+//
 //            newListSubjectTaskForUser.add(new SubjectTaskUser(allTasks.get(0).getId(), allTasks.get(0).getSubject()));
-//            msgForSend.add(new SendMessage(chatId, allTasks.get(0).getProblem()).setReplyMarkup(keyboard(allTasks.get(0).getId(), subject)));
+//            msgForSend.add(new SendMessage(chatId, allTasks.get(0).getProblem())
+//                    .setReplyMarkup(new KeyboardTaskSelect(allTasks.get(0).getId(), subject, limit, 1).keyboard()));
 //            updateUser(user, newListSubjectTaskForUser);
-        }
+//        }
         return messageTexts;
     }
 
