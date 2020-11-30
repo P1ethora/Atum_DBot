@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class KeyboardBot {
+public class KeyboardSubjectTask {
 //TODO добавить все клавы сюда
     public InlineKeyboardMarkup inlineKeyboardSubjectTask() {
 
@@ -19,7 +19,7 @@ public class KeyboardBot {
         List<InlineKeyboardButton> row2 = new ArrayList<>();
 
         InlineKeyboardButton buttonV = new InlineKeyboardButton("Ветвления");
-        InlineKeyboardButton buttonL = new InlineKeyboardButton("Линеные");
+        InlineKeyboardButton buttonL = new InlineKeyboardButton("Линейные");
         InlineKeyboardButton buttonC = new InlineKeyboardButton("Циклы");
         InlineKeyboardButton buttonM = new InlineKeyboardButton("Массивы");
         InlineKeyboardButton buttonMM = new InlineKeyboardButton("Мн-мр-е массивы");

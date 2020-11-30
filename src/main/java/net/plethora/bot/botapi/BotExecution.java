@@ -2,9 +2,8 @@ package net.plethora.bot.botapi;
 
 import net.plethora.bot.botapi.commands.Cmd;
 import net.plethora.bot.botapi.handler.handtask.SubjectTaskUser;
-import net.plethora.bot.botapi.keyboards.KeyboardBot;
+import net.plethora.bot.botapi.keyboards.KeyboardSubjectTask;
 import net.plethora.bot.botapi.state.BotState;
-import net.plethora.bot.botapi.state.TaskState;
 import net.plethora.bot.cache.CacheUsersState;
 import net.plethora.bot.dao.DataAccessUser;
 import net.plethora.bot.model.User;
@@ -25,17 +24,17 @@ public class BotExecution<T> {
     private KeyboardMenu keyboardMenu;
     private PhrasesService phrases;
     private DataAccessUser dataAccessUser;
-    private KeyboardBot keyboardBot;
+    private KeyboardSubjectTask keyboardSubjectTask;
 
     private User user;
 
-    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardMenu keyboardMenu, PhrasesService phrases, DataAccessUser dataAccessUser, KeyboardBot keyboardBot) {
+    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardMenu keyboardMenu, PhrasesService phrases, DataAccessUser dataAccessUser, KeyboardSubjectTask keyboardSubjectTask) {
         this.cacheUsersState = cacheUsersState;
         this.processingStates = processingStates;
         this.keyboardMenu = keyboardMenu;
         this.phrases = phrases;
         this.dataAccessUser = dataAccessUser;
-        this.keyboardBot = keyboardBot;
+        this.keyboardSubjectTask = keyboardSubjectTask;
     }
 
     /**
@@ -141,7 +140,7 @@ public class BotExecution<T> {
                 dataAccessUser.editUser(user, BotState.TASK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
                 messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService"))
-                        .setReplyMarkup(keyboardBot.inlineKeyboardSubjectTask())); //кнопки
+                        .setReplyMarkup(keyboardSubjectTask.inlineKeyboardSubjectTask())); //кнопки
                 return messages;
 
             }
