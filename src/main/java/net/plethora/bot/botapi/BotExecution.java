@@ -102,9 +102,9 @@ public class BotExecution<T> {
      * @return готовое телеграм сообщение к отправке
      */
     private List<SendMessage> checkCommand(long chatId, String askUser) {
+        List<SendMessage> messages = new ArrayList<>();
         switch (askUser) {
             case Cmd.START: {
-                List<SendMessage> messages = new ArrayList<>();
                 if (cacheUsersState.getStateUsers().get(chatId) != null) {
                     cacheUsersState.getStateUsers().remove(chatId); //переходим в неопределенное сотояние
                 }
@@ -113,21 +113,18 @@ public class BotExecution<T> {
 
             }
             case Cmd.MENU: {
-                List<SendMessage> messages = new ArrayList<>();
                 messages.add(keyboardMenu.process(chatId));
                 return messages;   //открываем меню
 
             }
             case Cmd.HELP:
             case Cmd.HELP_BUTTON: {
-                List<SendMessage> messages = new ArrayList<>();
                 messages.add(new SendMessage(chatId, phrases.getMessage("phrase.help")));
                 return messages;
 
             }
             case Cmd.ASK:
             case Cmd.ASK_BUTTON: {   //Состояние вопрос-ответ
-                List<SendMessage> messages = new ArrayList<>();
                 dataAccessUser.editUser(user, BotState.ASK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.ASK);
                 messages.add(new SendMessage(chatId, phrases.getMessage("phrase.AskEnableService")));
@@ -137,7 +134,6 @@ public class BotExecution<T> {
             }
             case Cmd.TASK:
             case Cmd.TASK_BUTTON: {   //Состояние задача
-                List<SendMessage> messages = new ArrayList<>();
                 dataAccessUser.editUser(user, BotState.TASK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
                 messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService")));
@@ -148,13 +144,18 @@ public class BotExecution<T> {
             }
             case Cmd.JOB:
             case Cmd.JOB_BUTTON: {   //Состояние поиск работы
-                List<SendMessage> messages = new ArrayList<>();
 
                 dataAccessUser.editUser(user, BotState.JOB);
                 cacheUsersState.getStateUsers().put(chatId, BotState.JOB);
                 messages.add(new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService")));
                 return messages;
             }
+            case Cmd.BOOK:
+                dataAccessUser.editUser(user, BotState.BOOK);
+                cacheUsersState.getStateUsers().put(chatId, BotState.BOOK);
+                messages.add(new SendMessage(chatId, "Сервис BOOK подключен"));
+                messages.add(new SendMessage(chatId, "На каком языке предпочитаете книги?") );
+                return messages;
         }
 
         return null;
@@ -201,6 +202,7 @@ public class BotExecution<T> {
             user.setState(null);
             user.setSubjectTask(new SubjectTaskUser[0]);
             user.setIdChat(idChat);
+            user.setIdSaveBook(null);
             dataAccessUser.addUser(user);
             return user;
         }

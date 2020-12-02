@@ -7,4 +7,6 @@ public enum BotState {
     ASK,
     TASK,
     JOB,
+    BOOK,
+    QUIZ
 }

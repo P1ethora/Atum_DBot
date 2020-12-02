@@ -1,5 +1,6 @@
 package net.plethora.bot.botapi.handler.handjob;
 
+import net.plethora.bot.botapi.keyboards.KeyboardPeriodJob;
 import net.plethora.bot.botapi.parsers.InfoForSearch;
 import net.plethora.bot.botapi.parsers.ParsRabota;
 import net.plethora.bot.cache.CacheSearchJob;
@@ -42,7 +43,7 @@ public class HandlerJobMessage {
             cacheSearchJob.getInfos().get(chatId).setArea(msgUser);//добавляем город в инфо кэш
             //TODO:добавить текст в ресурсы
             //TODO проверка на период или оставить с неделей по умолчанию
-            list.add(new SendMessage(chatId, "Выберите период:").setReplyMarkup(addKeyBoard()));
+            list.add(new SendMessage(chatId, "Выберите период:").setReplyMarkup(new KeyboardPeriodJob().addKeyBoard()));
             return list;
         }
         if (info.getPeriod() == null && info.getArea() != null) { //если в инфо нет периода
@@ -58,35 +59,9 @@ public class HandlerJobMessage {
                 if (list.size() == 0) {
                     list.add(new SendMessage(chatId, "В городе " + areaName + " вакансий java engineer не обнаружено "));
                 }
- //           }
             cacheSearchJob.getInfos().remove(chatId); //Пока просто удаляем инфо в конце
             //TODO можно оставить инфо и дать пользователю возможность менять период или город
         }
         return list;
-    }
-
-    private InlineKeyboardMarkup addKeyBoard() {
-
-        InlineKeyboardMarkup keyBoardMsg = new InlineKeyboardMarkup();   //наша клава под msg
-        List<List<InlineKeyboardButton>> rows = new ArrayList<>(); //формируем ряды
-        List<InlineKeyboardButton> row = new ArrayList<>();
-
-        InlineKeyboardButton buttonM = new InlineKeyboardButton("Месяц");
-        InlineKeyboardButton buttonW = new InlineKeyboardButton("Неделя");
-        InlineKeyboardButton buttonTd = new InlineKeyboardButton("Три дня");
-        InlineKeyboardButton buttonD = new InlineKeyboardButton("Сутки");
-
-        buttonM.setCallbackData("Месяц");
-        buttonW.setCallbackData("Неделя");
-        buttonTd.setCallbackData("Три дня");
-        buttonD.setCallbackData("Сутки");
-
-        row.add(buttonM);
-        row.add(buttonW);
-        row.add(buttonTd);
-        row.add(buttonD);
-        rows.add(row);
-        keyBoardMsg.setKeyboard(rows);
-        return keyBoardMsg;
     }
 }

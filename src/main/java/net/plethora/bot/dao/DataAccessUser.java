@@ -43,14 +43,6 @@ public class DataAccessUser {
         postRepositoryUser.save(oldUser);
     }
 
-//    public void editUser(User user,Enum subState){
-//        User oldUser = postRepositoryUser.findById(user.getId())
-//                .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
-//
-//        oldUser.setSubState(subState);
-//        postRepositoryUser.save(oldUser);
-//    }
-
     public void editUser(User user,long chatId){
         User oldUser = postRepositoryUser.findById(user.getId())
                 .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
@@ -58,4 +50,13 @@ public class DataAccessUser {
         oldUser.setIdChat(chatId);
         postRepositoryUser.save(oldUser);
     }
+
+    public void editUser(User user, String idBook){
+        User oldUser = postRepositoryUser.findById(user.getId())
+                .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
+
+        oldUser.setIdSaveBook(idBook);
+        postRepositoryUser.save(oldUser);
+    }
+
 }

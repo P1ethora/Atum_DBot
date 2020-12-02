@@ -11,11 +11,13 @@ public class ProcessingStates {
     private AskServiceMenu askService;
     private TaskServiceMenu taskService;
     private JobServiceMenu jobService;
+    private BookServiceMenu bookServiceMenu;
 
-    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService) {
+    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService,BookServiceMenu bookServiceMenu) {
         this.askService = askService;
         this.taskService = taskService;
         this.jobService = jobService;
+        this.bookServiceMenu = bookServiceMenu;
     }
 
     /**
@@ -32,6 +34,8 @@ public class ProcessingStates {
                 return taskService;
             case JOB:
                 return jobService;
+            case BOOK:
+                return bookServiceMenu;
 
         }
         return null;

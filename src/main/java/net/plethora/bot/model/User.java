@@ -24,6 +24,7 @@ public class User {
     private String lastName;
     private String userName;
     private SubjectTaskUser[] subjectTask;
+    private String idSaveBook;
 
     public User(int idUser, String firstName, String lastName, String userName, SubjectTaskUser[] subjectTask) {
         this.idUser = idUser;
