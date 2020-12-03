@@ -30,9 +30,9 @@ public class BotConfig {
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
 
-        botOptions.setProxyType(proxyType);
-        botOptions.setProxyHost(proxyHost);
-        botOptions.setProxyPort(proxyPort);
+//        botOptions.setProxyType(proxyType);
+//        botOptions.setProxyHost(proxyHost);
+//        botOptions.setProxyPort(proxyPort);
 
         AtumBot atumBot = new AtumBot(botOptions);
         atumBot.setBotPath(botPath);
