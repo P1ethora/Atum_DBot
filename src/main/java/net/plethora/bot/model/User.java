@@ -2,11 +2,10 @@ package net.plethora.bot.model;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.plethora.bot.botapi.handler.handtask.SubjectTaskUser;
+import net.plethora.bot.model.system.SubjectTaskUser;
 import net.plethora.bot.botapi.state.BotState;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
 
 @Getter
 @Setter

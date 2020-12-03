@@ -1,6 +1,6 @@
 package net.plethora.bot.service;
 
-import net.plethora.bot.botapi.handler.handjob.HandlerJobMessage;
+import net.plethora.bot.botapi.handler.HandlerJobMessage;
 import net.plethora.bot.model.User;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +17,7 @@ public class JobServiceMenu<T> implements ServiceMenu {
 
 
     @Override
-    public List<T> start(long chatId, String msgUser, User user, int messageId) {
+    public List<T> start(long chatId, String msgUser, User user, int messageId,String inlineMessageId) {
         return (List<T>) handlerJobMessage.handler(chatId, msgUser);
 
     }

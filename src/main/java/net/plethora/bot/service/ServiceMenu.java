@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ServiceMenu<T> {
 
-    List<T> start(long chatId, String msgUser, User user,int messageId);
+    List<T> start(long chatId, String msgUser, User user,int messageId,String inlineMessageId);
 }

@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.handler.handtask;
+package net.plethora.bot.botapi.handler;
 
 import lombok.SneakyThrows;
 import net.plethora.bot.botapi.keyboards.KeyboardSubjectTask;
@@ -7,12 +7,11 @@ import net.plethora.bot.dao.DataAccessTask;
 import net.plethora.bot.dao.DataAccessUser;
 import net.plethora.bot.model.Task;
 import net.plethora.bot.model.User;
+import net.plethora.bot.model.system.SubjectTaskUser;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.io.*;
 import java.net.HttpURLConnection;

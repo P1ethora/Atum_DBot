@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.handler.handtask;
+package net.plethora.bot.model.system;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,6 +1,6 @@
 package net.plethora.bot.dao;
 
-import net.plethora.bot.botapi.handler.handtask.SubjectTaskUser;
+import net.plethora.bot.model.system.SubjectTaskUser;
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.model.User;
 import net.plethora.bot.dao.repo.PostRepositoryUser;

@@ -1,8 +1,10 @@
 package net.plethora.bot.botapi;
 
 import net.plethora.bot.botapi.commands.Cmd;
-import net.plethora.bot.botapi.handler.handtask.SubjectTaskUser;
-import net.plethora.bot.botapi.keyboards.KeyboardMenu;
+import net.plethora.bot.dao.DataAccessDesingFile;
+import net.plethora.bot.model.system.SubjectTaskUser;
+import net.plethora.bot.botapi.keyboards.KeyboardAgeOptionBook;
+import net.plethora.bot.botapi.keyboards.KeyboardCmdMenu;
 import net.plethora.bot.botapi.keyboards.KeyboardSubjectTask;
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.cache.CacheUsersState;
@@ -11,6 +13,7 @@ import net.plethora.bot.model.User;
 import net.plethora.bot.service.PhrasesService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -22,20 +25,22 @@ public class BotExecution<T> {
 
     private CacheUsersState cacheUsersState;
     private ProcessingStates processingStates;
-    private KeyboardMenu keyboardMenu;
+    private KeyboardCmdMenu keyboardCmdMenu;
     private PhrasesService phrases;
     private DataAccessUser dataAccessUser;
     private KeyboardSubjectTask keyboardSubjectTask;
+    private DataAccessDesingFile dataAccessDesingFile;
 
     private User user;
 
-    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardMenu keyboardMenu, PhrasesService phrases, DataAccessUser dataAccessUser, KeyboardSubjectTask keyboardSubjectTask) {
+    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardCmdMenu keyboardCmdMenu, PhrasesService phrases, DataAccessUser dataAccessUser, KeyboardSubjectTask keyboardSubjectTask, DataAccessDesingFile dataAccessDesingFile) {
         this.cacheUsersState = cacheUsersState;
         this.processingStates = processingStates;
-        this.keyboardMenu = keyboardMenu;
+        this.keyboardCmdMenu = keyboardCmdMenu;
         this.phrases = phrases;
         this.dataAccessUser = dataAccessUser;
         this.keyboardSubjectTask = keyboardSubjectTask;
+        this.dataAccessDesingFile = dataAccessDesingFile;
     }
 
     /**
@@ -53,12 +58,14 @@ public class BotExecution<T> {
         //КНОПКА
         if (update.hasCallbackQuery()) {
             CallbackQuery callbackQuery = update.getCallbackQuery();  //данные нажатия кнопки
-            chatId = callbackQuery.getMessage().getChatId();          //id кнопки
+            chatId = callbackQuery.getMessage().getChatId();          //id чата кнопки
             askUser = callbackQuery.getData().toLowerCase();          //содержимое кнопки(переводим в нижни реестр)
+            String callbackQueryId = callbackQuery.getId();      //id callback для всплывающего окна
             int messageId = callbackQuery.getMessage().getMessageId();
 
+
             if (checkCommand(chatId, askUser) != null) {     //является ли командой
-                messages = (List<T>) checkCommand(chatId, askUser);  //соглассно введенной команды
+                messages = checkCommand(chatId, askUser);  //соглассно введенной команды
             } else {                                         //Иначе запрос согласно сервиса меню
                 //Определяем данные пользователя
                 String firstName = update.getCallbackQuery().getFrom().getFirstName();
@@ -67,7 +74,7 @@ public class BotExecution<T> {
                 int idUser = update.getCallbackQuery().getFrom().getId();
                 user = checkUser(chatId, idUser, firstName, lastName, userName);
                 //включаем сервис
-                messages = enabledService(chatId, askUser, messageId);
+                messages = enabledService(chatId, askUser, messageId,callbackQueryId);
                 return messages;
             }
 //-----------------------------------------------------------------------------------------------------//
@@ -83,10 +90,10 @@ public class BotExecution<T> {
             user = checkUser(chatId, idUser, firstName, lastName, userName);
 //TODO поменять это снизу
             if (checkCommand(chatId, askUser) != null) { //Сперва проверяются команды
-                messages = (List<T>) checkCommand(chatId, askUser);   //запрос -> команда
+                messages = checkCommand(chatId, askUser);   //запрос -> команда
             } else {                                                 //Если не является командой, запрос согласно сервиса меню
 
-                messages = enabledService(chatId, askUser, 0);
+                messages = enabledService(chatId, askUser, 0,null);
 
             }
         }
@@ -101,25 +108,25 @@ public class BotExecution<T> {
      * @param askUser сообщение пользователя
      * @return готовое телеграм сообщение к отправке
      */
-    private List<SendMessage> checkCommand(long chatId, String askUser) {
-        List<SendMessage> messages = new ArrayList<>();
+    private List<T> checkCommand(long chatId, String askUser) {
+        List<T> messages = new ArrayList<>();
         switch (askUser) {
             case Cmd.START: {
                 if (cacheUsersState.getStateUsers().get(chatId) != null) {
                     cacheUsersState.getStateUsers().remove(chatId); //переходим в неопределенное сотояние
                 }
-                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
+                messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
                 return messages;
 
             }
             case Cmd.MENU: {
-                messages.add(keyboardMenu.process(chatId));
+                messages.add((T) keyboardCmdMenu.process(chatId));
                 return messages;   //открываем меню
 
             }
             case Cmd.HELP:
             case Cmd.HELP_BUTTON: {
-                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.help")));
+                messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.help")));
                 return messages;
 
             }
@@ -127,7 +134,7 @@ public class BotExecution<T> {
             case Cmd.ASK_BUTTON: {   //Состояние вопрос-ответ
                 dataAccessUser.editUser(user, BotState.ASK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.ASK);
-                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.AskEnableService")));
+                messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.AskEnableService")));
                 return messages;
 
                 //TODO подключить inline клаву к сообщению(перечень тем)
@@ -136,8 +143,8 @@ public class BotExecution<T> {
             case Cmd.TASK_BUTTON: {   //Состояние задача
                 dataAccessUser.editUser(user, BotState.TASK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.TASK);
-                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService")));
-                messages.add(new SendMessage(chatId, "Разделы с задачами:")
+                messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.TaskEnableService")));
+                messages.add((T) new SendMessage(chatId, "Разделы с задачами:")
                         .setReplyMarkup(keyboardSubjectTask.inlineKeyboardSubjectTask())); //кнопки
                 return messages;
 
@@ -147,14 +154,14 @@ public class BotExecution<T> {
 
                 dataAccessUser.editUser(user, BotState.JOB);
                 cacheUsersState.getStateUsers().put(chatId, BotState.JOB);
-                messages.add(new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService")));
+                messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService")));
                 return messages;
             }
             case Cmd.BOOK:
                 dataAccessUser.editUser(user, BotState.BOOK);
                 cacheUsersState.getStateUsers().put(chatId, BotState.BOOK);
-                messages.add(new SendMessage(chatId, "Сервис BOOK подключен"));
-                messages.add(new SendMessage(chatId, "На каком языке предпочитаете книги?") );
+                messages.add((T) new SendMessage(chatId, "Сервис BOOK подключен"));
+                messages.add((T) new SendPhoto().setChatId(chatId).setPhoto(dataAccessDesingFile.findByName("pictureOptions").getUrl()).setReplyMarkup(new KeyboardAgeOptionBook().inlineKeyboardSubjectTask()));
                 return messages;
         }
 
@@ -169,12 +176,12 @@ public class BotExecution<T> {
      * @param askUser сообщение пользователя
      * @return список с сообщениями
      */
-    private List<T> enabledService(long chatId, String askUser, int messageId) {
+    private List<T> enabledService(long chatId, String askUser, int messageId, String inlineMessageId) {
         List<T> messages = new ArrayList<>();
         if (cacheUsersState.getStateUsers().get(chatId) != null) {//Если активировано состояние
 
             messages = processingStates.processing(cacheUsersState.getStateUsers().get(chatId)) //определяем состояние из кэша по id
-                    .start(chatId, askUser, user, messageId);
+                    .start(chatId, askUser, user, messageId, inlineMessageId);
         }//запускаем соответствующий сервис
         else {
             messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));

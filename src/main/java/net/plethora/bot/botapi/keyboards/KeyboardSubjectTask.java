@@ -12,7 +12,7 @@ public class KeyboardSubjectTask {
 //TODO добавить все клавы сюда
     public InlineKeyboardMarkup inlineKeyboardSubjectTask() {
 
-        InlineKeyboardMarkup inlineKeyBoard = new InlineKeyboardMarkup();   //наша клава под task
+        InlineKeyboardMarkup keyboard = new InlineKeyboardMarkup();   //наша клава под task
         List<List<InlineKeyboardButton>> rows = new ArrayList<>(); //список рядов
         List<InlineKeyboardButton> row = new ArrayList<>();//ряд
         List<InlineKeyboardButton> row1 = new ArrayList<>();
@@ -45,8 +45,8 @@ public class KeyboardSubjectTask {
         rows.add(row);
         rows.add(row1);
         rows.add(row2);
-        inlineKeyBoard.setKeyboard(rows);
+        keyboard.setKeyboard(rows);
 
-        return inlineKeyBoard;
+        return keyboard;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @Component
-public class KeyboardMenu {
+public class KeyboardCmdMenu {
 
     private ReplyKeyboardMarkup keyboard;
 

@@ -1,15 +1,12 @@
-package net.plethora.bot.botapi.handler.handjob;
+package net.plethora.bot.botapi.handler;
 
 import net.plethora.bot.botapi.keyboards.KeyboardPeriodJob;
-import net.plethora.bot.botapi.parsers.InfoForSearch;
+import net.plethora.bot.model.system.InfoForSearch;
 import net.plethora.bot.botapi.parsers.ParsRabota;
 import net.plethora.bot.cache.CacheSearchJob;
 import net.plethora.bot.dao.DataAccessArea;
-import net.plethora.bot.model.Area;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;

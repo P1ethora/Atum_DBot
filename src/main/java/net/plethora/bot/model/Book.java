@@ -12,16 +12,16 @@ public class Book {
 
     @Id
     private String id;
-    private String fileName;
     private String url;
     private String description;
     private String urlCoverBook;
+    private String age;
 
-    public Book(String id, String fileName, String url, String description) {
+    public Book(String id, String url, String description,String age) {
         this.id = id;
-        this.fileName = fileName;
         this.url = url;
         this.description = description;
+        this.age = age;
     }
 
     public Book(){}
