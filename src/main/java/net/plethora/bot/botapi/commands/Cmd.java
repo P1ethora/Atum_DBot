@@ -1,7 +1,7 @@
 package net.plethora.bot.botapi.commands;
 
 public class Cmd {
-//TODO Изменить просто слово на команду со слешем, да и вообще task_button не нужен
+
     public static final String START = "/start";
 
     public static final String ASK = "/ask";
@@ -20,5 +20,8 @@ public class Cmd {
 
     public static final String BOOK = "/book";
     public static final String BOOK_BUTTON = "book";
+
+    public static final String QUIZ = "/quiz";
+    public static final String QUIZ_BUTTON = "quiz";
 
 }
