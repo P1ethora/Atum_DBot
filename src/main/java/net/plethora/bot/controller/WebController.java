@@ -26,5 +26,4 @@ public class WebController {
     public BotApiMethod<?> onUpdateReceived(@RequestBody Update update) {
         return atumBot.onWebhookUpdateReceived(update);
     }
-
 }

@@ -1,13 +1,9 @@
 package net.plethora.bot.dao;
 
-import lombok.Getter;
-import lombok.Setter;
 import net.plethora.bot.dao.repo.PostRepositorySaveCell;
 import net.plethora.bot.model.systemmodel.SaveCell;
 import org.springframework.stereotype.Component;
 
-@Getter
-@Setter
 @Component
 public class DataAccessSaveCell {
 

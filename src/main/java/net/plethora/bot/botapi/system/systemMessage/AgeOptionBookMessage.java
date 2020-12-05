@@ -16,7 +16,7 @@ public class AgeOptionBookMessage {
         this.dataAccessDesingFile = dataAccessDesingFile;
     }
 
-    public EditMessageMedia editMessage(long idChat, int idMessage){
+    public EditMessageMedia editMessage(long idChat, int idMessage) {
         EditMessageMedia editMessageMedia = new EditMessageMedia();
         editMessageMedia.setChatId(idChat); //id чата
         editMessageMedia.setMessageId(idMessage);  //id сообщения
@@ -25,7 +25,7 @@ public class AgeOptionBookMessage {
         return editMessageMedia;
     }
 
-    public SendPhoto message(long chatId){
+    public SendPhoto message(long chatId) {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(chatId);
         sendPhoto.setPhoto(dataAccessDesingFile.findByName("pictureOptions").getUrl());

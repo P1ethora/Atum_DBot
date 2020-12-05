@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PostRepositoryBook extends MongoRepository<Book,String> {
+public interface PostRepositoryBook extends MongoRepository<Book, String> {
 
     public List<Book> findBySubject(String subject);
-    }
+}

@@ -22,14 +22,12 @@ import java.util.regex.Pattern;
 public class HandlerTaskMessage<T> {
 
     private DataAccessMaterialTask dataAccessTask;
-    private DataAccessUser dataAccessUser;
     private OptionTypeTaskMessage optionTypeTaskMessage;
     private ShiftView shiftView;
 
-    public HandlerTaskMessage(DataAccessMaterialTask dataAccessTask, DataAccessUser dataAccessUser,
-                              OptionTypeTaskMessage optionTypeTaskMessage, ShiftView shiftView) {
+    public HandlerTaskMessage(DataAccessMaterialTask dataAccessTask, OptionTypeTaskMessage optionTypeTaskMessage,
+                              ShiftView shiftView) {
         this.dataAccessTask = dataAccessTask;
-        this.dataAccessUser = dataAccessUser;
         this.optionTypeTaskMessage = optionTypeTaskMessage;
         this.shiftView = shiftView;
     }
@@ -129,7 +127,7 @@ public class HandlerTaskMessage<T> {
      * @return готовый id задачи
      */
     private String getValueMsg(String msgUser) {
-
+//TODO найти способ убрать символ { через регулярку
         Pattern regex = Pattern.compile("\\{([^}]*)"); //вытягиваем id из скобок
         Matcher regexMatcher = regex.matcher(msgUser);
 

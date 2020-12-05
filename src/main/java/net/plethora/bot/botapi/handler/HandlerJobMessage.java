@@ -32,7 +32,7 @@ public class HandlerJobMessage {
         if (info == null) { //если нет в списке
             cacheSearchJob.getInfos().put(chatId, new InfoForSearch());//создаем пустое инфо в кеше
 
-            if (dataAccessArea.handleRequest(msgUser) == null){ //если город не найден
+            if (dataAccessArea.handleRequest(msgUser) == null) { //если город не найден
                 list.add(new SendMessage(chatId, "Город " + msgUser + " не найден"));
                 return list;
             }
@@ -50,12 +50,12 @@ public class HandlerJobMessage {
 
             String areaName = info.getArea(); //получаем название нужного города
 
-//                //TODO забросить сообщения в ресурс
-                int code = dataAccessArea.handleRequest(areaName).getCode();
-                list = parsRabota.vacancyListMsg(chatId, code, info.getPeriod());
-                if (list.size() == 0) {
-                    list.add(new SendMessage(chatId, "В городе " + areaName + " вакансий java engineer не обнаружено "));
-                }
+                //TODO забросить сообщения в ресурс
+            int code = dataAccessArea.handleRequest(areaName).getCode();
+            list = parsRabota.vacancyListMsg(chatId, code, info.getPeriod());
+            if (list.size() == 0) {
+                list.add(new SendMessage(chatId, "В городе " + areaName + " вакансий java engineer не обнаружено "));
+            }
             cacheSearchJob.getInfos().remove(chatId); //Пока просто удаляем инфо в конце
             //TODO можно оставить инфо и дать пользователю возможность менять период или город
         }

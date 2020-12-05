@@ -17,7 +17,7 @@ public class ProcessingStates {
     private JobServiceMenu jobService;
     private BookServiceMenu bookServiceMenu;
 
-    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService,BookServiceMenu bookServiceMenu) {
+    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService, BookServiceMenu bookServiceMenu) {
         this.askService = askService;
         this.taskService = taskService;
         this.jobService = jobService;
@@ -26,6 +26,7 @@ public class ProcessingStates {
 
     /**
      * Определяем состояние
+     *
      * @param botState Enum состояние
      * @return сервис
      */

@@ -13,13 +13,8 @@ import java.util.List;
 @Component
 public class KeyboardTaskSelect {
 
-    /**
-     *
-     * @return готовую инлайн клавиатуру
-     */
     public InlineKeyboardMarkup keyboard(String idTask, String subject, int limit, int numberTask) {
 
-        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(); //клава
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();  //ряды
         List<InlineKeyboardButton> rowTop = new ArrayList<>(); //ряд
         List<InlineKeyboardButton> rowDown = new ArrayList<>(); //ряд
@@ -47,8 +42,6 @@ public class KeyboardTaskSelect {
         rows.add(rowTop);
         rows.add(rowDown);
 
-        inlineKeyboardMarkup.setKeyboard(rows);
-
-        return inlineKeyboardMarkup;
+        return new InlineKeyboardMarkup(rows);
     }
 }

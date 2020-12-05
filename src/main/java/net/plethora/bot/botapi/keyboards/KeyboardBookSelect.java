@@ -1,20 +1,13 @@
 package net.plethora.bot.botapi.keyboards;
 
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ---------------------------------
- * НАЗАД      ПРЕВЬЮ       ДАЛЕЕ
- * ---------------------------------
- * К РАЗДЕЛАМ       ПРОСМОТР
- * ---------------------------------
- */
+
 @Component
 public class KeyboardBookSelect {
 
@@ -68,5 +61,4 @@ public class KeyboardBookSelect {
 
         return inlineKeyboardMarkup;
     }
-
 }

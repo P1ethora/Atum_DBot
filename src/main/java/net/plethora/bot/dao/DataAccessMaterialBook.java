@@ -15,12 +15,8 @@ public class DataAccessMaterialBook implements DataAccessMaterial {
         this.postRepositoryBook = postRepositoryBook;
     }
 
-    public Book findById(String id){
-        return  postRepositoryBook.findById(id).orElseThrow(() -> new IllegalStateException("Book with id " +id + " not found"));
-    }
-
-    public List<Book> findAll(){
-        return postRepositoryBook.findAll();
+    public Book findById(String id) {
+        return postRepositoryBook.findById(id).orElseThrow(() -> new IllegalStateException("Book with id " + id + " not found"));
     }
 
     @Override

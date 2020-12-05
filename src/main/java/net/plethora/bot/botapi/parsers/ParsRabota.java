@@ -144,6 +144,7 @@ public class ParsRabota {
                 Element title = el.getElementsByAttributeValue("class", "vacancy-serp-item__row vacancy-serp-item__row_header").first();
                 Element name = title.getElementsByAttributeValue("class", "vacancy-serp-item__info").first();
                 Element link = name.getElementsByAttributeValue("class", "bloko-link HH-LinkModifier").first();
+                //TODO разобраться с парсером
                 String url = link.attr("href");  //получил саму ссылку
                 vacancy.add(url);
             }
@@ -173,5 +174,4 @@ public class ParsRabota {
         }
         return linePeriod;
     }
-
 }

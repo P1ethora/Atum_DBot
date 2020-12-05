@@ -19,26 +19,14 @@ public class DataAccessUser {
         return postRepositoryUser.findByIdUser(idUser);
     }
 
-    public User findUserByName(String userName){
-        return postRepositoryUser.findByUserName(userName);
-    }
-
-    public void addUser(User user){
+    public void addUser(User user) {
         postRepositoryUser.save(user);
     }
 
-    public void editUser(User user, BotState botState){
+    public void editUser(User user, BotState botState) {
         User oldUser = postRepositoryUser.findById(user.getId())
-                .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
+                .orElseThrow(() -> new IllegalStateException("User with id " + user.getId() + "not found"));
         oldUser.setState(botState);
-        postRepositoryUser.save(oldUser);
-    }
-
-    public void editUser(User user,long chatId){
-        User oldUser = postRepositoryUser.findById(user.getId())
-                .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
-
-        oldUser.setIdChat(chatId);
         postRepositoryUser.save(oldUser);
     }
 }

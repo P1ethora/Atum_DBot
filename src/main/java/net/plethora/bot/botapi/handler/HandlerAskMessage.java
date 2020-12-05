@@ -54,7 +54,7 @@ public class HandlerAskMessage<T> {
         SendMessage sendMessage = new SendMessage(chatId, getStrAnswer(ask));
         if (answer != null && answer.getKeyWords().length > 0) {
             sendMessage.setReplyMarkup(getInlineKeyboardMarkup());
-        } //добавляем клавиатуру
+        }
         return sendMessage;
     }
 

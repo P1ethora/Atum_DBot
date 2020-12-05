@@ -10,7 +10,6 @@ public class KeyboardPeriodJob {
 
     public InlineKeyboardMarkup addKeyBoard() {
 
-        InlineKeyboardMarkup keyBoardMsg = new InlineKeyboardMarkup();   //наша клава под msg
         List<List<InlineKeyboardButton>> rows = new ArrayList<>(); //формируем ряды
         List<InlineKeyboardButton> row = new ArrayList<>();
 
@@ -29,8 +28,7 @@ public class KeyboardPeriodJob {
         row.add(buttonTd);
         row.add(buttonD);
         rows.add(row);
-        keyBoardMsg.setKeyboard(rows);
-        return keyBoardMsg;
-    }
 
+        return new InlineKeyboardMarkup(rows);
+    }
 }

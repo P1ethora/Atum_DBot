@@ -34,5 +34,4 @@ public class Task extends Material {
 
     public Task() {
     }
-
 }

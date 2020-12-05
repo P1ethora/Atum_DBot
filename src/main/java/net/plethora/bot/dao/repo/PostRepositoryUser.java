@@ -5,9 +5,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostRepositoryUser extends MongoRepository<User,String> {
+public interface PostRepositoryUser extends MongoRepository<User, String> {
 
-    public User findByUserName(String userName);
     public User findByIdUser(int idUser);
 
 }
