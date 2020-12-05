@@ -1,17 +1,17 @@
 package net.plethora.bot.dao;
 
 import net.plethora.bot.dao.repo.PostRepositoryBook;
-import net.plethora.bot.model.Book;
+import net.plethora.bot.model.material.Book;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class DataAccessBook {
+public class DataAccessMaterialBook implements DataAccessMaterial {
 
     private PostRepositoryBook postRepositoryBook;
 
-    public DataAccessBook(PostRepositoryBook postRepositoryBook) {
+    public DataAccessMaterialBook(PostRepositoryBook postRepositoryBook) {
         this.postRepositoryBook = postRepositoryBook;
     }
 
@@ -23,4 +23,8 @@ public class DataAccessBook {
         return postRepositoryBook.findAll();
     }
 
+    @Override
+    public List findBySubject(String subject) {
+        return postRepositoryBook.findBySubject(subject);
+    }
 }

@@ -1,4 +1,4 @@
-package net.plethora.bot.model.system;
+package net.plethora.bot.model.systemmodel;
 
 import lombok.Getter;
 import lombok.Setter;

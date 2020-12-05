@@ -1,5 +1,6 @@
 package net.plethora.bot.botapi.keyboards;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -9,24 +10,14 @@ import java.util.List;
 /**
  * Добавляет кнопки под условие задачи
  */
+@Component
 public class KeyboardTaskSelect {
-    private String idTask;
-    private String subject;
-    private int limit;
-    private int numberTask;
-
-    public KeyboardTaskSelect(String idTask, String subject, int limit, int numberTask) {
-        this.idTask=idTask;
-        this.subject=subject;
-        this.limit=limit;
-        this.numberTask=numberTask;
-    }
 
     /**
      *
      * @return готовую инлайн клавиатуру
      */
-    public InlineKeyboardMarkup keyboard() {
+    public InlineKeyboardMarkup keyboard(String idTask, String subject, int limit, int numberTask) {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(); //клава
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();  //ряды
@@ -41,13 +32,13 @@ public class KeyboardTaskSelect {
         keyboardButton.setCallbackData(":!awr{" + idTask + "}");  //ответка в виде id задачи и небольшога шифра
         rowDown.add(keyboardButton);
 
-        if (numberTask != 1) {
+        if (numberTask > 1) {
             InlineKeyboardButton keyboardButtonBack = new InlineKeyboardButton("Назад"); // кнопка
             keyboardButtonBack.setCallbackData("%b->ac!k{" + subject + "}");
             rowTop.add(keyboardButtonBack);
         }
 
-        if (numberTask != limit) {
+        if (numberTask < limit) {
             InlineKeyboardButton keyboardButtonNext = new InlineKeyboardButton("Далее"); //кнопка
             keyboardButtonNext.setCallbackData("%n->ex!t{" + subject + "}");
             rowTop.add(keyboardButtonNext);

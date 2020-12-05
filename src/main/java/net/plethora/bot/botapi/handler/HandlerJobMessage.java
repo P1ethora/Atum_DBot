@@ -1,7 +1,7 @@
 package net.plethora.bot.botapi.handler;
 
 import net.plethora.bot.botapi.keyboards.KeyboardPeriodJob;
-import net.plethora.bot.model.system.InfoForSearch;
+import net.plethora.bot.model.systemmodel.InfoForSearch;
 import net.plethora.bot.botapi.parsers.ParsRabota;
 import net.plethora.bot.cache.CacheSearchJob;
 import net.plethora.bot.dao.DataAccessArea;

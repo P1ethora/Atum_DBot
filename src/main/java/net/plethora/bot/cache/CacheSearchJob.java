@@ -2,7 +2,7 @@ package net.plethora.bot.cache;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.plethora.bot.model.system.InfoForSearch;
+import net.plethora.bot.model.systemmodel.InfoForSearch;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

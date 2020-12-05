@@ -29,7 +29,6 @@ public class BotConfig {
     public AtumBot atumBot() {
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
-
 //        botOptions.setProxyType(proxyType);
 //        botOptions.setProxyHost(proxyHost);
 //        botOptions.setProxyPort(proxyPort);

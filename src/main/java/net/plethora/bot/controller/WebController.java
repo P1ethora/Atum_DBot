@@ -15,9 +15,9 @@ import java.io.IOException;
 
 @RestController
 public class WebController {
+
     private final AtumBot atumBot;
 
-    @Autowired
     public WebController(AtumBot atumBot) {
         this.atumBot = atumBot;
     }

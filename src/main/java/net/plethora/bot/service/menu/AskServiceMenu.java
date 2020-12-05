@@ -1,7 +1,8 @@
-package net.plethora.bot.service;
+package net.plethora.bot.service.menu;
 
 import net.plethora.bot.botapi.handler.HandlerAskMessage;
 import net.plethora.bot.model.User;
+import net.plethora.bot.service.ServiceMenu;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 

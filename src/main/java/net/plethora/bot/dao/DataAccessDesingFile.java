@@ -1,7 +1,7 @@
 package net.plethora.bot.dao;
 
 import net.plethora.bot.dao.repo.PostRepositoryDesignFile;
-import net.plethora.bot.model.system.DesignFile;
+import net.plethora.bot.model.systemmodel.DesignFile;
 import org.springframework.stereotype.Component;
 
 @Component

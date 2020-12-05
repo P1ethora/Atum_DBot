@@ -1,27 +1,27 @@
-package net.plethora.bot.model;
+package net.plethora.bot.model.material;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@EqualsAndHashCode(callSuper = true)
+@Data
 @Document(collection = "books")
-public class Book {
+public class Book extends Material {
 
     @Id
     private String id;
     private String url;
     private String description;
     private String urlCoverBook;
-    private String age;
+    private String subject;
 
-    public Book(String id, String url, String description,String age) {
+    public Book(String id, String url, String description,String subject) {
         this.id = id;
         this.url = url;
         this.description = description;
-        this.age = age;
+        this.subject = subject;
     }
 
     public Book(){}

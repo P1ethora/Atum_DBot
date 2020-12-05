@@ -2,6 +2,10 @@ package net.plethora.bot.botapi;
 
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.service.*;
+import net.plethora.bot.service.menu.AskServiceMenu;
+import net.plethora.bot.service.menu.BookServiceMenu;
+import net.plethora.bot.service.menu.JobServiceMenu;
+import net.plethora.bot.service.menu.TaskServiceMenu;
 import org.springframework.stereotype.Component;
 
 

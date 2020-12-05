@@ -1,16 +1,14 @@
 package net.plethora.bot.botapi;
 
 import net.plethora.bot.botapi.commands.Cmd;
-import net.plethora.bot.model.system.SubjectTaskUser;
 import net.plethora.bot.botapi.keyboards.KeyboardCmdMenu;
-import net.plethora.bot.botapi.keyboards.KeyboardSubjectTask;
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.cache.CacheUsersState;
 import net.plethora.bot.dao.DataAccessUser;
 import net.plethora.bot.model.User;
 import net.plethora.bot.service.PhrasesService;
-import net.plethora.bot.systemMessage.AgeOptionBookMessage;
-import net.plethora.bot.systemMessage.OptionTypeTaskMessage;
+import net.plethora.bot.botapi.system.systemMessage.AgeOptionBookMessage;
+import net.plethora.bot.botapi.system.systemMessage.OptionTypeTaskMessage;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
@@ -33,7 +31,10 @@ public class BotExecution<T> {
 
     private User user;
 
-    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates, KeyboardCmdMenu keyboardCmdMenu, PhrasesService phrases, DataAccessUser dataAccessUser, AgeOptionBookMessage ageOptionBookMessage, OptionTypeTaskMessage optionTypeTaskMessage) {
+    public BotExecution(CacheUsersState cacheUsersState, ProcessingStates processingStates,
+                        KeyboardCmdMenu keyboardCmdMenu, PhrasesService phrases,
+                        DataAccessUser dataAccessUser, AgeOptionBookMessage ageOptionBookMessage,
+                        OptionTypeTaskMessage optionTypeTaskMessage) {
         this.cacheUsersState = cacheUsersState;
         this.processingStates = processingStates;
         this.keyboardCmdMenu = keyboardCmdMenu;
@@ -200,9 +201,7 @@ public class BotExecution<T> {
             user.setUserName(userName);
             user.setIdUser(idUser);
             user.setState(null);
-            user.setSubjectTask(new SubjectTaskUser[0]);
             user.setIdChat(idChat);
-            user.setIdSaveBook(null);
             dataAccessUser.addUser(user);
             return user;
         }

@@ -1,7 +1,8 @@
-package net.plethora.bot.service;
+package net.plethora.bot.service.menu;
 
 import net.plethora.bot.botapi.handler.HandlerBookMessage;
 import net.plethora.bot.model.User;
+import net.plethora.bot.service.ServiceMenu;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -17,6 +18,6 @@ public class BookServiceMenu implements ServiceMenu {
 
     @Override
     public List start(long chatId, String msgUser, User user, int messageId,String inlineMessageId) {
-        return handlerBookMessage.handler(chatId,msgUser,user,messageId, inlineMessageId);
+        return handlerBookMessage.handler(chatId,msgUser,messageId, inlineMessageId);
     }
 }

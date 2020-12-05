@@ -1,5 +1,6 @@
 package net.plethora.bot.botapi.keyboards;
 
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.AnswerInlineQuery;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -14,20 +15,14 @@ import java.util.List;
  * К РАЗДЕЛАМ       ПРОСМОТР
  * ---------------------------------
  */
-
+@Component
 public class KeyboardBookSelect {
 
-    private int numberBook;
-    private int limit;
-    private String url;
+    public KeyboardBookSelect() {
 
-    public KeyboardBookSelect(int numberBook, int limit, String url) {
-        this.numberBook = numberBook;
-        this.limit = limit;
-        this.url = url;
     }
 
-    public InlineKeyboardMarkup keyboard() {
+    public InlineKeyboardMarkup keyboard(int numberBook, int limit, String url) {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(); //клава
 
@@ -61,8 +56,10 @@ public class KeyboardBookSelect {
             rowTop.add(1, keyboardButtonPreview);
         } else {
             if (rowTop.get(0).getText().equals("Назад")) {
-                rowTop.add(1,keyboardButtonPreview);
-            } else {rowTop.add(0,keyboardButtonPreview);}
+                rowTop.add(1, keyboardButtonPreview);
+            } else {
+                rowTop.add(0, keyboardButtonPreview);
+            }
         }
         rows.add(rowTop);
         rows.add(rowDown);

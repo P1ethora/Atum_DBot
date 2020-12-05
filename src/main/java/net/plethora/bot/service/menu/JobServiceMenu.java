@@ -1,7 +1,8 @@
-package net.plethora.bot.service;
+package net.plethora.bot.service.menu;
 
 import net.plethora.bot.botapi.handler.HandlerJobMessage;
 import net.plethora.bot.model.User;
+import net.plethora.bot.service.ServiceMenu;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,6 +1,5 @@
 package net.plethora.bot.dao;
 
-import net.plethora.bot.model.system.SubjectTaskUser;
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.model.User;
 import net.plethora.bot.dao.repo.PostRepositoryUser;
@@ -28,14 +27,6 @@ public class DataAccessUser {
         postRepositoryUser.save(user);
     }
 
-    public void editUser(User user, SubjectTaskUser[] newSubjectTask) {
-        User oldUser = postRepositoryUser.findById(user.getId())
-                .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
-
-        oldUser.setSubjectTask(newSubjectTask);
-        postRepositoryUser.save(oldUser);
-    }
-
     public void editUser(User user, BotState botState){
         User oldUser = postRepositoryUser.findById(user.getId())
                 .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
@@ -50,13 +41,4 @@ public class DataAccessUser {
         oldUser.setIdChat(chatId);
         postRepositoryUser.save(oldUser);
     }
-
-    public void editUser(User user, String idBook){
-        User oldUser = postRepositoryUser.findById(user.getId())
-                .orElseThrow(() -> new IllegalStateException("User with id " +user.getId()+"not found"));
-
-        oldUser.setIdSaveBook(idBook);
-        postRepositoryUser.save(oldUser);
-    }
-
 }

@@ -1,4 +1,4 @@
-package net.plethora.bot.systemMessage;
+package net.plethora.bot.botapi.system.systemMessage;
 
 import net.plethora.bot.botapi.keyboards.KeyboardSubjectTask;
 import org.springframework.stereotype.Component;

@@ -1,23 +1,25 @@
 package net.plethora.bot.dao;
 
 import lombok.Getter;
-import net.plethora.bot.model.Task;
+import lombok.Setter;
+import net.plethora.bot.model.material.Task;
 import net.plethora.bot.dao.repo.PostRepositoryTask;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Getter
+@Setter
 @Component
-public class DataAccessTask {
+public class DataAccessMaterialTask implements DataAccessMaterial {
 
     private final PostRepositoryTask postRepositoryTask;
 
-    public DataAccessTask(PostRepositoryTask postRepositoryTask) {
+    public DataAccessMaterialTask(PostRepositoryTask postRepositoryTask) {
         this.postRepositoryTask = postRepositoryTask;
     }
 
-    public List<Task> handleRequest(String subject) {
+    public List<Task> findBySubject(String subject) {
         return postRepositoryTask.findBySubject(subject);
     }
 
