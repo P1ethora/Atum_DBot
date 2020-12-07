@@ -9,6 +9,7 @@ import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.AnswerCallbackQuery;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.polls.SendPoll;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
@@ -54,6 +55,8 @@ public class AtumBot<T> extends TelegramWebhookBot {
                 execute((EditMessageMedia) sendMessage);
             if(sendMessage instanceof AnswerCallbackQuery)
                 execute((AnswerCallbackQuery) sendMessage);
+            if(sendMessage instanceof SendPoll)
+                execute((SendPoll) sendMessage);
         }
 
 

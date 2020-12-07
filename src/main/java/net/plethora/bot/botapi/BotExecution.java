@@ -11,8 +11,13 @@ import net.plethora.bot.botapi.system.systemMessage.AgeOptionBookMessage;
 import net.plethora.bot.botapi.system.systemMessage.OptionTypeTaskMessage;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.polls.Poll;
+import org.telegram.telegrambots.meta.api.objects.polls.PollAnswer;
+import org.telegram.telegrambots.meta.api.objects.polls.PollOption;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +46,14 @@ public class BotExecution<T> {
      * @param update пакет от пользователя
      * @return сообщение для пользователя
      */
-    public List<T> process(Update update) {
+    public List<T> process(Update update) throws TelegramApiRequestException {
 
         long chatId;
         String msgUser;
-        List<T> messages = null;
+        List<T> messages = new ArrayList<>();
 //------------------------------------------------------------------------------------------------//
         //КНОПКА
+
         if (update.hasCallbackQuery()) {
 
             CallbackQuery callbackQuery = update.getCallbackQuery();  //данные нажатия кнопки
@@ -77,6 +83,15 @@ public class BotExecution<T> {
             messages = response(chatId, idUser, firstName, lastName, userName, msgUser, 0, null);
         }
 //---------------------------------------------------------------------------------------------------------//
+        else if(update.hasPoll()){
+            Poll poll = update.getPoll();
+
+            String question = poll.getQuestion();
+            String pollId = poll.getId(); //id Опроса
+            int totalVoter = poll.getTotalVoterCount(); //количество ответов
+            List <PollOption> pollOptions = poll.getOptions();  //варианты ответов
+       System.out.println("Количество " + totalVoter + "Вариант " + pollOptions);
+        }
         return messages;
     }
 
@@ -88,7 +103,7 @@ public class BotExecution<T> {
      * @param askUser сообщение пользователя
      * @return список с сообщениями
      */
-    private List<T> enabledService(long chatId, String askUser, int messageId, String inlineMessageId) {
+    private List<T> enabledService(long chatId, String askUser, int messageId, String inlineMessageId) throws TelegramApiRequestException {
         List<T> messages = new ArrayList<>();
         if (user.getState() != null) {//Если есть состояние
             //Определяем что за состояние и запускаем сервис
@@ -150,7 +165,7 @@ public class BotExecution<T> {
      * @param callbackQueryId id вызова
      * @return лист-ответ с сообщением
      */
-    private List<T> response(long chatId, int idUser, String firstName, String lastName, String userName, String msgUser, int messageId, String callbackQueryId) {
+    private List<T> response(long chatId, int idUser, String firstName, String lastName, String userName, String msgUser, int messageId, String callbackQueryId) throws TelegramApiRequestException {
         List<T> messages;
         messages = checkCommand.inspect(chatId, msgUser, user, dataAccessUser, phrases); //получаем сообщение от бота согласно команде
         if (messages.size() == 0) {     //если не пришло сообщений значит не команда

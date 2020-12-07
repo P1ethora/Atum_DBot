@@ -2,10 +2,7 @@ package net.plethora.bot.botapi;
 
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.service.*;
-import net.plethora.bot.service.menu.AskServiceMenu;
-import net.plethora.bot.service.menu.BookServiceMenu;
-import net.plethora.bot.service.menu.JobServiceMenu;
-import net.plethora.bot.service.menu.TaskServiceMenu;
+import net.plethora.bot.service.menu.*;
 import org.springframework.stereotype.Component;
 
 
@@ -16,12 +13,14 @@ public class ProcessingStates {
     private TaskServiceMenu taskService;
     private JobServiceMenu jobService;
     private BookServiceMenu bookServiceMenu;
+    private QuizServiceMenu quizServiceMenu;
 
-    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService, BookServiceMenu bookServiceMenu) {
+    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService, BookServiceMenu bookServiceMenu,QuizServiceMenu quizServiceMenu) {
         this.askService = askService;
         this.taskService = taskService;
         this.jobService = jobService;
         this.bookServiceMenu = bookServiceMenu;
+        this.quizServiceMenu = quizServiceMenu;
     }
 
     /**
@@ -41,6 +40,8 @@ public class ProcessingStates {
                 return jobService;
             case BOOK:
                 return bookServiceMenu;
+            case QUIZ:
+                return quizServiceMenu;
 
         }
         return null;

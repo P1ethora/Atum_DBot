@@ -75,6 +75,12 @@ public class CheckCommand<T> {
                 dataAccessUser.editUser(user, BotState.BOOK);
                 messages.add((T) ageOptionBookMessage.message(chatId));
                 break;
+
+                case Cmd.QUIZ:
+            case Cmd.QUIZ_BUTTON:
+                dataAccessUser.editUser(user, BotState.QUIZ);
+                messages.add((T) new SendMessage(chatId, "Сервис QUIZ подключен"));
+                break;
         }
         return messages;
     }
