@@ -4,7 +4,6 @@ import net.plethora.bot.botapi.handler.HandlerQuizMessage;
 import net.plethora.bot.model.User;
 import net.plethora.bot.service.ServiceMenu;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.util.List;
 
@@ -18,9 +17,8 @@ public class QuizServiceMenu implements ServiceMenu {
     }
 
     @Override
-    public List start(long chatId, String msgUser, User user, int messageId, String inlineMessageId) throws TelegramApiRequestException {
+    public List start(long chatId, String msgUser, User user, int messageId, String inlineMessageId) {
 
-
-        return handlerQuizMessage.process(chatId);
+        return handlerQuizMessage.process(chatId, msgUser);
     }
 }

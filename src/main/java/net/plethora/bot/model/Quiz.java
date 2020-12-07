@@ -15,13 +15,11 @@ public class Quiz {
     private String id;
     private String question;
     private String[] options;
-    private PollOption[] pollOptions;
     private int answer;
 
-    public Quiz(String question, String[] options, PollOption[] pollOptions, int answer) {
+    public Quiz(String question, String[] options, int answer) {
         this.question = question;
         this.options = options;
-        this.pollOptions = pollOptions;
         this.answer = answer;
     }
 

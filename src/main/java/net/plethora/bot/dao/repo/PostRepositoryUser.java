@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepositoryUser extends MongoRepository<User, String> {
 
-    public User findByIdUser(int idUser);
+    User findByIdUser(int idUser);
 
 }

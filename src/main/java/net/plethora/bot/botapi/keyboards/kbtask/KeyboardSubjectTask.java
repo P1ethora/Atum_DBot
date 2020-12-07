@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.keyboards;
+package net.plethora.bot.botapi.keyboards.kbtask;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

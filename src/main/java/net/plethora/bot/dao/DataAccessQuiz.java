@@ -2,12 +2,10 @@ package net.plethora.bot.dao;
 
 import net.plethora.bot.dao.repo.PostRepositoryQuiz;
 import net.plethora.bot.model.Quiz;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Component;
 
-import java.util.Queue;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @Component
@@ -19,8 +17,20 @@ public class DataAccessQuiz {
         this.postRepositoryQuiz = postRepositoryQuiz;
     }
 
-    public Quiz findRandom(){
+    public Quiz findRandom() {
         return postRepositoryQuiz.findAll().get(new Random().nextInt(postRepositoryQuiz.findAll().size()));
+    }
+
+    public Quiz findById(String id){
+        return postRepositoryQuiz.findById(id).orElseThrow(() -> new IllegalStateException("Quiz with id " + id + " not found"));
+    }
+
+    public List<String> findAllId(){
+        List<String> idList = new ArrayList<>();
+        for(Quiz quiz : postRepositoryQuiz.findAll()) {
+           idList.add(quiz.getId());
+        }
+        return idList;
     }
 
     public Quiz findByQuestions(String questions) {

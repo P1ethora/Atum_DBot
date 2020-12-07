@@ -1,6 +1,6 @@
 package net.plethora.bot.botapi.system.systemMessage;
 
-import net.plethora.bot.botapi.keyboards.KeyboardAgeOptionBook;
+import net.plethora.bot.botapi.keyboards.kbbook.KeyboardAgeOptionBook;
 import net.plethora.bot.dao.DataAccessDesingFile;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;

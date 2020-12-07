@@ -1,13 +1,13 @@
 package net.plethora.bot.botapi.system;
 
-import net.plethora.bot.botapi.keyboards.KeyboardBookSelect;
-import net.plethora.bot.botapi.keyboards.KeyboardTaskSelect;
+import net.plethora.bot.botapi.keyboards.kbbook.KeyboardBookSelect;
+import net.plethora.bot.botapi.keyboards.kbtask.KeyboardTaskSelect;
 import net.plethora.bot.dao.DataAccessMaterial;
 import net.plethora.bot.dao.DataAccessSaveCell;
 import net.plethora.bot.model.material.Book;
 import net.plethora.bot.model.material.Material;
 import net.plethora.bot.model.material.Task;
-import net.plethora.bot.model.systemmodel.SaveCell;
+import net.plethora.bot.model.systemmodel.SaveCellMaterial;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageMedia;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
@@ -36,34 +36,34 @@ public class ShiftView<T> {
 
         List<T> msgForSend = new ArrayList<>();                                         //список сообщений для отправки
         List<Material> allMaterialSubject = dataAccessMaterial.findBySubject(subject);  //взяди все задачи этой темы
-        SaveCell saveCell = dataAccessSaveCell.findByChatIdAndSubject(chatId, subject); //ячейка сохранения
+        SaveCellMaterial saveCellMaterial = dataAccessSaveCell.findByChatIdAndSubject(chatId, subject); //ячейка сохранения
 
-        if (saveCell == null) {
-            saveCell = new SaveCell(chatId, allMaterialSubject.get(0).getId(), subject);
-            dataAccessSaveCell.addSaveCell(saveCell);
+        if (saveCellMaterial == null) {
+            saveCellMaterial = new SaveCellMaterial(chatId, allMaterialSubject.get(0).getId(), subject);
+            dataAccessSaveCell.addSaveCell(saveCellMaterial);
         }
         //ТЕКУЩИЙ
         if (!next && !back) {
-            msgForSend = actualMessage(messageId, chatId, subject, allMaterialSubject, saveCell);
+            msgForSend = actualMessage(messageId, chatId, subject, allMaterialSubject, saveCellMaterial);
         }
         //СЛЕДУЮЩИЙ
         else if (next && !back) {
-            msgForSend = shift(chatId, messageId, subject, saveCell, NUMBER_NEXT, allMaterialSubject);
+            msgForSend = shift(chatId, messageId, subject, saveCellMaterial, NUMBER_NEXT, allMaterialSubject);
         }
         //ПРЕДЫДУЩИЙ
         else if (back && !next) {
-            msgForSend = shift(chatId, messageId, subject, saveCell, NUMBER_BACK, allMaterialSubject);
+            msgForSend = shift(chatId, messageId, subject, saveCellMaterial, NUMBER_BACK, allMaterialSubject);
         }
         return msgForSend;
     }
 
-    private List<T> shift(long chatId, int messageId, String subject, SaveCell saveCell, int shiftNumber, List<Material> allMaterialSubject) {
+    private List<T> shift(long chatId, int messageId, String subject, SaveCellMaterial saveCellMaterial, int shiftNumber, List<Material> allMaterialSubject) {
         List<T> msgForSend = new ArrayList<>();
         for (int i = 0; i < allMaterialSubject.size(); i++) {
-            if (allMaterialSubject.get(i).getId().equals(saveCell.getSaveId())) {
-                dataAccessSaveCell.editSaveCell(saveCell, allMaterialSubject.get(i + shiftNumber).getId());
-                saveCell.setSaveId(allMaterialSubject.get(i + shiftNumber).getId());
-                msgForSend = actualMessage(messageId, chatId, subject, allMaterialSubject, saveCell);
+            if (allMaterialSubject.get(i).getId().equals(saveCellMaterial.getSaveId())) {
+                dataAccessSaveCell.editSaveCell(saveCellMaterial, allMaterialSubject.get(i + shiftNumber).getId());
+                saveCellMaterial.setSaveId(allMaterialSubject.get(i + shiftNumber).getId());
+                msgForSend = actualMessage(messageId, chatId, subject, allMaterialSubject, saveCellMaterial);
                 break;
             }
         }
@@ -71,7 +71,7 @@ public class ShiftView<T> {
     }
 
 
-    private List<T> actualMessage(int messageId, long chatId, String subject, List<Material> allMaterialSubject, SaveCell saveCell) {
+    private List<T> actualMessage(int messageId, long chatId, String subject, List<Material> allMaterialSubject, SaveCellMaterial saveCellMaterial) {
         List<T> messageTexts = new ArrayList<>();
 
         int limit = allMaterialSubject.size();
@@ -79,7 +79,7 @@ public class ShiftView<T> {
 
         for (Material material : allMaterialSubject) {
             number++;
-            if (saveCell.getSaveId().equals(material.getId())) {
+            if (saveCellMaterial.getSaveId().equals(material.getId())) {
                 if (material instanceof Task)
                     messageTexts.add((T) editMessageTask(chatId, messageId, subject, number, limit, material));
                 else if (material instanceof Book) {

@@ -7,6 +7,6 @@ import java.util.List;
 @Component
 public interface DataAccessMaterial<T> {
 
-    public List<T> findBySubject(String subject);
+    List<T> findBySubject(String subject);
 
 }

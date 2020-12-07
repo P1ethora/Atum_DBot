@@ -59,7 +59,6 @@ public class AtumBot<T> extends TelegramWebhookBot {
                 execute((SendPoll) sendMessage);
         }
 
-
         list.clear();
     }
 }

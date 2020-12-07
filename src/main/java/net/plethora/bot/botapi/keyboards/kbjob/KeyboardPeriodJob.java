@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.keyboards;
+package net.plethora.bot.botapi.keyboards.kbjob;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;

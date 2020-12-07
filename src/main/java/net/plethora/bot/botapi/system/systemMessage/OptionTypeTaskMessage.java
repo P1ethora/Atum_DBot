@@ -1,6 +1,6 @@
 package net.plethora.bot.botapi.system.systemMessage;
 
-import net.plethora.bot.botapi.keyboards.KeyboardSubjectTask;
+import net.plethora.bot.botapi.keyboards.kbtask.KeyboardSubjectTask;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;

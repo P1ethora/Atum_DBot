@@ -85,7 +85,7 @@ public class BotExecution<T> {
 //---------------------------------------------------------------------------------------------------------//
         else if(update.hasPoll()){
             Poll poll = update.getPoll();
-
+//TODO можно собрать данные для вывода статистики вконце викторины
             String question = poll.getQuestion();
             String pollId = poll.getId(); //id Опроса
             int totalVoter = poll.getTotalVoterCount(); //количество ответов

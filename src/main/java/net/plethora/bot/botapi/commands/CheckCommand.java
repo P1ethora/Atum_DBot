@@ -1,6 +1,7 @@
 package net.plethora.bot.botapi.commands;
 
 import net.plethora.bot.botapi.keyboards.KeyboardCmdMenu;
+import net.plethora.bot.botapi.keyboards.kbquiz.KeyboardSoloButtonQuiz;
 import net.plethora.bot.botapi.state.BotState;
 import net.plethora.bot.botapi.system.systemMessage.AgeOptionBookMessage;
 import net.plethora.bot.botapi.system.systemMessage.OptionTypeTaskMessage;
@@ -19,11 +20,14 @@ public class CheckCommand<T> {
     private OptionTypeTaskMessage optionTypeTaskMessage;
     private AgeOptionBookMessage ageOptionBookMessage;
     private KeyboardCmdMenu keyboardCmdMenu;
+    private KeyboardSoloButtonQuiz keyboardSoloButtonQuiz;
 
-    public CheckCommand(OptionTypeTaskMessage optionTypeTaskMessage, AgeOptionBookMessage ageOptionBookMessage, KeyboardCmdMenu keyboardCmdMenu) {
+    public CheckCommand(OptionTypeTaskMessage optionTypeTaskMessage, AgeOptionBookMessage ageOptionBookMessage,
+                        KeyboardCmdMenu keyboardCmdMenu, KeyboardSoloButtonQuiz keyboardSoloButtonQuiz) {
         this.optionTypeTaskMessage = optionTypeTaskMessage;
         this.ageOptionBookMessage = ageOptionBookMessage;
         this.keyboardCmdMenu = keyboardCmdMenu;
+        this.keyboardSoloButtonQuiz = keyboardSoloButtonQuiz;
     }
 
     /**
@@ -79,7 +83,8 @@ public class CheckCommand<T> {
                 case Cmd.QUIZ:
             case Cmd.QUIZ_BUTTON:
                 dataAccessUser.editUser(user, BotState.QUIZ);
-                messages.add((T) new SendMessage(chatId, "Сервис QUIZ подключен"));
+                messages.add((T) new SendMessage(chatId, "Сервис QUIZ подключен")
+                        .setReplyMarkup(keyboardSoloButtonQuiz.keyboardStart()));
                 break;
         }
         return messages;

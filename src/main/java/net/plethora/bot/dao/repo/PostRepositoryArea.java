@@ -10,6 +10,6 @@ public interface PostRepositoryArea extends MongoRepository<Area, String> {
     /**
      * Метод поиска по базе данных
      */
-    public Area findByArea(String area);
+    Area findByArea(String area);
 
 }

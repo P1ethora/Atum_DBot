@@ -11,8 +11,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Getter
 @Setter
-@Document(collection = "save_cell")
-public class SaveCell {
+@Document(collection = "save_cell_material")
+public class SaveCellMaterial {
 
     @Id
     private String id;
@@ -20,13 +20,13 @@ public class SaveCell {
     private String saveId;
     private String saveSubject;
 
-    public SaveCell(long chatId, String saveId, String saveSubject) {
+    public SaveCellMaterial(long chatId, String saveId, String saveSubject) {
         this.chatId = chatId;
         this.saveId = saveId;
         this.saveSubject = saveSubject;
     }
 
-    public SaveCell(){}
+    public SaveCellMaterial(){}
 
     public long getChatId() {
         return chatId;

@@ -1,7 +1,7 @@
 package net.plethora.bot.dao;
 
 import net.plethora.bot.dao.repo.PostRepositorySaveCell;
-import net.plethora.bot.model.systemmodel.SaveCell;
+import net.plethora.bot.model.systemmodel.SaveCellMaterial;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,17 +13,17 @@ public class DataAccessSaveCell {
         this.postRepositorySaveCell = postRepositorySaveCell;
     }
 
-    public SaveCell findByChatIdAndSubject(long chatId, String subject) {
+    public SaveCellMaterial findByChatIdAndSubject(long chatId, String subject) {
         return postRepositorySaveCell.findByChatIdAndSaveSubject(chatId, subject);
     }
 
-    public void addSaveCell(SaveCell saveCell) {
-        postRepositorySaveCell.save(saveCell);
+    public void addSaveCell(SaveCellMaterial saveCellMaterial) {
+        postRepositorySaveCell.save(saveCellMaterial);
     }
 
-    public void editSaveCell(SaveCell saveCell, String saveId) {
-        SaveCell oldSave = postRepositorySaveCell.findById(saveCell.getId())
-                .orElseThrow(() -> new IllegalStateException("SaveCell with id " + saveCell.getId() + "not found"));
+    public void editSaveCell(SaveCellMaterial saveCellMaterial, String saveId) {
+        SaveCellMaterial oldSave = postRepositorySaveCell.findById(saveCellMaterial.getId())
+                .orElseThrow(() -> new IllegalStateException("SaveCell with id " + saveCellMaterial.getId() + "not found"));
         oldSave.setSaveId(saveId);
         postRepositorySaveCell.save(oldSave);
 
