@@ -11,9 +11,11 @@ import org.telegram.telegrambots.meta.api.objects.media.InputMediaPhoto;
 public class AgeOptionBookMessage {
 
     private DataAccessDesingFile dataAccessDesingFile;
+    private KeyboardAgeOptionBook keyboardAgeOptionBook;
 
-    public AgeOptionBookMessage(DataAccessDesingFile dataAccessDesingFile) {
+    public AgeOptionBookMessage(DataAccessDesingFile dataAccessDesingFile,KeyboardAgeOptionBook keyboardAgeOptionBook) {
         this.dataAccessDesingFile = dataAccessDesingFile;
+        this.keyboardAgeOptionBook = keyboardAgeOptionBook;
     }
 
     public EditMessageMedia editMessage(long idChat, int idMessage) {
@@ -21,7 +23,7 @@ public class AgeOptionBookMessage {
         editMessageMedia.setChatId(idChat); //id чата
         editMessageMedia.setMessageId(idMessage);  //id сообщения
         editMessageMedia.setMedia(new InputMediaPhoto().setMedia((dataAccessDesingFile.findByName("pictureOptions").getUrl())).setCaption("Выберите раздел:"));
-        editMessageMedia.setReplyMarkup(new KeyboardAgeOptionBook().inlineKeyboardSubjectTask());
+        editMessageMedia.setReplyMarkup(keyboardAgeOptionBook.inlineKeyboardSubjectTask());
         return editMessageMedia;
     }
 
@@ -29,7 +31,7 @@ public class AgeOptionBookMessage {
         SendPhoto sendPhoto = new SendPhoto();
         sendPhoto.setChatId(chatId);
         sendPhoto.setPhoto(dataAccessDesingFile.findByName("pictureOptions").getUrl());
-        sendPhoto.setReplyMarkup(new KeyboardAgeOptionBook().inlineKeyboardSubjectTask());
+        sendPhoto.setReplyMarkup(keyboardAgeOptionBook.inlineKeyboardSubjectTask());
         sendPhoto.setCaption("Выберите раздел:");
 
         return sendPhoto;

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepositorySaveCellQuiz extends MongoRepository<SaveCellQuiz,String> {
 
-    SaveCellQuiz findByChatId(long chatId);
+   public SaveCellQuiz findByChatId(long chatId);
 
 }

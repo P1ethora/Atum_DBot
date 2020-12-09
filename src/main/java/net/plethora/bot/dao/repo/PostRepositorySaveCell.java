@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepositorySaveCell extends MongoRepository<SaveCellMaterial, String> {
 
-    SaveCellMaterial findByChatIdAndSaveSubject(long chatId, String subject);
+  public SaveCellMaterial findByChatIdAndSaveSubject(long chatId, String subject);
 }

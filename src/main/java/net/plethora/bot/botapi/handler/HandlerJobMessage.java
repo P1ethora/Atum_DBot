@@ -17,11 +17,14 @@ public class HandlerJobMessage {
     private CacheSearchJob cacheSearchJob;
     private DataAccessArea dataAccessArea;
     private ParsRabota parsRabota;
+    private KeyboardPeriodJob keyboardPeriodJob;
 
-    public HandlerJobMessage(CacheSearchJob cacheSearchJob, DataAccessArea dataAccessArea, ParsRabota parsRabota) {
+    public HandlerJobMessage(CacheSearchJob cacheSearchJob, DataAccessArea dataAccessArea,
+                             ParsRabota parsRabota,KeyboardPeriodJob keyboardPeriodJob) {
         this.cacheSearchJob = cacheSearchJob;
         this.dataAccessArea = dataAccessArea;
         this.parsRabota = parsRabota;
+        this.keyboardPeriodJob = keyboardPeriodJob;
     }
 
     public List<SendMessage> handler(long chatId, String msgUser) {
@@ -40,7 +43,7 @@ public class HandlerJobMessage {
             cacheSearchJob.getInfos().get(chatId).setArea(msgUser);//добавляем город в инфо кэш
             //TODO:добавить текст в ресурсы
             //TODO проверка на период или оставить с неделей по умолчанию
-            list.add(new SendMessage(chatId, "Выберите период:").setReplyMarkup(new KeyboardPeriodJob().addKeyBoard()));
+            list.add(new SendMessage(chatId, "Выберите период:").setReplyMarkup(keyboardPeriodJob.addKeyBoard()));
             return list;
         }
         if (info.getPeriod() == null && info.getArea() != null) { //если в инфо нет периода

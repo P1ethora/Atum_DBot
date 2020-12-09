@@ -19,7 +19,7 @@ public class OptionTypeTaskMessage {
         editMessageText.setChatId(chatId);
         editMessageText.setMessageId(messageId);
         editMessageText.setText("Разделы с задачами:");
-        editMessageText.setReplyMarkup(new KeyboardSubjectTask().inlineKeyboardSubjectTask());
+        editMessageText.setReplyMarkup(keyboardSubjectTask.inlineKeyboardSubjectTask());
         return editMessageText;
     }
 

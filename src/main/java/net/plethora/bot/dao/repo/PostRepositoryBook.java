@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface PostRepositoryBook extends MongoRepository<Book, String> {
 
-    List<Book> findBySubject(String subject);
+   public List<Book> findBySubject(String subject);
 }

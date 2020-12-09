@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepositoryDesignFile extends MongoRepository<DesignFile, String> {
 
-    DesignFile findByFileName(String fileName);
+   public DesignFile findByFileName(String fileName);
 }

@@ -15,7 +15,9 @@ public class ProcessingStates {
     private BookServiceMenu bookServiceMenu;
     private QuizServiceMenu quizServiceMenu;
 
-    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService, JobServiceMenu jobService, BookServiceMenu bookServiceMenu,QuizServiceMenu quizServiceMenu) {
+    public ProcessingStates(AskServiceMenu askService, TaskServiceMenu taskService,
+                            JobServiceMenu jobService, BookServiceMenu bookServiceMenu,
+                            QuizServiceMenu quizServiceMenu) {
         this.askService = askService;
         this.taskService = taskService;
         this.jobService = jobService;

@@ -11,10 +11,6 @@ import java.util.List;
 @Component
 public class KeyboardBookSelect {
 
-    public KeyboardBookSelect() {
-
-    }
-
     public InlineKeyboardMarkup keyboard(int numberBook, int limit, String url) {
 
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup(); //клава

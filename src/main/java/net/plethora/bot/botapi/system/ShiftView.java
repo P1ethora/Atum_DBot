@@ -106,8 +106,8 @@ public class ShiftView<T> {
         EditMessageMedia editMessageMedia = new EditMessageMedia();
         editMessageMedia.setChatId(chatId); //id чата
         editMessageMedia.setMessageId(messageId);  //id сообщения
-        editMessageMedia.setMedia(new InputMediaPhoto()
-                .setMedia(material.getUrlCoverBook()));
+        editMessageMedia.setMedia(new InputMediaPhoto() //отправка картинки посредством
+                .setMedia(material.getUrlCoverBook())); //передачи ссылки серверу телеграмм
         editMessageMedia.setReplyMarkup(keyboardBookSelect.keyboard(number, limit, material.getUrl()));
         return editMessageMedia;
     }

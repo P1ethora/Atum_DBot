@@ -18,7 +18,7 @@ public class HandlerAskMessage<T> {
     private final DataAccessAnswer dao;
     private PhrasesService phrasesService;
 
-    public HandlerAskMessage(DataAccessAnswer dao, PhrasesService phrasesService) {
+    public HandlerAskMessage(DataAccessAnswer dao,PhrasesService phrasesService) {
         this.dao = dao;
         this.phrasesService = phrasesService;
     }
@@ -40,7 +40,7 @@ public class HandlerAskMessage<T> {
      * @param ask строка запроса
      */
     private Answer assignAnswer(String ask) {
-        return dao.handleRequest(ask);//ищем в базе через метод репозитория и присваиваем документ
+       return dao.handleRequest(ask);//ищем в базе через метод репозитория и присваиваем документ
     }
 
     /**
