@@ -26,7 +26,10 @@ public class HandlerJobMessage {
         this.parsRabota = parsRabota;
         this.keyboardPeriodJob = keyboardPeriodJob;
     }
-
+//TODO сделать так: Сообщение "Ваши данные для поиска: Город: Не определен; Период: Не определен
+//TODO и снизу клаву новосозданную нажал на кнопку написал сообщение - откат и изменение Город: Минск и т д
+//TODO  потом жмешь поиск и прилетает лист вакансий где далее, назад и изменить запрос, а также подсчет вакансий
+//TODO прировнять вакансии к материалу т к уже есть готовые методы
     public List<SendMessage> handler(long chatId, String msgUser) {
         List<SendMessage> list = new ArrayList<>();
 
