@@ -1,12 +1,16 @@
 package net.plethora.bot.botapi.commands;
 
 import net.plethora.bot.botapi.keyboards.KeyboardCmdMenu;
+import net.plethora.bot.botapi.keyboards.kbjob.KeyboardOptionsSearch;
 import net.plethora.bot.botapi.keyboards.kbquiz.KeyboardSoloButtonQuiz;
 import net.plethora.bot.botapi.state.BotState;
+import net.plethora.bot.botapi.state.SubState;
 import net.plethora.bot.botapi.system.systemMessage.AgeOptionBookMessage;
 import net.plethora.bot.botapi.system.systemMessage.OptionTypeTaskMessage;
+import net.plethora.bot.botapi.system.systemMessage.SearchDataJobMessage;
 import net.plethora.bot.dao.DataAccessUser;
 import net.plethora.bot.model.User;
+import net.plethora.bot.model.systemmodel.InfoForSearch;
 import net.plethora.bot.service.PhrasesService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -21,13 +25,16 @@ public class CheckCommand<T> {
     private AgeOptionBookMessage ageOptionBookMessage;
     private KeyboardCmdMenu keyboardCmdMenu;
     private KeyboardSoloButtonQuiz keyboardSoloButtonQuiz;
+    private SearchDataJobMessage searchDataJobMessage;
 
     public CheckCommand(OptionTypeTaskMessage optionTypeTaskMessage, AgeOptionBookMessage ageOptionBookMessage,
-                        KeyboardCmdMenu keyboardCmdMenu, KeyboardSoloButtonQuiz keyboardSoloButtonQuiz) {
+                        KeyboardCmdMenu keyboardCmdMenu, KeyboardSoloButtonQuiz keyboardSoloButtonQuiz,
+                        SearchDataJobMessage searchDataJobMessage) {
         this.optionTypeTaskMessage = optionTypeTaskMessage;
         this.ageOptionBookMessage = ageOptionBookMessage;
         this.keyboardCmdMenu = keyboardCmdMenu;
         this.keyboardSoloButtonQuiz = keyboardSoloButtonQuiz;
+        this.searchDataJobMessage = searchDataJobMessage;
     }
 
     /**
@@ -42,7 +49,11 @@ public class CheckCommand<T> {
         switch (askUser) {
             case Cmd.START:
                 if (user.getState() != null) {
-                    dataAccessUser.editUser(user, null);
+                    //TODO возможно стоит сделать общий метод
+                    BotState botState = null;
+                    SubState subState = null;
+                    dataAccessUser.editUser(user, botState);
+                    dataAccessUser.editUser(user, subState);
                 }
                 messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
                 break;
@@ -71,7 +82,7 @@ public class CheckCommand<T> {
             case Cmd.JOB:
             case Cmd.JOB_BUTTON:    //Состояние поиск работы
                 dataAccessUser.editUser(user, BotState.JOB);
-                messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.JobEnableService")));
+                messages.add((T) searchDataJobMessage.message(chatId,new InfoForSearch()));
                 break;
 
             case Cmd.BOOK:
@@ -80,7 +91,7 @@ public class CheckCommand<T> {
                 messages.add((T) ageOptionBookMessage.message(chatId));
                 break;
 
-                case Cmd.QUIZ:
+            case Cmd.QUIZ:
             case Cmd.QUIZ_BUTTON:
                 dataAccessUser.editUser(user, BotState.QUIZ);
                 messages.add((T) new SendMessage(chatId, "Сервис QUIZ подключен")

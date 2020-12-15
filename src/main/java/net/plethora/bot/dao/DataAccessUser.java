@@ -1,6 +1,7 @@
 package net.plethora.bot.dao;
 
 import net.plethora.bot.botapi.state.BotState;
+import net.plethora.bot.botapi.state.SubState;
 import net.plethora.bot.model.User;
 import net.plethora.bot.dao.repo.PostRepositoryUser;
 import org.springframework.stereotype.Component;
@@ -29,4 +30,12 @@ public class DataAccessUser {
         oldUser.setState(botState);
         postRepositoryUser.save(oldUser);
     }
+
+    public void editUser(User user, SubState subState) {
+        User oldUser = postRepositoryUser.findById(user.getId())
+                .orElseThrow(() -> new IllegalStateException("User with id " + user.getId() + "not found"));
+        oldUser.setSubState(subState);
+        postRepositoryUser.save(oldUser);
+    }
+
 }

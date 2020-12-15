@@ -15,6 +15,7 @@ public class SaveVacancyCell {
     private String area;
     private String period;
     private Vacancy[] vacancies;
+    private String actualIdVacancy;
 
     public SaveVacancyCell(long chatId,String area, String period, Vacancy[] vacancies) {
         this.chatId = chatId;

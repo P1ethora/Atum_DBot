@@ -1,20 +1,15 @@
 package net.plethora.bot.botapi.handler;
 
 import lombok.SneakyThrows;
-import net.plethora.bot.botapi.system.ShiftView;
+import net.plethora.bot.botapi.system.ShiftViewMaterial;
 import net.plethora.bot.dao.DataAccessMaterialTask;
-import net.plethora.bot.dao.DataAccessUser;
 import net.plethora.bot.model.material.Task;
 import net.plethora.bot.botapi.system.systemMessage.OptionTypeTaskMessage;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendDocument;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.InputFile;
-import org.telegram.telegrambots.meta.api.objects.media.InputMedia;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -25,13 +20,13 @@ public class HandlerTaskMessage<T> {
 
     private DataAccessMaterialTask dataAccessTask;
     private OptionTypeTaskMessage optionTypeTaskMessage;
-    private ShiftView shiftView;
+    private ShiftViewMaterial shiftViewMaterial;
 
     public HandlerTaskMessage(DataAccessMaterialTask dataAccessTask, OptionTypeTaskMessage optionTypeTaskMessage,
-                              ShiftView shiftView) {
+                              ShiftViewMaterial shiftViewMaterial) {
         this.dataAccessTask = dataAccessTask;
         this.optionTypeTaskMessage = optionTypeTaskMessage;
-        this.shiftView = shiftView;
+        this.shiftViewMaterial = shiftViewMaterial;
     }
 
     @SneakyThrows
@@ -39,11 +34,11 @@ public class HandlerTaskMessage<T> {
         List<T> msg = new ArrayList<>();
 //TODO зашифровать сосстояние тему и тд то бы из любого состояния можно было кнопеой переключатся автоматически
         if (msgUser.length() > 9 && msgUser.substring(0, 9).equals("%n->ex!t{")) {
-            msg = shiftView.view(chatId, getValueMsg(msgUser), messageId, dataAccessTask, true, false);
+            msg = shiftViewMaterial.view(chatId, getValueMsg(msgUser), messageId, dataAccessTask, true, false);
         } else if (msgUser.length() > 9 && msgUser.substring(0, 9).equals("%b->ac!k{")) {
-            msg = shiftView.view(chatId, getValueMsg(msgUser), messageId, dataAccessTask, false, true);
+            msg = shiftViewMaterial.view(chatId, getValueMsg(msgUser), messageId, dataAccessTask, false, true);
         } else if (checkSubject(msgUser)) {   //если прилетела тема задачи
-            msg = shiftView.view(chatId, msgUser, messageId, dataAccessTask, false, false);
+            msg = shiftViewMaterial.view(chatId, msgUser, messageId, dataAccessTask, false, false);
         } else if (msgUser.length() > 6 && msgUser.substring(0, 6).equals(":!awr{")) {   //если сообщение является ответом к задаче
             msg = (List<T>) getSolution(chatId, getValueMsg(msgUser));  //вытягиваем id Task, получаем ответ и ложим его в список
         } else if (msgUser.equals(":backtosubject")) {

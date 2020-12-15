@@ -149,6 +149,7 @@ public class BotExecution<T> {
         user.setUserName(userName);
         user.setIdUser(idUser);
         user.setState(null);
+        user.setSubState(null);
         user.setIdChat(idChat);
         dataAccessUser.addUser(user);
         return user;
