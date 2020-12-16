@@ -92,6 +92,7 @@ public class BotExecution<T> {
             List <PollOption> pollOptions = poll.getOptions();  //варианты ответов
        System.out.println("Количество " + totalVoter + "Вариант " + pollOptions);
         }
+
         return messages;
     }
 
@@ -111,6 +112,7 @@ public class BotExecution<T> {
         } else { //Если не активирован сервис
             messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
         }
+
         return messages;
     }
 

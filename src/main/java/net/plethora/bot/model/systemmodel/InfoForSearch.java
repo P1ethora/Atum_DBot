@@ -8,9 +8,7 @@ import org.springframework.data.annotation.Id;
 @Setter
 public class InfoForSearch {
 
-   // @Id
     private int id;
-   // private int idMessage;
     private long chatId;
     private String area;
     private String period;

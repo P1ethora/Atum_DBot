@@ -8,9 +8,8 @@ import java.util.List;
 @Component
 public class VacancyFormatBuilder {
 
-    public StringBuilder getBuildTextVacancy(int indexVacancy,List<Vacancy> vacancyList) {
+    public StringBuilder getBuildTextVacancy(Vacancy vacancy) {
 
-        Vacancy vacancy = vacancyList.get(indexVacancy);
         StringBuilder stringBuilder = new StringBuilder();
 
         stringBuilder.append("<b>").append(vacancy.getTitle()).append("</b>").append("\n"); //Название
@@ -47,7 +46,7 @@ public class VacancyFormatBuilder {
                 .append("</a>")
                 .append("                ")
                 .append("<a href=\"")
-                .append(vacancy.getUrlVacancy())                           //гиперссылка на вакансию
+                .append(vacancy.getUrlVacancy())                           //ссылка на вакансию
                 .append("\">")
                 .append("Подробнее...")
                 .append("</a>")

@@ -113,37 +113,26 @@ public class HandlerJobMessage<T> {
             String area = getPartTheInfoUser(msgUser, 0);
             String period = getPartTheInfoUser(msgUser, 1);
             String idInfo = getPartTheInfoUser(msgUser, 2);
-
-            InfoForSearch info = new InfoForSearch(Integer.parseInt(idInfo), area, period);
-
-            if (area == null && period == null) {                                                     //проверки на нулл значения
+            //TODO изменить на editText
+            if (area.equals("null") && period.equals("null")) {             //проверки на нулл значения
                 messages.add((T) new SendMessage(chatId, "поле город и период не заполнено"));
-            } else if (area == null) {
+            } else if (area.equals("null")) {
                 messages.add((T) new SendMessage(chatId, "поле город не заполнено"));
-            } else if (period == null) {
+            } else if (period.equals("null")) {
                 messages.add((T) new SendMessage(chatId, "поле период не заполнено"));
             } else {
-
+                InfoForSearch info = new InfoForSearch(Integer.parseInt(idInfo), area, period);
                 int code = dataAccessArea.handleRequest(area).getCode();
-
-                //messages.add((T) new SendMessage(chatId, "Лист вакансий " + area + ", " + period + " " + idInfo));
                 List<Vacancy> vacancies = parsRabota.parse(chatId, code, period); //Получаем списо вакансий
-                SaveVacancyCell saveVacancyCell = createSaveVacancyCell(chatId, area, period, vacancies); //создать конструктор
+                SaveVacancyCell saveVacancyCell = createSaveVacancyCell(messageId,chatId, area, period, vacancies,0); //создать конструктор
                 addSaveVacancyToCache(saveVacancyCell);  //добавляем сохранение
-                messages.add((T) shiftViewVacancy.view(chatId, messageId, info, false, false));  //сообщение
-                //if(saveVacancyCell==null){
-                // saveVacancyCell = parsRabota.getVacancies(area,period,idInfo)
-                // }
-                //dataAccessUser.editUser(user, SubState.FOUND);
-                //TODO сохранение передать в view
-                //String idSearch = dragId(msgUser);
-                //messages.add((T) shiftViewVacancy.view(chatId, messageId, getInfoFromProvisionalCache(chatId), false, false));
+                messages = shiftViewVacancy.view(chatId, messageId, info, false, false);  //сообщение
+                dataAccessUser.editUser(user, SubState.FOUND);
             }
         } else {
 
             if (user.getSubState() == SubState.AREA) {
                 InfoForSearch info = provisionalObjectInfo.getInfoForSearches().get(chatId);
-                //int msgIdPost = cacheLastTwoMessageJob.getIdMessage().get(chatId); //вытягиваем id поста бота
                 int msgIdPost = info.getId(); //вытягиваем id поста бота
                 if (dataAccessArea.handleRequest(msgUser) == null) {
                     EditMessageText editMessageText = new EditMessageText();
@@ -210,12 +199,14 @@ public class HandlerJobMessage<T> {
         return infos[numberArr];
     }
 
-    public SaveVacancyCell createSaveVacancyCell(long chatId, String area, String period, List<Vacancy> listVacancy) {
+    public SaveVacancyCell createSaveVacancyCell(int messageId,long chatId, String area, String period, List<Vacancy> listVacancy, int saveIdVacancy) {
         SaveVacancyCell saveVacancyCell = new SaveVacancyCell();
+        saveVacancyCell.setId(messageId);
         saveVacancyCell.setChatId(chatId);
         saveVacancyCell.setArea(area);
         saveVacancyCell.setPeriod(period);
         saveVacancyCell.setVacancies(listVacancy.toArray(new Vacancy[0]));
+        saveVacancyCell.setSaveIdVacancy(saveIdVacancy);
         return saveVacancyCell;
     }
 

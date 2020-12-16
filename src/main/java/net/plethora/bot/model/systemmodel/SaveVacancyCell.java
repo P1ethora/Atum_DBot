@@ -6,22 +6,22 @@ import net.plethora.bot.model.Vacancy;
 
 @Getter
 @Setter
-//@Document(collection = "save_cell_vacancy")
 public class SaveVacancyCell {
 
-   // @Id
-   // private String id;
+   private int id;
     private long chatId;
     private String area;
     private String period;
     private Vacancy[] vacancies;
-    private String actualIdVacancy;
+    int saveIdVacancy;
 
-    public SaveVacancyCell(long chatId,String area, String period, Vacancy[] vacancies) {
+    public SaveVacancyCell(int id,long chatId,String area, String period, Vacancy[] vacancies, int saveIdVacancy) {
+        this.id = id;
         this.chatId = chatId;
         this.area = area;
         this.period = period;
         this.vacancies = vacancies;
+        this.saveIdVacancy = saveIdVacancy;
     }
 
     public SaveVacancyCell() {

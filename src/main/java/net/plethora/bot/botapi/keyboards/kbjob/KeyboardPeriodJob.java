@@ -15,10 +15,10 @@ public class KeyboardPeriodJob {
         List<List<InlineKeyboardButton>> rows = new ArrayList<>(); //формируем ряды
         List<InlineKeyboardButton> row = new ArrayList<>();
 
-        InlineKeyboardButton buttonM = new InlineKeyboardButton("Месяц");
-        InlineKeyboardButton buttonW = new InlineKeyboardButton("Неделя");
-        InlineKeyboardButton buttonTd = new InlineKeyboardButton("Три дня");
-        InlineKeyboardButton buttonD = new InlineKeyboardButton("Сутки");
+        InlineKeyboardButton buttonM = new InlineKeyboardButton("месяц");
+        InlineKeyboardButton buttonW = new InlineKeyboardButton("неделя");
+        InlineKeyboardButton buttonTd = new InlineKeyboardButton("три дня");
+        InlineKeyboardButton buttonD = new InlineKeyboardButton("сутки");
 
         buttonM.setCallbackData("Месяц");
         buttonW.setCallbackData("Неделя");
