@@ -82,7 +82,7 @@ public class CheckCommand<T> {
             case Cmd.JOB:
             case Cmd.JOB_BUTTON:    //Состояние поиск работы
                 dataAccessUser.editUser(user, BotState.JOB);
-                messages.add((T) searchDataJobMessage.message(chatId,new InfoForSearch()));
+                messages.add((T) searchDataJobMessage.message(chatId,new InfoForSearch(0,chatId,null,null,0)));
                 break;
 
             case Cmd.BOOK:

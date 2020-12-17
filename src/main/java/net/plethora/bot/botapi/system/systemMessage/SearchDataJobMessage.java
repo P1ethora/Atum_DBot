@@ -30,13 +30,7 @@ public class SearchDataJobMessage {
     public SendMessage message(long chatId, InfoForSearch infoForSearch) {
         String area = infoForSearch.getArea();
         String period = infoForSearch.getPeriod();
-//        if (infoForSearch == null) {
-//            area = null;
-//            period = null;
-//        } else {
-//            area = infoForSearch.getArea();
-//            period = infoForSearch.getPeriod();
-//        }
+
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(chatId);
         if (area == null)

@@ -121,10 +121,10 @@ public class HandlerJobMessage<T> {
             } else if (period.equals("null")) {
                 messages.add((T) new SendMessage(chatId, "поле период не заполнено"));
             } else {
-                InfoForSearch info = new InfoForSearch(Integer.parseInt(idInfo), area, period);
+                InfoForSearch info = new InfoForSearch(Integer.parseInt(idInfo),chatId, area, period,0);
                 int code = dataAccessArea.handleRequest(area).getCode();
-                List<Vacancy> vacancies = parsRabota.parse(chatId, code, period); //Получаем списо вакансий
-                SaveVacancyCell saveVacancyCell = createSaveVacancyCell(messageId,chatId, area, period, vacancies,0); //создать конструктор
+                List<Vacancy> vacancies = parsRabota.parse(code, period); //Получаем списо вакансий
+                SaveVacancyCell saveVacancyCell = createSaveVacancyCell(messageId,chatId, area, period, vacancies); //создать конструктор
                 addSaveVacancyToCache(saveVacancyCell);  //добавляем сохранение
                 messages = shiftViewVacancy.view(chatId, messageId, info, false, false);  //сообщение
                 dataAccessUser.editUser(user, SubState.FOUND);
@@ -170,18 +170,22 @@ public class HandlerJobMessage<T> {
                     String area = getPartTheInfoUser(msgUser, 0);
                     String period = getPartTheInfoUser(msgUser, 1);
                     String idInfo = getPartTheInfoUser(msgUser, 2);
+                    InfoForSearch info = new InfoForSearch(messageId,area,period);
+                   messages.add((T) searchDataJobMessage.editMessage(chatId,messageId,info));
 
-                    //проверка на пустой инфо и создание нового если нет, тоже самое сдалать с остальными командами
-
-                    String idSearch = dragId(msgUser);
-                    //  messages.add((T) searchDataJobMessage.editMessage(chatId, messageId, getInfo(idSearch)));
-                } else if (msgUser.length() > 7 && msgUser.substring(0, 7).equals(":next->")) {//TODO записать в колл бек id search job
-                    String idSearch = dragId(msgUser);
-                    //    messages.add((T) shiftViewVacancy.view(chatId, messageId, getInfo(idSearch), true, false));
-                } else if (msgUser.length() > 7 && msgUser.substring(0, 7).equals(":back->")) {
-                    String idSearch = dragId(msgUser);
-                    //   messages.add((T) shiftViewVacancy.view(chatId, messageId, getInfo(idSearch), false, true));
-                }
+                } else if (msgUser.length() > 8 && msgUser.substring(0, 8).equals(":next-->")) {//TODO записать в колл бек id search job
+                    String area = getPartTheInfoUser(msgUser, 0);
+                    String period = getPartTheInfoUser(msgUser, 1);
+                    int idVacancy = Integer.parseInt(getPartTheInfoUser(msgUser, 2));
+                    InfoForSearch info = new InfoForSearch(messageId,chatId,area,period,idVacancy);
+                    messages = shiftViewVacancy.view(chatId, messageId, info, true, false);
+                } else if (msgUser.length() > 8 && msgUser.substring(0, 8).equals(":<--back")) {
+                    String area = getPartTheInfoUser(msgUser, 0);
+                    String period = getPartTheInfoUser(msgUser, 1);
+                    int idVacancy = Integer.parseInt(getPartTheInfoUser(msgUser, 2));
+                    InfoForSearch info = new InfoForSearch(messageId,chatId,area,period,idVacancy);
+                    messages =  shiftViewVacancy.view(chatId, messageId, info, false, true);
+                } else {messages.add((T) new SendMessage(chatId,"Неверный формат ввода"));}
             }
 
         }
@@ -199,14 +203,14 @@ public class HandlerJobMessage<T> {
         return infos[numberArr];
     }
 
-    public SaveVacancyCell createSaveVacancyCell(int messageId,long chatId, String area, String period, List<Vacancy> listVacancy, int saveIdVacancy) {
+    public SaveVacancyCell createSaveVacancyCell(int messageId,long chatId, String area, String period, List<Vacancy> listVacancy) {
         SaveVacancyCell saveVacancyCell = new SaveVacancyCell();
         saveVacancyCell.setId(messageId);
         saveVacancyCell.setChatId(chatId);
         saveVacancyCell.setArea(area);
         saveVacancyCell.setPeriod(period);
         saveVacancyCell.setVacancies(listVacancy.toArray(new Vacancy[0]));
-        saveVacancyCell.setSaveIdVacancy(saveIdVacancy);
+        //saveVacancyCell.setSaveIdVacancy(saveIdVacancy);
         return saveVacancyCell;
     }
 

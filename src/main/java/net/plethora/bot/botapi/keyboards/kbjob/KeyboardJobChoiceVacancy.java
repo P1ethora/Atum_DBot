@@ -1,5 +1,7 @@
 package net.plethora.bot.botapi.keyboards.kbjob;
 
+import net.plethora.bot.model.Vacancy;
+import net.plethora.bot.model.systemmodel.InfoForSearch;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -10,35 +12,35 @@ import java.util.List;
 @Component
 public class KeyboardJobChoiceVacancy {
 
-    public InlineKeyboardMarkup keyboard(int numberVacancy, int limit, String urlRespond, String urlDetailed, int idInfoSearch) {
+    public InlineKeyboardMarkup keyboard(int numberVacancy, int limit, Vacancy vacancy, InfoForSearch infoForSearch) {
 
         List<List<InlineKeyboardButton>> rows = new ArrayList<>();  //ряды
         List<InlineKeyboardButton> rowTop = new ArrayList<>(); //ряд
         List<InlineKeyboardButton> rowDown = new ArrayList<>(); //ряд
 
         InlineKeyboardButton keyboardButtonReturn = new InlineKeyboardButton("Вернуться");
-        keyboardButtonReturn.setCallbackData(":return>" + idInfoSearch);
+        keyboardButtonReturn.setCallbackData(":return>" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + infoForSearch.getId());
         rowDown.add(keyboardButtonReturn);
 
         InlineKeyboardButton keyboardButtonRespond = new InlineKeyboardButton("Откликнуться"); //кнопка
         //keyboardButtonRespond.setCallbackData(":res!po<nd");
-        keyboardButtonRespond.setUrl(urlRespond);
+        keyboardButtonRespond.setUrl(vacancy.getUrlRespond());
         rowDown.add(keyboardButtonRespond);
 
         InlineKeyboardButton keyboardButtonDetailed = new InlineKeyboardButton("Подробнее"); //кнопка
         //keyboardButtonDetailed.setCallbackData(":det!ai>led");
-        keyboardButtonDetailed.setUrl(urlDetailed);
+        keyboardButtonDetailed.setUrl(vacancy.getUrlVacancy());
         rowDown.add(keyboardButtonDetailed);
 
         if (numberVacancy > 1) {
             InlineKeyboardButton keyboardButtonBack = new InlineKeyboardButton("Назад"); // кнопка
-            keyboardButtonBack.setCallbackData("%b->ac!k");
+            keyboardButtonBack.setCallbackData(":<--back" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + vacancy.getId());
             rowTop.add(keyboardButtonBack);
         }
 
         if (numberVacancy < limit) {
             InlineKeyboardButton keyboardButtonNext = new InlineKeyboardButton("Далее"); //кнопка
-            keyboardButtonNext.setCallbackData("%n->ex!t");
+            keyboardButtonNext.setCallbackData(":next-->" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + vacancy.getId());
             rowTop.add(keyboardButtonNext);
         }
 

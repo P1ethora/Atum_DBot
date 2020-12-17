@@ -35,24 +35,19 @@ public class ShiftViewVacancy<T> {
 
         List<T> msgForSend = new ArrayList<>();        //список сообщений для отправки
         SaveVacancyCell saveVacancyCell = getSave(info);   //получаем ячейку сохранения с вакансиями
-System.out.println("Ячейка сохранения открыта" + saveVacancyCell);
-System.out.println("Содержание вакансий: " + Arrays.toString(saveVacancyCell.getVacancies()));
-//        if (saveVacancyCell == null) {    //если ячейка отсутствует её необходимо воссоздать
-//            saveVacancyCell = new SaveVacancyCell();
-//
-//        }
+
         //ТЕКУЩИЙ
         if (!next && !back) {
             System.out.println("Запрос на получение актуальной ваканссии");
-            msgForSend = actualVacancy(chatId, messageId, saveVacancyCell, info.getId());
+            msgForSend = actualVacancy(chatId, messageId, saveVacancyCell, info);
         }
         //СЛЕДУЮЩИЙ
         else if (next && !back) {
-            msgForSend = shift(chatId, messageId, NUMBER_NEXT, saveVacancyCell, info.getId());
+            msgForSend = shift(chatId, messageId, NUMBER_NEXT, saveVacancyCell, info);
         }
         //ПРЕДЫДУЩИЙ
         else if (back && !next) {
-            msgForSend = shift(chatId, messageId, NUMBER_BACK, saveVacancyCell,info.getId());
+            msgForSend = shift(chatId, messageId, NUMBER_BACK, saveVacancyCell,info);
         }
         System.out.println("Отправляю сообщение " + msgForSend.size());
         return msgForSend;
@@ -61,13 +56,15 @@ System.out.println("Содержание вакансий: " + Arrays.toString(s
     /**
      * Сдвиг материала назад<-->вперед
      */
-    private List<T> shift(long chatId, int messageId, int shiftNumber, SaveVacancyCell saveVacancyCell,int idInfoForSearch) {
+    private List<T> shift(long chatId, int messageId, int shiftNumber, SaveVacancyCell saveVacancyCell,InfoForSearch infoForSearch) {
         List<T> msgForSend = new ArrayList<>();
         Vacancy[] vacancies = saveVacancyCell.getVacancies();
         for (int i = 0; i < saveVacancyCell.getVacancies().length; i++) {
-            if (vacancies[i].getId() == saveVacancyCell.getSaveIdVacancy()) {
-                saveVacancyCell.setSaveIdVacancy(vacancies[i + shiftNumber].getId());
-                msgForSend.add((T) editMessageVacancy(chatId, messageId, i + shiftNumber, vacancies.length, vacancies[i + shiftNumber],idInfoForSearch));
+            if (vacancies[i].getId() == infoForSearch.getIdVacancy()) {
+                //saveVacancyCell.setSaveIdVacancy(vacancies[i + shiftNumber].getId());
+                // infoForSearch.setIdVacancy(vacancies[i + shiftNumber].getId());
+                msgForSend.add((T) editMessageVacancy(chatId, messageId, (i+1) + shiftNumber, vacancies.length, vacancies[i + shiftNumber],infoForSearch));
+                System.out.println("Вакансия должна стать: номер" + ((i+1)+shiftNumber) +", заголовок: "+ vacancies[i+shiftNumber].getTitle() + ", id = " + vacancies[i+shiftNumber]);
                 break;
             }
         }
@@ -75,32 +72,32 @@ System.out.println("Содержание вакансий: " + Arrays.toString(s
     }
 
 
-    private List<T> actualVacancy(long chatId, int messageId, SaveVacancyCell saveVacancyCell, int idInfoSearch) {
+    private List<T> actualVacancy(long chatId, int messageId, SaveVacancyCell saveVacancyCell, InfoForSearch infoForSearch) {
         List<T> messageTexts = new ArrayList<>();
 
         int limit = saveVacancyCell.getVacancies().length;
-        System.out.println("Размер листа вакансий составляет" + limit);
         int number = 0;
 
         for (Vacancy vacancy : saveVacancyCell.getVacancies()) {
             number++;
-            if (saveVacancyCell.getSaveIdVacancy()==vacancy.getId()) {
-                messageTexts.add((T) editMessageVacancy(chatId, messageId, number, limit, vacancy,idInfoSearch));
-            } else {System.out.println("Не совпало");}
+            if (infoForSearch.getIdVacancy()==vacancy.getId()) {
+                messageTexts.add((T) editMessageVacancy(chatId, messageId, number, limit, vacancy,infoForSearch));
+                break;
+            }
 
         }
         return messageTexts;
     }
 
     //EDIT TASK
-    private EditMessageText editMessageVacancy(long chatId, int messageId, int number, int limit, Vacancy vacancy, int idInfoSearch) {
+    private EditMessageText editMessageVacancy(long chatId, int messageId, int number, int limit, Vacancy vacancy, InfoForSearch infoForSearch) {
         EditMessageText editMessageText = new EditMessageText();
         editMessageText.setChatId(chatId);
         editMessageText.setMessageId(messageId);
         editMessageText.setText("[" + number + "/" + limit + "]\n" + vacancyFormatBuilder.getBuildTextVacancy(vacancy))
                 .enableHtml(true)
                 .disableWebPagePreview();
-        editMessageText.setReplyMarkup(keyboardJobChoiceVacancy.keyboard(number, limit, vacancy.getUrlRespond(), vacancy.getUrlVacancy(),idInfoSearch));
+        editMessageText.setReplyMarkup(keyboardJobChoiceVacancy.keyboard(number, limit, vacancy, infoForSearch));
         return editMessageText;
     }
 
