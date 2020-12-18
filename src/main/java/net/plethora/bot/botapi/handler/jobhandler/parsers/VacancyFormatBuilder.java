@@ -39,18 +39,6 @@ public class VacancyFormatBuilder {
                 stringBuilder.append(skill).append("\n");
             }
         }
-//        stringBuilder.append("<a href=\"")                                 //отклик в виде гиперссылки
-//                .append(vacancy.getUrlRespond())
-//                .append("\">")
-//                .append("Откликнуться")
-//                .append("</a>")
-//                .append("                ")
-//                .append("<a href=\"")
-//                .append(vacancy.getUrlVacancy())                           //ссылка на вакансию
-//                .append("\">")
-//                .append("Подробнее...")
-//                .append("</a>")
-//                .append("\n");
 
         return stringBuilder;
     }

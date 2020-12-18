@@ -34,9 +34,9 @@ public class ParsRabota {
                 text + "&enable_snippets=true";                //По это ссылке будем подключаться к сайту
 
         List<String> urls = getUrlVacancy(connection); //получаем список ссылок вакансий
-int counter = -1;
+        int counter = -1;
         for (String urlVacancy : urls) {          //подключение и парс страницы согласно url
-counter++;
+            counter++;
             Document doc = Jsoup.connect(urlVacancy).get();//заходим на адрес вакансии
 
             Element title = doc.getElementsByAttributeValue("data-qa", "vacancy-title").first();              //заголовок вакансии
@@ -44,7 +44,7 @@ counter++;
             Element companyName = doc.getElementsByAttributeValue("data-qa", "vacancy-company-name").first(); //компания
             String urlCompanyName = webAddressRabota + companyName.attr("href");           //ссылка на компанию в сайте
             Element address = doc.getElementsByAttributeValue("data-qa", "vacancy-view-raw-address").first();    //адрес
-            if(address==null) {
+            if (address == null) {
                 address = doc.getElementsByAttributeValue("data-qa", "vacancy-view-location").first(); //если нулл, заглядываем в локацию
             }
 //          String logo = doc.getElementsByAttributeValue("class", "vacancy-company-logo").attr("src");        //логотип картинка
@@ -58,15 +58,13 @@ counter++;
             Element experience = expEmp.getElementsByAttributeValue("data-qa", "vacancy-experience").first();           //требуемый опыт
             Element employment = expEmp.getElementsByAttributeValue("data-qa", "vacancy-view-employment-mode").first(); //занятость
             Element tableSkills = doc.getElementsByAttributeValue("class", "bloko-tag-list").first();//ключевые навыки
-            Elements allSkills = tableSkills.getElementsByAttributeValue("class","bloko-tag__section bloko-tag__section_text"); //вытягиваем навыки
+            Elements allSkills = null;
+            if (tableSkills != null) {
+                allSkills = tableSkills.getElementsByAttributeValue("class", "bloko-tag__section bloko-tag__section_text"); //вытягиваем навыки
+            }
 //          Element data =doc.getElementsByAttributeValue("class","bloko-column bloko-column_xs-4 bloko-column_s-8 bloko-column_m-8 bloko-column_l-8vacancy-creation-time").first();
             //TODO: не могу вытянуть дату
-//          Element vacancySection = blockDescription.getElementsByAttributeValue("class","vacancy-section").first(); //полное описание
-            String[] skills = new String[allSkills.size()];
-            for (int i = 0; i < allSkills.size(); i++) {
-                skills[i] = allSkills.get(i).text();
-            }
-
+//         Element vacancySection = blockDescription.getElementsByAttributeValue("class","vacancy-section").first(); //полное описание
             Vacancy vacancy = new Vacancy();
             vacancy.setId(counter);
             vacancy.setTitle(title.text()); //заголовок вакансии
@@ -77,7 +75,13 @@ counter++;
             vacancy.setExperience(experience.text());// опыт
             vacancy.setEmployment(employment.text());
 //          vacancy.setDescription(description); //описание
-            vacancy.setKeySkills(skills);   //ключевые навыки
+            if (allSkills != null) {
+                String[] skills = new String[allSkills.size()];
+                for (int i = 0; i < allSkills.size(); i++) {
+                    skills[i] = allSkills.get(i).text();
+                }
+                vacancy.setKeySkills(skills);   //ключевые навыки
+            }
             vacancy.setUrlRespond(requestLink);  //откликнуться
             vacancy.setUrlVacancy(urlVacancy);  //перейти к вакансии
 
@@ -95,9 +99,16 @@ counter++;
             Element table = doc.getElementsByAttributeValue("class", "vacancy-serp").first();  //получил таблицу
             Elements els = table.getElementsByAttributeValue("class", "bloko-link HH-LinkModifier HH-VacancySidebarTrigger-Link HH-VacancySidebarAnalytics-Link"); //блок со ссылкой
 
+            element:
             for (Element el : els) { //перебор элементов
                 String url = el.attr("href");  //получаем саму ссылку
-                vacancies.add(url);
+                if (vacancies.size() > 0) {
+                    for (String str : vacancies) {
+                        if (str.equals(url))
+                            continue element;
+                    }
+                    vacancies.add(url);
+                } else vacancies.add(url);
                 System.out.println(url);
             }
 
@@ -111,6 +122,7 @@ counter++;
 
     /**
      * Определение участка для ссылки согласно заданному периоду
+     *
      * @param period от сообщения
      * @return участок ссылки
      */

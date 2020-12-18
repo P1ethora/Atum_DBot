@@ -10,14 +10,10 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Component
 public class ShiftViewVacancy<T> {
-
-    private final int NUMBER_NEXT = 1;
-    private final int NUMBER_BACK = -1;
 
     private KeyboardJobChoiceVacancy keyboardJobChoiceVacancy;
     private CacheVacancySearchUser cacheVacancySearchUser;
@@ -38,55 +34,33 @@ public class ShiftViewVacancy<T> {
 
         //ТЕКУЩИЙ
         if (!next && !back) {
-            System.out.println("Запрос на получение актуальной ваканссии");
-            msgForSend = actualVacancy(chatId, messageId, saveVacancyCell, info);
+            msgForSend = shift(chatId, messageId, 0, saveVacancyCell, info);
         }
         //СЛЕДУЮЩИЙ
         else if (next && !back) {
-            msgForSend = shift(chatId, messageId, NUMBER_NEXT, saveVacancyCell, info);
+            msgForSend = shift(chatId, messageId, 1, saveVacancyCell, info);
         }
         //ПРЕДЫДУЩИЙ
         else if (back && !next) {
-            msgForSend = shift(chatId, messageId, NUMBER_BACK, saveVacancyCell,info);
+            msgForSend = shift(chatId, messageId, -1, saveVacancyCell,info);
         }
-        System.out.println("Отправляю сообщение " + msgForSend.size());
+
         return msgForSend;
     }
 
     /**
-     * Сдвиг материала назад<-->вперед
+     * Сдвиг вакансии:  назад<--текущий-->вперед
      */
     private List<T> shift(long chatId, int messageId, int shiftNumber, SaveVacancyCell saveVacancyCell,InfoForSearch infoForSearch) {
         List<T> msgForSend = new ArrayList<>();
         Vacancy[] vacancies = saveVacancyCell.getVacancies();
         for (int i = 0; i < saveVacancyCell.getVacancies().length; i++) {
             if (vacancies[i].getId() == infoForSearch.getIdVacancy()) {
-                //saveVacancyCell.setSaveIdVacancy(vacancies[i + shiftNumber].getId());
-                // infoForSearch.setIdVacancy(vacancies[i + shiftNumber].getId());
                 msgForSend.add((T) editMessageVacancy(chatId, messageId, (i+1) + shiftNumber, vacancies.length, vacancies[i + shiftNumber],infoForSearch));
-                System.out.println("Вакансия должна стать: номер" + ((i+1)+shiftNumber) +", заголовок: "+ vacancies[i+shiftNumber].getTitle() + ", id = " + vacancies[i+shiftNumber]);
                 break;
             }
         }
         return msgForSend;
-    }
-
-
-    private List<T> actualVacancy(long chatId, int messageId, SaveVacancyCell saveVacancyCell, InfoForSearch infoForSearch) {
-        List<T> messageTexts = new ArrayList<>();
-
-        int limit = saveVacancyCell.getVacancies().length;
-        int number = 0;
-
-        for (Vacancy vacancy : saveVacancyCell.getVacancies()) {
-            number++;
-            if (infoForSearch.getIdVacancy()==vacancy.getId()) {
-                messageTexts.add((T) editMessageVacancy(chatId, messageId, number, limit, vacancy,infoForSearch));
-                break;
-            }
-
-        }
-        return messageTexts;
     }
 
     //EDIT TASK
