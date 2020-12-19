@@ -20,6 +20,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -33,6 +34,8 @@ public class HandlerJobMessage<T> {
     private ShiftViewVacancy shiftViewVacancy;
     private ProvisionalObjectInfo provisionalObjectInfo;
     private CacheVacancySearchUser cacheVacancySearchUser;
+
+    private final long DAY = 86400000;
 
     public HandlerJobMessage(DataAccessArea dataAccessArea, ParsRabota parsRabota, KeyboardPeriodJob keyboardPeriodJob,
                              DataAccessUser dataAccessUser, SearchDataJobMessage searchDataJobMessage,
@@ -99,7 +102,7 @@ public class HandlerJobMessage<T> {
                 if (vacancies.size() > 0) {
                     SaveVacancyCell saveVacancyCell = createSaveVacancyCell(messageId, chatId, info.getArea(), info.getPeriod(), vacancies); //создать конструктор
                     addSaveVacancyToCache(saveVacancyCell);  //добавляем сохранение
-                    messages = shiftViewVacancy.view(chatId, messageId, info, false, false);  //сообщение
+                    messages = shiftViewVacancy.view(chatId, messageId, info, saveVacancyCell, false, false);  //сообщение
                     dataAccessUser.editUser(user, SubState.FOUND);
                 } else {
                     messages.add((T) new SendMessage(chatId, "Не обнаружено"));
@@ -156,13 +159,17 @@ public class HandlerJobMessage<T> {
                     String period = getPartTheInfoUser(msgUser, 1);
                     int idVacancy = Integer.parseInt(getPartTheInfoUser(msgUser, 2));
                     InfoForSearch info = new InfoForSearch(messageId, chatId, area, period, idVacancy);
-                    messages = shiftViewVacancy.view(chatId, messageId, info, true, false);
+                    SaveVacancyCell saveVacancyCell = getSave(info);
+                    saveVacancyCell = checkSave(saveVacancyCell, info, messageId, chatId);
+                    messages = shiftViewVacancy.view(chatId, messageId, info, saveVacancyCell, true, false);
                 } else if (msgUser.length() > 8 && msgUser.substring(0, 8).equals(":<--back")) {
                     String area = getPartTheInfoUser(msgUser, 0);
                     String period = getPartTheInfoUser(msgUser, 1);
                     int idVacancy = Integer.parseInt(getPartTheInfoUser(msgUser, 2));
                     InfoForSearch info = new InfoForSearch(messageId, chatId, area, period, idVacancy);
-                    messages = shiftViewVacancy.view(chatId, messageId, info, false, true);
+                    SaveVacancyCell saveVacancyCell = getSave(info);
+                    saveVacancyCell = checkSave(saveVacancyCell, info, messageId, chatId);
+                    messages = shiftViewVacancy.view(chatId, messageId, info, saveVacancyCell, false, true);
                 } else {
                     messages.add((T) new SendMessage(chatId, "Неверный формат ввода"));
                 }
@@ -179,12 +186,15 @@ public class HandlerJobMessage<T> {
     }
 
     private SaveVacancyCell createSaveVacancyCell(int messageId, long chatId, String area, String period, List<Vacancy> listVacancy) {
+
+        Date date = new Date();
         SaveVacancyCell saveVacancyCell = new SaveVacancyCell();
         saveVacancyCell.setId(messageId);
         saveVacancyCell.setChatId(chatId);
         saveVacancyCell.setArea(area);
         saveVacancyCell.setPeriod(period);
         saveVacancyCell.setVacancies(listVacancy.toArray(new Vacancy[0]));
+        saveVacancyCell.setDateDelete(new Date(date.getTime() + DAY));
         return saveVacancyCell;
     }
 
@@ -207,6 +217,22 @@ public class HandlerJobMessage<T> {
         info.setPeriod(period);
         info.setIdVacancy(0);
         return info;
+    }
+
+    private SaveVacancyCell getSave(InfoForSearch infoForSearch) {
+        return cacheVacancySearchUser.getCache().stream()
+                .filter(i -> i.getId() == infoForSearch.getId())
+                .findFirst()
+                .orElse(null);
+    }
+
+    private SaveVacancyCell checkSave(SaveVacancyCell saveVacancyCell, InfoForSearch info, int messageId, long chatId) {
+        if (saveVacancyCell == null) {
+            List<Vacancy> vacancies = parsRabota.parse(dataAccessArea.handleRequest(info.getArea()).getCode(), info.getPeriod());
+            saveVacancyCell = createSaveVacancyCell(messageId, chatId, info.getArea(), info.getPeriod(), vacancies);
+            addSaveVacancyToCache(saveVacancyCell);
+        }
+        return saveVacancyCell;
     }
 
 }

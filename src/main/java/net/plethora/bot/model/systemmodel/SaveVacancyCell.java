@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.plethora.bot.model.Vacancy;
 
+import java.util.Date;
+
 @Getter
 @Setter
 public class SaveVacancyCell {
@@ -14,14 +16,16 @@ public class SaveVacancyCell {
     private String period;
     private Vacancy[] vacancies;
     int saveIdVacancy;
+    private Date dateDelete;
 
-    public SaveVacancyCell(int id,long chatId,String area, String period, Vacancy[] vacancies, int saveIdVacancy) {
+    public SaveVacancyCell(int id, long chatId, String area, String period, Vacancy[] vacancies, int saveIdVacancy, Date dateDelete) {
         this.id = id;
         this.chatId = chatId;
         this.area = area;
         this.period = period;
         this.vacancies = vacancies;
         this.saveIdVacancy = saveIdVacancy;
+        this.dateDelete = dateDelete;
     }
 
     public SaveVacancyCell() {

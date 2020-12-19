@@ -14,7 +14,9 @@ import java.util.List;
 
 @Component
 public class ShiftViewVacancy<T> {
-
+    //TODO может произойти такое что количетво вакансий будет меньше чем до удаления
+    //TODO и при новом создании ячейки id станет за пределы списка
+    //TODO в таком случае нужно указать самый последний элемент!!!!!!!!!!!
     private KeyboardJobChoiceVacancy keyboardJobChoiceVacancy;
     private CacheVacancySearchUser cacheVacancySearchUser;
     private VacancyFormatBuilder vacancyFormatBuilder;
@@ -27,10 +29,9 @@ public class ShiftViewVacancy<T> {
 
     }
 
-    public List<T> view(long chatId, int messageId, InfoForSearch info, boolean next, boolean back) {
+    public List<T> view(long chatId, int messageId, InfoForSearch info, SaveVacancyCell saveVacancyCell, boolean next, boolean back) {
 
         List<T> msgForSend = new ArrayList<>();        //список сообщений для отправки
-        SaveVacancyCell saveVacancyCell = getSave(info);   //получаем ячейку сохранения с вакансиями
 
         //ТЕКУЩИЙ
         if (!next && !back) {
