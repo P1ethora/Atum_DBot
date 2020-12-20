@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.system;
+package net.plethora.bot.botapi.system.shift;
 
 import net.plethora.bot.botapi.keyboards.kbbook.KeyboardBookSelect;
 import net.plethora.bot.botapi.keyboards.kbtask.KeyboardTaskSelect;

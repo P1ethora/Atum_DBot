@@ -81,16 +81,17 @@ public class BotExecution<T> {
             user = getUser(chatId, idUser, firstName, lastName, userName); //инициализация пользователя
 
             messages = response(chatId, idUser, firstName, lastName, userName, msgUser, 0, null);
-        }
+
 //---------------------------------------------------------------------------------------------------------//
-        else if(update.hasPoll()){
+            //ОТВЕТ ВИКТОРИНЫ
+        } else if (update.hasPoll()) {
             Poll poll = update.getPoll();
 //TODO можно собрать данные для вывода статистики вконце викторины
             String question = poll.getQuestion();
             String pollId = poll.getId(); //id Опроса
             int totalVoter = poll.getTotalVoterCount(); //количество ответов
-            List <PollOption> pollOptions = poll.getOptions();  //варианты ответов
-       System.out.println("Количество " + totalVoter + "Вариант " + pollOptions);
+            List<PollOption> pollOptions = poll.getOptions();  //варианты ответов
+            System.out.println("Количество " + totalVoter + "Вариант " + pollOptions);
         }
 
         return messages;
@@ -108,7 +109,8 @@ public class BotExecution<T> {
         List<T> messages = new ArrayList<>();
         if (user.getState() != null) {//Если есть состояние
             //Определяем что за состояние и запускаем сервис
-            messages = processingStates.processing(user.getState()).start(chatId, askUser, user, messageId, inlineMessageId);
+            messages = processingStates.processing(user.getState())
+                    .start(chatId, askUser, user, messageId, inlineMessageId);
         } else { //Если не активирован сервис
             messages.add((T) new SendMessage(chatId, phrases.getMessage("phrase.NeedEnableService")));
         }

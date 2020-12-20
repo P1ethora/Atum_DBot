@@ -14,7 +14,6 @@ public class User {
 
     @Id
     private String id;
-
     private int idUser;
     private BotState state;
     private SubState subState;

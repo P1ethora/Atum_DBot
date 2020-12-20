@@ -1,5 +1,6 @@
 package net.plethora.bot.botapi.handler;
 
+import net.plethora.bot.botapi.system.Cutter;
 import net.plethora.bot.dao.DataAccessAnswer;
 import net.plethora.bot.model.Answer;
 import net.plethora.bot.service.PhrasesService;
@@ -17,10 +18,12 @@ public class HandlerAskMessage<T> {
     private Answer answer;
     private final DataAccessAnswer dao;
     private PhrasesService phrasesService;
+    private Cutter cutter;
 
-    public HandlerAskMessage(DataAccessAnswer dao,PhrasesService phrasesService) {
+    public HandlerAskMessage(DataAccessAnswer dao, PhrasesService phrasesService, Cutter cutter) {
         this.dao = dao;
         this.phrasesService = phrasesService;
+        this.cutter = cutter;
     }
 
     /**
@@ -40,7 +43,8 @@ public class HandlerAskMessage<T> {
      * @param ask строка запроса
      */
     private Answer assignAnswer(String ask) {
-       return dao.handleRequest(ask);//ищем в базе через метод репозитория и присваиваем документ
+
+        return dao.handleRequest(cutter.cut(ask));//ищем в базе через метод репозитория и присваиваем документ
     }
 
     /**

@@ -1,7 +1,7 @@
 package net.plethora.bot.botapi.handler;
 
 import lombok.SneakyThrows;
-import net.plethora.bot.botapi.system.ShiftViewMaterial;
+import net.plethora.bot.botapi.system.shift.ShiftViewMaterial;
 import net.plethora.bot.dao.DataAccessMaterialTask;
 import net.plethora.bot.model.material.Task;
 import net.plethora.bot.botapi.system.systemMessage.OptionTypeTaskMessage;

@@ -1,6 +1,6 @@
 package net.plethora.bot.botapi.handler;
 
-import net.plethora.bot.botapi.system.ShiftViewMaterial;
+import net.plethora.bot.botapi.system.shift.ShiftViewMaterial;
 import net.plethora.bot.dao.DataAccessMaterialBook;
 import net.plethora.bot.dao.DataAccessSaveCell;
 import net.plethora.bot.botapi.system.systemMessage.AgeOptionBookMessage;

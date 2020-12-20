@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.system;
+package net.plethora.bot.botapi.system.shift;
 
 import net.plethora.bot.botapi.handler.jobhandler.parsers.VacancyFormatBuilder;
 import net.plethora.bot.botapi.keyboards.kbjob.KeyboardJobChoiceVacancy;

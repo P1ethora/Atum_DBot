@@ -1,10 +1,9 @@
 package net.plethora.bot.botapi.handler.jobhandler;
 
 import jdk.nashorn.internal.runtime.Context;
-import net.plethora.bot.botapi.handler.jobhandler.parsers.VacancyFormatBuilder;
 import net.plethora.bot.botapi.keyboards.kbjob.KeyboardPeriodJob;
 import net.plethora.bot.botapi.state.SubState;
-import net.plethora.bot.botapi.system.ShiftViewVacancy;
+import net.plethora.bot.botapi.system.shift.ShiftViewVacancy;
 import net.plethora.bot.botapi.system.systemMessage.SearchDataJobMessage;
 import net.plethora.bot.cache.CacheVacancySearchUser;
 import net.plethora.bot.cache.ProvisionalObjectInfo;

@@ -45,10 +45,14 @@ public class AtumBot<T> extends TelegramWebhookBot {
                 e.printStackTrace();
             }
         };
-        Thread executor = new Thread(run, "Executor");
+        Thread executor = new Thread(run, "Executor " + update.getUpdateId());
         executor.start();
 
         return null;
+    }
+
+    public void mailing(List<T> list) {
+        send(list);
     }
 
     @SneakyThrows

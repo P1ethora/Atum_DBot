@@ -42,7 +42,6 @@ public class BotConfig {
 //        botOptions.setProxyPort(proxyPort);
 
         AtumBot atumBot = new AtumBot(botOptions);
-        //cellVacancyMonitoring.run();
         atumBot.setBotPath(botPath);
         atumBot.setBotUsername(botUsername);
         atumBot.setBotToken(botToken);

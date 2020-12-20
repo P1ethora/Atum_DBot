@@ -6,6 +6,8 @@ import net.plethora.bot.model.User;
 import net.plethora.bot.dao.repo.PostRepositoryUser;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 
 @Component
 public class DataAccessUser {
@@ -36,6 +38,10 @@ public class DataAccessUser {
                 .orElseThrow(() -> new IllegalStateException("User with id " + user.getId() + "not found"));
         oldUser.setSubState(subState);
         postRepositoryUser.save(oldUser);
+    }
+
+    public List<User> findAll() {
+        return postRepositoryUser.findAll();
     }
 
 }
