@@ -20,6 +20,7 @@ import org.telegram.telegrambots.meta.api.objects.polls.PollOption;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Component
@@ -155,6 +156,7 @@ public class BotExecution<T> {
         user.setState(null);
         user.setSubState(null);
         user.setIdChat(idChat);
+        user.setDate(new Date());
         dataAccessUser.addUser(user);
         return user;
     }

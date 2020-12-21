@@ -18,6 +18,7 @@ public class CellVacancyMonitoring {
     @SneakyThrows
     @Scheduled(fixedDelay = 3600 * 1000)
     public void run() {
+        System.out.println("Monitoring cell vacancy start");
         if (cacheVacancySearchUser.getCache().size() > 0) {
             Iterator<SaveVacancyCell> it = cacheVacancySearchUser.getCache().iterator();
             while (it.hasNext()) {
@@ -27,5 +28,6 @@ public class CellVacancyMonitoring {
                 }
             }
         }
+        System.out.println("Monitoring cell vacancy end");
     }
 }

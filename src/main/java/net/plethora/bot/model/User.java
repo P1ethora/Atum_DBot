@@ -7,6 +7,8 @@ import net.plethora.bot.botapi.state.SubState;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @Document(collection = "users")
@@ -21,12 +23,14 @@ public class User {
     private String firstName;
     private String lastName;
     private String userName;
+    private Date date;
 
-    public User(int idUser, String firstName, String lastName, String userName) {
+    public User(int idUser, String firstName, String lastName, String userName, Date date) {
         this.idUser = idUser;
         this.firstName = firstName;
         this.lastName = lastName;
         this.userName = userName;
+        this.date = date;
     }
 
     public User(){}
