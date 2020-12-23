@@ -19,6 +19,8 @@ import org.telegram.telegrambots.meta.ApiContext;
 import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Getter
 @Setter
@@ -37,11 +39,12 @@ public class BotConfig {
     @Bean
     public AtumBot atumBot() {
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
+        ExecutorService executorService = Executors.newCachedThreadPool();
 //        botOptions.setProxyType(proxyType);
 //        botOptions.setProxyHost(proxyHost);
 //        botOptions.setProxyPort(proxyPort);
 
-        AtumBot atumBot = new AtumBot(botOptions);
+        AtumBot atumBot = new AtumBot(botOptions, executorService);
         atumBot.setBotPath(botPath);
         atumBot.setBotUsername(botUsername);
         atumBot.setBotToken(botToken);

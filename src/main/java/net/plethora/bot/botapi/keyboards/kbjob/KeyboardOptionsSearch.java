@@ -33,9 +33,9 @@ if(infoForSearch==null){
     id = String.valueOf(infoForSearch.getId());
 }
 
-        buttonC.setCallbackData(":ar!-ea>" + area + "$" + period + "$" + id);
-        buttonP.setCallbackData(":period>" + area+ "$" + period + "$" + id);
-        buttonS.setCallbackData(":search>" +area + "$" + period + "$" + id);
+        buttonC.setCallbackData("job##:ar!-ea>" + area + "$" + period + "$" + id);
+        buttonP.setCallbackData("job##:period>" + area + "$" + period + "$" + id);
+        buttonS.setCallbackData("job##:search>" + area + "$" + period + "$" + id);
 
         row.add(buttonC);
         row.add(buttonP);

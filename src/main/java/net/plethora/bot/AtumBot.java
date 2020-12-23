@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import net.plethora.bot.botapi.BotExecution;
-import net.plethora.bot.botapi.system.CellVacancyMonitoring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.bots.TelegramWebhookBot;
@@ -20,6 +19,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 @Getter
 @Setter
@@ -28,12 +28,15 @@ public class AtumBot<T> extends TelegramWebhookBot {
     private String botPath;
     private String botUsername;
     private String botToken;
+    private ExecutorService executorService;
+
 
     @Autowired
     private BotExecution botExecution;
 
-    public AtumBot(DefaultBotOptions botOptions) {
+    public AtumBot(DefaultBotOptions botOptions, ExecutorService executorService) {
         super(botOptions);
+        this.executorService = executorService;
     }
 
     @SneakyThrows
@@ -46,7 +49,7 @@ public class AtumBot<T> extends TelegramWebhookBot {
             }
         };
         Thread executor = new Thread(run, "Executor " + update.getUpdateId());
-        executor.start();
+        executorService.submit(executor);
 
         return null;
     }

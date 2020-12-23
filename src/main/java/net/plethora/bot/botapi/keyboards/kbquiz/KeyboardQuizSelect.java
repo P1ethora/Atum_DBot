@@ -15,11 +15,11 @@ public class KeyboardQuizSelect {
         List<InlineKeyboardButton> row = new ArrayList<>(); //ряд
 
         InlineKeyboardButton keyboardButtonBackToSubject = new InlineKeyboardButton("Обнулить");
-        keyboardButtonBackToSubject.setCallbackData(":ze!ro&iz|e");
+        keyboardButtonBackToSubject.setCallbackData("quiz##:ze!ro&iz|e");
         row.add(keyboardButtonBackToSubject);
 
         InlineKeyboardButton keyboardButton = new InlineKeyboardButton("Далее"); //кнопка
-        keyboardButton.setCallbackData(":next!random");  //ответка в виде id задачи и небольшога шифра
+        keyboardButton.setCallbackData("quiz##:next!random");  //ответка в виде id задачи и небольшога шифра
         row.add(keyboardButton);
 
         rows.add(row);

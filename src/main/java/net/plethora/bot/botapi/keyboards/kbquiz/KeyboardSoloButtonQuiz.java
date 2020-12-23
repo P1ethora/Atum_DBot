@@ -16,7 +16,7 @@ public class KeyboardSoloButtonQuiz {
         List<InlineKeyboardButton> row = new ArrayList<>(); //ряд
 
         InlineKeyboardButton keyboardButton = new InlineKeyboardButton("Начать"); //имя кнопки
-        keyboardButton.setCallbackData(":sta!r>t");  //начать
+        keyboardButton.setCallbackData("quiz##:sta!r>t");  //начать
         row.add(keyboardButton); //добавляем кнопку
 
         rows.add(row);//добавляем ряд
@@ -30,7 +30,7 @@ public class KeyboardSoloButtonQuiz {
         List<InlineKeyboardButton> row = new ArrayList<>(); //ряд
 
         InlineKeyboardButton keyboardButton = new InlineKeyboardButton("Обнулить"); //имя кнопки
-        keyboardButton.setCallbackData(":ze!ro&iz|e");  //начать
+        keyboardButton.setCallbackData("quiz##:ze!ro&iz|e");  //начать
         row.add(keyboardButton); //добавляем кнопку
 
         rows.add(row);//добавляем ряд

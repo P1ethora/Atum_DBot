@@ -19,28 +19,26 @@ public class KeyboardJobChoiceVacancy {
         List<InlineKeyboardButton> rowDown = new ArrayList<>(); //ряд
 
         InlineKeyboardButton keyboardButtonReturn = new InlineKeyboardButton("Вернуться");
-        keyboardButtonReturn.setCallbackData(":return>" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + infoForSearch.getId());
+        keyboardButtonReturn.setCallbackData("job#found#:return>" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + infoForSearch.getId());
         rowDown.add(keyboardButtonReturn);
 
         InlineKeyboardButton keyboardButtonRespond = new InlineKeyboardButton("Откликнуться"); //кнопка
-        //keyboardButtonRespond.setCallbackData(":res!po<nd");
         keyboardButtonRespond.setUrl(vacancy.getUrlRespond());
         rowDown.add(keyboardButtonRespond);
 
         InlineKeyboardButton keyboardButtonDetailed = new InlineKeyboardButton("Подробнее"); //кнопка
-        //keyboardButtonDetailed.setCallbackData(":det!ai>led");
         keyboardButtonDetailed.setUrl(vacancy.getUrlVacancy());
         rowDown.add(keyboardButtonDetailed);
 
         if (numberVacancy > 1) {
             InlineKeyboardButton keyboardButtonBack = new InlineKeyboardButton("Назад"); // кнопка
-            keyboardButtonBack.setCallbackData(":<--back" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + vacancy.getId());
+            keyboardButtonBack.setCallbackData("job#found#:<--back" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + vacancy.getId());
             rowTop.add(keyboardButtonBack);
         }
 
         if (numberVacancy < limit) {
             InlineKeyboardButton keyboardButtonNext = new InlineKeyboardButton("Далее"); //кнопка
-            keyboardButtonNext.setCallbackData(":next-->" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + vacancy.getId());
+            keyboardButtonNext.setCallbackData("job#found#:next-->" + infoForSearch.getArea() + "$" + infoForSearch.getPeriod() + "$" + vacancy.getId());
             rowTop.add(keyboardButtonNext);
         }
 

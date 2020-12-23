@@ -18,8 +18,8 @@ public class KeyboardAgeOptionBook {
         InlineKeyboardButton buttonC = new InlineKeyboardButton("Детям");
         InlineKeyboardButton buttonO = new InlineKeyboardButton("Взрослым");
 
-        buttonC.setCallbackData("children");
-        buttonO.setCallbackData("older");
+        buttonC.setCallbackData("book##children");
+        buttonO.setCallbackData("book##older");
 
         row.add(buttonC);
         row.add(buttonO);

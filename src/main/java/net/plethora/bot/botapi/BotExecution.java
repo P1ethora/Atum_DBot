@@ -4,6 +4,7 @@ import net.plethora.bot.botapi.commands.CheckCommand;
 import net.plethora.bot.botapi.commands.Cmd;
 import net.plethora.bot.botapi.keyboards.KeyboardCmdMenu;
 import net.plethora.bot.botapi.state.BotState;
+import net.plethora.bot.botapi.state.SubState;
 import net.plethora.bot.dao.DataAccessUser;
 import net.plethora.bot.model.User;
 import net.plethora.bot.service.PhrasesService;
@@ -19,6 +20,7 @@ import org.telegram.telegrambots.meta.api.objects.polls.PollAnswer;
 import org.telegram.telegrambots.meta.api.objects.polls.PollOption;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
 
+import javax.security.auth.Subject;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +69,7 @@ public class BotExecution<T> {
             String userName = update.getCallbackQuery().getFrom().getUserName();  //               |
             int idUser = update.getCallbackQuery().getFrom().getId();             //<---------------
 
-            messages = response(chatId, idUser, firstName, lastName, userName, msgUser, messageId, callbackQueryId);
+            messages = response(chatId, idUser, firstName, lastName, userName, changeState(msgUser), messageId, callbackQueryId);
 //-----------------------------------------------------------------------------------------------------//
             //СООБЩЕНИЕ
         } else if (update.getMessage() != null && update.getMessage().hasText()) {  //если отправленно сообщение
@@ -180,5 +182,17 @@ public class BotExecution<T> {
             messages = enabledService(chatId, msgUser, messageId, callbackQueryId);  //включаем сервис
         }
         return messages;
+    }
+
+    private String changeState(String msgUser) {
+
+        String[] sts = msgUser.split("#"); //делим сообщение на части
+        BotState botState = BotState.valueOf(sts[0].toUpperCase()); //1я часть - состояние
+        dataAccessUser.editUser(user, botState); //меняем состояние
+        if (!sts[1].equals("")) { //на случай если подсостояние не указано
+            SubState subState = SubState.valueOf(sts[1].toUpperCase());//2я - подсостояние
+            dataAccessUser.editUser(user, subState); // меняем состояние
+        }
+        return sts[2];  // остальное возвращаем
     }
 }

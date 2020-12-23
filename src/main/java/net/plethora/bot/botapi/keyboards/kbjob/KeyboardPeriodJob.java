@@ -20,10 +20,10 @@ public class KeyboardPeriodJob {
         InlineKeyboardButton buttonTd = new InlineKeyboardButton("три дня");
         InlineKeyboardButton buttonD = new InlineKeyboardButton("сутки");
 
-        buttonM.setCallbackData("Месяц");
-        buttonW.setCallbackData("Неделя");
-        buttonTd.setCallbackData("Три дня");
-        buttonD.setCallbackData("Сутки");
+        buttonM.setCallbackData("job#period#Месяц");
+        buttonW.setCallbackData("job#periodНеделя");
+        buttonTd.setCallbackData("job#period#Три дня");
+        buttonD.setCallbackData("job#periodСутки");
 
         row.add(buttonM);
         row.add(buttonW);

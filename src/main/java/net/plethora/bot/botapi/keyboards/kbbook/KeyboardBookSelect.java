@@ -20,7 +20,7 @@ public class KeyboardBookSelect {
         List<InlineKeyboardButton> rowDown = new ArrayList<>(); //ряд
 
         InlineKeyboardButton keyboardButtonBackToOptions = new InlineKeyboardButton("К разделам"); //кнопка
-        keyboardButtonBackToOptions.setCallbackData(":To<Opt!io>ns");
+        keyboardButtonBackToOptions.setCallbackData("book##:To<Opt!io>ns");
         rowDown.add(keyboardButtonBackToOptions);
 
         InlineKeyboardButton keyboardButton = new InlineKeyboardButton("Просмотр").setUrl(url); //кнопка
@@ -28,17 +28,17 @@ public class KeyboardBookSelect {
 
         if (numberBook > 1) {
             InlineKeyboardButton keyboardButtonBack = new InlineKeyboardButton("Назад"); // кнопка
-            keyboardButtonBack.setCallbackData("%b->ac!k");
+            keyboardButtonBack.setCallbackData("book##%b->ac!k");
             rowTop.add(keyboardButtonBack);
         }
 
         InlineKeyboardButton keyboardButtonPreview = new InlineKeyboardButton("Превью"); // кнопка
-        keyboardButtonPreview.setCallbackData(":previ!ew&");
+        keyboardButtonPreview.setCallbackData("book##:previ!ew&");
 
 
         if (numberBook < limit) {
             InlineKeyboardButton keyboardButtonNext = new InlineKeyboardButton("Далее"); //кнопка
-            keyboardButtonNext.setCallbackData("%n->ex!t");
+            keyboardButtonNext.setCallbackData("book##%n->ex!t");
             rowTop.add(keyboardButtonNext);
         }
         if (rowTop.size() == 2) {
