@@ -1,7 +1,7 @@
 package net.plethora.bot.service.menu;
 
 import net.plethora.bot.botapi.handler.HandlerTaskMessage;
-import net.plethora.bot.model.User;
+import net.plethora.bot.model.UserTelegram;
 import net.plethora.bot.service.ServiceMenu;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -18,7 +18,7 @@ public class TaskServiceMenu<T> implements ServiceMenu {
     }
 
     @Override
-    public List<T> start(long chatId, String msgUser, User user, int messageId,String inlineMessageId) {
+    public List<T> start(long chatId, String msgUser, UserTelegram userTelegram, int messageId, String inlineMessageId) {
         List<T> list = handlerTaskMessage.process(chatId,msgUser, messageId);
 
         if(list.size()==0){

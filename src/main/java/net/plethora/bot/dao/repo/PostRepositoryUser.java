@@ -1,12 +1,12 @@
 package net.plethora.bot.dao.repo;
 
-import net.plethora.bot.model.User;
+import net.plethora.bot.model.UserTelegram;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostRepositoryUser extends MongoRepository<User, String> {
+public interface PostRepositoryUser extends MongoRepository<UserTelegram, String> {
 
-   public User findByIdUser(int idUser);
+    public UserTelegram findByIdUser(int idUser);
 
 }

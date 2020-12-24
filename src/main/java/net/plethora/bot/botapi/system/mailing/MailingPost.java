@@ -2,10 +2,9 @@ package net.plethora.bot.botapi.system.mailing;
 
 import net.plethora.bot.AtumBot;
 import net.plethora.bot.dao.DataAccessUser;
-import net.plethora.bot.model.User;
+import net.plethora.bot.model.UserTelegram;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.telegram.telegrambots.bots.TelegramWebhookBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 
 import java.util.ArrayList;
@@ -25,13 +24,13 @@ public class MailingPost<T> implements Runnable {
     @Override
     public void run() {
         System.out.println("Mailing post start");
-        for (User user : dataAccessUser.findAll()) {
-            long timeSending = user.getDate().getTime() + FOUR_HOURS;
+        for (UserTelegram userTelegram : dataAccessUser.findAll()) {
+            long timeSending = userTelegram.getDate().getTime() + FOUR_HOURS;
             Date date = new Date();
             if (timeSending <= date.getTime()) {
                 SendMessage sendMessage = new SendMessage();
 //TODO добавить базу с записями или парсить группы вк
-                sendMessage.setChatId(user.getIdChat());
+                sendMessage.setChatId(userTelegram.getIdChat());
                 sendMessage.setText("Это просто спам");
 
                 List<T> list = new ArrayList<>();

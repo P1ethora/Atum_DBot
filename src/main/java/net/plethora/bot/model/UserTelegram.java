@@ -12,7 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Document(collection = "users")
-public class User {
+public class UserTelegram {
 
     @Id
     private String id;
@@ -25,7 +25,7 @@ public class User {
     private String userName;
     private Date date;
 
-    public User(int idUser, String firstName, String lastName, String userName, Date date) {
+    public UserTelegram(int idUser, String firstName, String lastName, String userName, Date date) {
         this.idUser = idUser;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -33,6 +33,7 @@ public class User {
         this.date = date;
     }
 
-    public User(){}
+    public UserTelegram() {
+    }
 
 }

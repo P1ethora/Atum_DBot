@@ -8,7 +8,7 @@ import net.plethora.bot.botapi.system.systemMessage.SearchDataJobMessage;
 import net.plethora.bot.cache.CacheVacancySearchUser;
 import net.plethora.bot.cache.ProvisionalObjectInfo;
 import net.plethora.bot.dao.DataAccessUser;
-import net.plethora.bot.model.User;
+import net.plethora.bot.model.UserTelegram;
 import net.plethora.bot.model.Vacancy;
 import net.plethora.bot.model.systemmodel.InfoForSearch;
 import net.plethora.bot.botapi.handler.jobhandler.parsers.ParsRabota;
@@ -51,7 +51,7 @@ public class HandlerJobMessage<T> {
 
     }
 
-    public List<T> handler(long chatId, String msgUser, User user, int messageId) {
+    public List<T> handler(long chatId, String msgUser, UserTelegram userTelegram, int messageId) {
 
         List<T> messages = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class HandlerJobMessage<T> {
                     getPartTheInfoUser(msgUser, 1));
 
             provisionalObjectInfo.getInfoForSearches().put(chatId, info);
-            dataAccessUser.editUser(user, SubState.AREA);//изменяем подсостояние
+            dataAccessUser.editUser(userTelegram, SubState.AREA);//изменяем подсостояние
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(chatId);
             editMessageText.setMessageId(messageId);
@@ -75,7 +75,7 @@ public class HandlerJobMessage<T> {
                     getPartTheInfoUser(msgUser, 1));
 
             provisionalObjectInfo.getInfoForSearches().put(chatId, info);
-            dataAccessUser.editUser(user, SubState.PERIOD);
+            dataAccessUser.editUser(userTelegram, SubState.PERIOD);
             EditMessageText editMessageText = new EditMessageText();
             editMessageText.setChatId(chatId);
             editMessageText.setMessageId(messageId);
@@ -102,14 +102,14 @@ public class HandlerJobMessage<T> {
                     SaveVacancyCell saveVacancyCell = createSaveVacancyCell(messageId, chatId, info.getArea(), info.getPeriod(), vacancies); //создать конструктор
                     addSaveVacancyToCache(saveVacancyCell);  //добавляем сохранение
                     messages = shiftViewVacancy.view(chatId, messageId, info, saveVacancyCell, false, false);  //сообщение
-                    dataAccessUser.editUser(user, SubState.FOUND);
+                    dataAccessUser.editUser(userTelegram, SubState.FOUND);
                 } else {
                     messages.add((T) new SendMessage(chatId, "Не обнаружено"));
                 }
             }
         } else {
 
-            if (user.getSubState() == SubState.AREA) {
+            if (userTelegram.getSubState() == SubState.AREA) {
                 InfoForSearch info = provisionalObjectInfo.getInfoForSearches().get(chatId);
                 if (info == null) { //на случай падения или перезапуска сервера, когда очистится кэш;
                     messages.add((T) searchDataJobMessage.message(chatId, new InfoForSearch()));
@@ -127,7 +127,7 @@ public class HandlerJobMessage<T> {
                         messages.add((T) searchDataJobMessage.editMessage(chatId, msgIdPost, info));
                     }
                 }
-            } else if (user.getSubState() == SubState.PERIOD) {
+            } else if (userTelegram.getSubState() == SubState.PERIOD) {
 
                 if (msgUser.equals("месяц") ||
                         msgUser.equals("неделя") ||
@@ -146,7 +146,7 @@ public class HandlerJobMessage<T> {
                     editMessageText.setReplyMarkup(keyboardPeriodJob.addKeyBoard());
                     messages.add((T) editMessageText);
                 }
-            } else if (user.getSubState() == SubState.FOUND) {
+            } else if (userTelegram.getSubState() == SubState.FOUND) {
                 if (msgUser.length() > 8 && msgUser.substring(0, 8).equals(":return>")) {
                     String area = getPartTheInfoUser(msgUser, 0);
                     String period = getPartTheInfoUser(msgUser, 1);
