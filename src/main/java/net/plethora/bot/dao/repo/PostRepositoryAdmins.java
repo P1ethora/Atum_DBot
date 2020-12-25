@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepositoryAdmins extends MongoRepository<UserControl, String> {
+
+    public UserControl findByLoginAndPassword(String login, String password);
+
 }

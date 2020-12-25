@@ -3,16 +3,22 @@
     <title>Control panel Java-Samurai</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" type="text/css" media="all"
-          th:href="@{/static/assets/css/style.css}"/>
+          th:href="@{/assets/css/style.css}"/>
 </head>
 
 <body>
+
 <h1>Sign In</h1>
 <div id="wrapper">
-    <form id="signin" method="" action="" autocomplete="off">
+    <form id="signin" method="post" action="login" autocomplete="off">
         <input type="text" id="user" name="user" placeholder="username"/>
         <input type="password" id="pass" name="pass" placeholder="password"/>
+        <div th:if="${param.error}">
+            Неправильные имя и пароль.
+        </div>
         <button type="submit">&#xf0da;</button>
     </form>
+
 </div>
+
 </body>
