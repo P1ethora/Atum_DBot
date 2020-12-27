@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class ControlPanelController {
 
@@ -19,9 +21,11 @@ public class ControlPanelController {
     }
 
     @PostMapping(value = "login")
-    public String login(String user, String pass, Model model) {
+    public String login(String user, String pass, Model model, HttpSession session) {
         UserControl userControl = dataAccessAdmins.findByLoginAndPassword(user, pass);
         if (userControl != null) {
+            session.setAttribute("username", userControl.getLogin());
+            session.setAttribute("password", userControl.getPassword());
             return "main";
         }
         model.addAttribute("error", "invalid username or password");

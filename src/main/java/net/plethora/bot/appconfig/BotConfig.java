@@ -3,22 +3,14 @@ package net.plethora.bot.appconfig;
 import lombok.Getter;
 import lombok.Setter;
 import net.plethora.bot.AtumBot;
-import net.plethora.bot.botapi.BotExecution;
-import net.plethora.bot.botapi.system.CellVacancyMonitoring;
-import net.plethora.bot.cache.CacheVacancySearchUser;
-import net.plethora.bot.model.systemmodel.SaveVacancyCell;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
 
-import java.util.ArrayList;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

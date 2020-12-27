@@ -2,7 +2,7 @@ package net.plethora.bot.botapi.system.shift;
 
 import net.plethora.bot.botapi.handler.jobhandler.parsers.VacancyFormatBuilder;
 import net.plethora.bot.botapi.keyboards.kbjob.KeyboardJobChoiceVacancy;
-import net.plethora.bot.cache.CacheVacancySearchUser;
+import net.plethora.bot.botapi.cache.CacheVacancySearchUser;
 import net.plethora.bot.model.Vacancy;
 import net.plethora.bot.model.systemmodel.InfoForSearch;
 import net.plethora.bot.model.systemmodel.SaveVacancyCell;

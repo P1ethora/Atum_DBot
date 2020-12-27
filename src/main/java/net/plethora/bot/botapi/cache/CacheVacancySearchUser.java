@@ -1,4 +1,4 @@
-package net.plethora.bot.cache;
+package net.plethora.bot.botapi.cache;
 
 import lombok.Getter;
 import lombok.Setter;

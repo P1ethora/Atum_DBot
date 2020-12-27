@@ -1,7 +1,7 @@
 package net.plethora.bot.botapi.system;
 
 import lombok.SneakyThrows;
-import net.plethora.bot.cache.CacheVacancySearchUser;
+import net.plethora.bot.botapi.cache.CacheVacancySearchUser;
 import net.plethora.bot.model.systemmodel.SaveVacancyCell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
