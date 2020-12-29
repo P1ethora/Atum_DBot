@@ -1,12 +1,12 @@
 package net.plethora.bot.controller;
 
 import net.plethora.bot.controlpanel.BaseSessions;
+import net.plethora.bot.controlpanel.logic.ConverterToArrayAnswer;
 import net.plethora.bot.dao.DataAccessAdmins;
 import net.plethora.bot.dao.DataAccessAnswer;
 import net.plethora.bot.model.Answer;
 import net.plethora.bot.model.UserControl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +15,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.lang.reflect.Array;
-import java.util.Arrays;
 
 @Controller
 public class ControlPanelController {
@@ -27,6 +25,8 @@ public class ControlPanelController {
     private BaseSessions baseSessions;
     @Autowired
     private DataAccessAnswer dataAccessAnswer;
+    @Autowired
+    private ConverterToArrayAnswer converter;
 
     @GetMapping("/login")
     public String home(Model model) {
@@ -99,27 +99,57 @@ public class ControlPanelController {
         return "redirect:/login";
     }
 
-    @PostMapping("getanswer")
+    @PostMapping("/answer/get")
     public String getAnswer(String ask, Model model) {
-        Answer answer = dataAccessAnswer.handleRequest(ask);
+        Answer answer = dataAccessAnswer.handleRequest(ask.toLowerCase());
         if (answer == null) {
 
         } else {
             StringBuilder stringBuilderAsk = new StringBuilder();
+            int count = 0;
             for (String ask1 : answer.getAsk()) {
-                stringBuilderAsk.append(ask1).append(", ");
+                count++;
+                stringBuilderAsk.append(ask1);
+                if (count != answer.getAsk().length) {
+                    stringBuilderAsk.append(",");
+                }
             }
+
             StringBuilder stringBuilderKey = new StringBuilder();
-            for (String ask1 : answer.getAsk()) {
-                stringBuilderKey.append(ask1).append(", ");
+            count = 0;
+            for (String key : answer.getKeyWords()) {
+                count++;
+                stringBuilderKey.append(key);
+                if (count != answer.getKeyWords().length) {
+                    stringBuilderKey.append(",");
+                }
             }
 
             model.addAttribute("answer", answer.getAnswer());
             model.addAttribute("asks", stringBuilderAsk);
             model.addAttribute("keys", stringBuilderKey);
+            model.addAttribute("id", answer.getId());
         }
 
         return "answer";
     }
+
+    @PostMapping("answer/get/update")
+    public String updateAnswer(@RequestParam String idO, String asks, String keys, String answer) {
+        Answer answerOld = dataAccessAnswer.findById(idO);
+        System.out.println(answerOld.getAnswer());
+        answerOld.setAsk(converter.convert(asks));
+        answerOld.setKeyWords(converter.convert(keys));
+        answerOld.setAnswer(answer);
+        dataAccessAnswer.save(answerOld);
+
+        return "answer";
+    }
+
+//    @GetMapping("answer/get/update/{id}")
+//    public String getMap(@PathVariable(value = "id") String id){
+//
+//        return "answer";
+//    }
 
 }

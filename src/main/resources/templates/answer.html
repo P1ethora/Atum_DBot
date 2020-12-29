@@ -5,22 +5,44 @@
 </head>
 <body>
 
-<form action="/getanswer" method="POST">
-    <fieldset>
+<form method="POST" action="/answer/get">
+    <fieldset style="display: inline-block">
         <legend>Получить объект вопроса</legend>
         <label>Введите тег:<br><input type="text" name="ask"></label><br>
     </fieldset>
-    <input type="submit">
-</form>
-
-<form method="post">
-
-    <input type="text" th:value="${asks}" name="asks" placeholder="Теги" class="form-control"><br>
-    <input type="text" th:value="${keys}" name="keys" placeholder="Подсказки кнопки" class="form-control"><br>
-    <textarea name="answer" placeholder="Ввод текста" class="form-control" th:text="${answer}"></textarea> <br>
-    <button type="submit" class="btn btn-success">Обновить</button>
+    <br><input type="submit"><br>
 
 </form>
 
+<div style="min-width: 1200px">
+    <form method="post" action="/answer/get/update">
+        <fieldset style="display: inline-block">
+            <legend>Объект</legend>
+            <div>
+                <input type="text" th:name="idO" th:value="${id}" readonly/>
+            </div>
+            <div>
+                <a style="padding-right: 340px; padding-left: 150px">Теги</a>
+                <a style="padding-right: 320px">Кнопки</a>
+                <a>Текст ответа</a>
+            </div>
+            <div style="float: left">
+            <textarea style="resize: none" cols="50" rows="20" name="asks" th:text="${asks}"
+                      placeholder="Теги"></textarea><br>
+            </div>
+            <div style="float: left">
+            <textarea style="resize: none" cols="50" rows="20" th:text="${keys}" name="keys"
+                      placeholder="Подсказки кнопки"></textarea><br>
+            </div>
+            <div style="float: left">
+                <textarea style="resize: none" name="answer" cols="50" rows="20" th:text="${answer}"></textarea> <br>
+            </div>
+        </fieldset>
+        <br>
+        <button type="submit">Обновить</button>
+        <br>
+
+    </form>
+</div>
 </body>
 </html>

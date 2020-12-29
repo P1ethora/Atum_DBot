@@ -20,4 +20,12 @@ public class DataAccessAnswer {
     public Answer handleRequest(String ask) {
         return postRepositoryAnswer.findAnswerByAsk(ask);
     }
+
+    public Answer findById(String id) {
+        return postRepositoryAnswer.findById(id).orElseThrow(() -> new IllegalStateException("Answer with id " + id + " not found"));
+    }
+
+    public void save(Answer answer) {
+        postRepositoryAnswer.save(answer);
+    }
 }
