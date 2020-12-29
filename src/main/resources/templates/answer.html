@@ -1,10 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
+
+<form action="/getanswer" method="POST">
+    <fieldset>
+        <legend>Получить объект вопроса</legend>
+        <label>Введите тег:<br><input type="text" name="ask"></label><br>
+    </fieldset>
+    <input type="submit">
+</form>
+
+<form method="post">
+
+    <input type="text" th:value="${asks}" name="asks" placeholder="Теги" class="form-control"><br>
+    <input type="text" th:value="${keys}" name="keys" placeholder="Подсказки кнопки" class="form-control"><br>
+    <textarea name="answer" placeholder="Ввод текста" class="form-control" th:text="${answer}"></textarea> <br>
+    <button type="submit" class="btn btn-success">Обновить</button>
+
+</form>
 
 </body>
 </html>
