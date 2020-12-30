@@ -28,4 +28,8 @@ public class DataAccessAnswer {
     public void save(Answer answer) {
         postRepositoryAnswer.save(answer);
     }
+
+    public void delete(String id) {
+        postRepositoryAnswer.deleteById(id);
+    }
 }

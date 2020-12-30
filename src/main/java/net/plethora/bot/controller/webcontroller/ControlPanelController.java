@@ -1,4 +1,4 @@
-package net.plethora.bot.controller;
+package net.plethora.bot.controller.webcontroller;
 
 import net.plethora.bot.controlpanel.BaseSessions;
 import net.plethora.bot.controlpanel.logic.ConverterToArrayAnswer;
@@ -23,10 +23,6 @@ public class ControlPanelController {
     private DataAccessAdmins dataAccessAdmins;
     @Autowired
     private BaseSessions baseSessions;
-    @Autowired
-    private DataAccessAnswer dataAccessAnswer;
-    @Autowired
-    private ConverterToArrayAnswer converter;
 
     @GetMapping("/login")
     public String home(Model model) {
@@ -99,57 +95,9 @@ public class ControlPanelController {
         return "redirect:/login";
     }
 
-    @PostMapping("/answer/get")
-    public String getAnswer(String ask, Model model) {
-        Answer answer = dataAccessAnswer.handleRequest(ask.toLowerCase());
-        if (answer == null) {
-
-        } else {
-            StringBuilder stringBuilderAsk = new StringBuilder();
-            int count = 0;
-            for (String ask1 : answer.getAsk()) {
-                count++;
-                stringBuilderAsk.append(ask1);
-                if (count != answer.getAsk().length) {
-                    stringBuilderAsk.append(",");
-                }
-            }
-
-            StringBuilder stringBuilderKey = new StringBuilder();
-            count = 0;
-            for (String key : answer.getKeyWords()) {
-                count++;
-                stringBuilderKey.append(key);
-                if (count != answer.getKeyWords().length) {
-                    stringBuilderKey.append(",");
-                }
-            }
-
-            model.addAttribute("answer", answer.getAnswer());
-            model.addAttribute("asks", stringBuilderAsk);
-            model.addAttribute("keys", stringBuilderKey);
-            model.addAttribute("id", answer.getId());
-        }
-
-        return "answer";
+    @GetMapping("/book")
+    public String book() {
+        return "book";
     }
-
-    @PostMapping("answer/get/update")
-    public String updateAnswer(@RequestParam String idO, String asks, String keys, String answer) {
-        Answer answerOld = dataAccessAnswer.findById(idO);
-        System.out.println(answerOld.getAnswer());
-        answerOld.setAsk(converter.convert(asks));
-        answerOld.setKeyWords(converter.convert(keys));
-        answerOld.setAnswer(answer);
-        dataAccessAnswer.save(answerOld);
-
-        return "answer";
-    }
-
-//    @GetMapping("answer/get/update/{id}")
-//    public String getMap(@PathVariable(value = "id") String id){
-//
-//        return "answer";
-//    }
 
 }

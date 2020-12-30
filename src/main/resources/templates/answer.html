@@ -1,19 +1,28 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Answer</title>
 </head>
 <body>
 
-<form method="POST" action="/answer/get">
-    <fieldset style="display: inline-block">
-        <legend>Получить объект вопроса</legend>
-        <label>Введите тег:<br><input type="text" name="ask"></label><br>
-    </fieldset>
-    <br><input type="submit"><br>
-
+<form action="/" method="GET">
+    <button type="submit">Вернуться в меню</button>
 </form>
 
+<div style="float: top">
+    <div style="float: left">
+        <form method="POST" action="/answer/get">
+            <fieldset style="display: inline-block">
+                <legend>Получить объект вопроса</legend>
+                <label>Введите тег:<br><input type="text" name="ask"></label><br>
+            </fieldset>
+            <br><input type="submit"><br>
+        </form>
+    </div>
+    <div style="float: left">
+        <a style="display: inline-block; padding-left: 400px; color: red">error error error error error </a>
+    </div>
+</div>
 <div style="min-width: 1200px">
     <form method="post" action="/answer/get/update">
         <fieldset style="display: inline-block">
@@ -39,7 +48,9 @@
             </div>
         </fieldset>
         <br>
-        <button type="submit">Обновить</button>
+        <button type="submit" name="action" value="update">Обновить</button>
+        <button type="submit" name="action" value="create">Создать</button>
+        <button type="submit" name="action" value="delete">Удалить</button>
         <br>
 
     </form>
