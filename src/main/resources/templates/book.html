@@ -9,7 +9,7 @@
 <div>
 
     <div style="float: left">
-        <form>
+        <form method="post" action="/book/edit">
             <div style="float: left">
                 <img style="height: 350px" th:src="${urlCover}" alt="">
                 <div>
@@ -34,6 +34,9 @@
                       placeholder="description" th:text="${description}"></textarea><br>
                 </div>
             </div>
+            <button type="submit" name="action" value="update">Обновить</button>
+            <button type="submit" name="action" value="create">Создать</button>
+            <button type="submit" name="action" value="delete">Удалить</button>
         </form>
     </div>
 

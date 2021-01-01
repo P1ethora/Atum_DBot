@@ -33,4 +33,26 @@ public class BookController {
         return "book";
     }
 
+    @RequestMapping(value = "/book/edit", method = RequestMethod.POST, params = "action=update")
+    public String update(String idCoverBook, String idBook, String subject,
+                         String description, Model model) {
+        Book book = dataAccessMaterialBook.findById(idBook);
+        book.setUrlCoverBook(idCoverBook);
+        book.setSubject(subject);
+        book.setDescription(description);
+        dataAccessMaterialBook.save(book);
+
+        List<Book> books = dataAccessMaterialBook.findAll();
+        model.addAttribute("books", books);
+        return "book";
+    }
+
+    @RequestMapping(value = "/book/edit", method = RequestMethod.POST, params = "action=delete")
+    public String delete(String idBook, Model model) {
+        dataAccessMaterialBook.delete(idBook);
+        List<Book> books = dataAccessMaterialBook.findAll();
+        model.addAttribute("books", books);
+        return "book";
+    }
+
 }

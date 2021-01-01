@@ -10,4 +10,6 @@ import java.util.List;
 public interface PostRepositoryBook extends MongoRepository<Book, String> {
 
    public List<Book> findBySubject(String subject);
+
+   public void deleteById(String id);
 }

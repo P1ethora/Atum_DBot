@@ -27,4 +27,12 @@ public class DataAccessMaterialBook implements DataAccessMaterial {
     public List<Book> findAll() {
         return postRepositoryBook.findAll();
     }
+
+    public void save(Book book) {
+        postRepositoryBook.save(book);
+    }
+
+    public void delete(String id) {
+        postRepositoryBook.deleteById(id);
+    }
 }
