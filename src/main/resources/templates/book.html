@@ -6,42 +6,45 @@
     <title>Title</title>
 </head>
 <body>
-<form>
-    <div>
-        <div style="float: left ">
-            <img src="https://drive.google.com/uc?export=view&id=1DngHCqevWi35V26Jl92MMJr3dz5g3JIQ" alt="">
-        </div>
-        <div style="padding-left: 300px; padding-top: 30px">
-            <a>id Обложки</a>
-            <input type="text" th:name="idCoverBook" value="idCoverBook"/>
-        </div>
-        <div style="padding-left: 300px; padding-top: 30px">
-            <a>id Книги</a>
-            <input type="text" th:name="idBook" value="idBook"/>
-        </div>
-        <div style="padding-left: 300px; padding-top: 30px">
-            <a>Тема</a>
-            <input type="text" th:name="subject" value="subject"/>
-        </div>
-        <div style="padding-left: 300px; padding-top: 30px">
-            <textarea style="resize: none" cols="50" rows="11" name="description"
-                      placeholder="description">Описание</textarea><br>
-        </div>
+<div>
+
+    <div style="float: left">
+        <form>
+            <div style="float: left">
+                <img style="height: 350px" th:src="${urlCover}" alt="">
+                <div>
+                    <a th:href="${urlBook}">Открыть книгу</a>
+                </div>
+            </div>
+            <div>
+                <div style="padding-left: 300px; padding-top: 30px; ">
+                    <a>id Обложки</a>
+                    <input type="text" th:name="idCoverBook" th:value="${urlCover}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 30px">
+                    <a>id Книги</a>
+                    <input type="text" th:name="idBook" th:value="${idBook}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 30px">
+                    <a>Тема</a>
+                    <input type="text" th:name="subject" th:value="${subjectBook}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 30px">
+            <textarea style="resize: none" cols="50" rows="11" th:name="description"
+                      placeholder="description" th:text="${description}"></textarea><br>
+                </div>
+            </div>
+        </form>
     </div>
 
-
-</form>
-
-<div style="padding-top: 260px">
-    <form action="https://drive.google.com/file/d/1JEVK-V_moB729nCBcvCNtqUL7E-bdHWy/view?usp=sharing">
-        <button type="submit">Открыть</button>
-    </form>
-</div>
-<div style="float: top; padding-left: 500px;">
-    <fieldset>
-        <legend>Список книг</legend>
-    </fieldset>
-
+    <div>
+        <fieldset>
+            <legend>Список книг</legend>
+            <div th:each="el : ${books}">
+                <a th:href="'/book/' + ${el.id}" th:text="${el.name}"></a>
+            </div>
+        </fieldset>
+    </div>
 </div>
 </body>
 </html>

@@ -4,8 +4,10 @@ import net.plethora.bot.controlpanel.BaseSessions;
 import net.plethora.bot.controlpanel.logic.ConverterToArrayAnswer;
 import net.plethora.bot.dao.DataAccessAdmins;
 import net.plethora.bot.dao.DataAccessAnswer;
+import net.plethora.bot.dao.DataAccessMaterialBook;
 import net.plethora.bot.model.Answer;
 import net.plethora.bot.model.UserControl;
+import net.plethora.bot.model.material.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +17,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @Controller
 public class ControlPanelController {
@@ -23,6 +26,8 @@ public class ControlPanelController {
     private DataAccessAdmins dataAccessAdmins;
     @Autowired
     private BaseSessions baseSessions;
+    @Autowired
+    private DataAccessMaterialBook dataAccessMaterialBook;
 
     @GetMapping("/login")
     public String home(Model model) {
@@ -96,7 +101,9 @@ public class ControlPanelController {
     }
 
     @GetMapping("/book")
-    public String book() {
+    public String book(Model model) {
+        List<Book> books = dataAccessMaterialBook.findAll();
+        model.addAttribute("books", books);
         return "book";
     }
 
