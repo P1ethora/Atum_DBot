@@ -1,10 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
 <body>
-<img src="https://drive.google.com/uc?export=view&id=1DngHCqevWi35V26Jl92MMJr3dz5g3JIQ" alt="">
+<form>
+    <div>
+        <div style="float: left ">
+            <img src="https://drive.google.com/uc?export=view&id=1DngHCqevWi35V26Jl92MMJr3dz5g3JIQ" alt="">
+        </div>
+        <div style="padding-left: 300px; padding-top: 30px">
+            <a>id Обложки</a>
+            <input type="text" th:name="idCoverBook" value="idCoverBook"/>
+        </div>
+        <div style="padding-left: 300px; padding-top: 30px">
+            <a>id Книги</a>
+            <input type="text" th:name="idBook" value="idBook"/>
+        </div>
+        <div style="padding-left: 300px; padding-top: 30px">
+            <a>Тема</a>
+            <input type="text" th:name="subject" value="subject"/>
+        </div>
+        <div style="padding-left: 300px; padding-top: 30px">
+            <textarea style="resize: none" cols="50" rows="11" name="description"
+                      placeholder="description">Описание</textarea><br>
+        </div>
+    </div>
+
+
+</form>
+
+<div style="padding-top: 260px">
+    <form action="https://drive.google.com/file/d/1JEVK-V_moB729nCBcvCNtqUL7E-bdHWy/view?usp=sharing">
+        <button type="submit">Открыть</button>
+    </form>
+</div>
+<div style="float: top; padding-left: 500px;">
+    <fieldset>
+        <legend>Список книг</legend>
+    </fieldset>
+
+</div>
 </body>
 </html>
