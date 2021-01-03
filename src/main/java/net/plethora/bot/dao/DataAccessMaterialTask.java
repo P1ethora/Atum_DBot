@@ -22,4 +22,12 @@ public class DataAccessMaterialTask implements DataAccessMaterial {
     public Task findById(String id){
        return postRepositoryTask.findById(id).orElseThrow(() -> new IllegalStateException("Task with id " +id + " not found"));
     }
+
+    public List<Task> findAll() {
+        return postRepositoryTask.findAll();
+    }
+
+    public void delete(String id) {
+        postRepositoryTask.deleteById(id);
+    }
 }

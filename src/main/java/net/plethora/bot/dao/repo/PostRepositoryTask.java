@@ -11,4 +11,6 @@ public interface PostRepositoryTask extends MongoRepository<Task, String> {
 
    public List<Task> findBySubject(String subject);
 
+    public void deleteById(String id);
+
 }
