@@ -7,7 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.ws.rs.PATCH;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +60,65 @@ public class TaskController {
         model.addAttribute("subjectTask", taskObj.getSubject());
         model.addAttribute("tasks", tasks);
         model.addAttribute("listSubject", getSubjectList(list));
+        return "task";
+    }
+
+    @RequestMapping(value = "/task/edit", method = RequestMethod.POST, params = "action=update")
+    public String editTask(String idTask, String problemTask, String urlSolution, String nameTask, String subjectTask, Model model) {
+        Task taskObj = dataAccessMaterialTask.findById(idTask);
+        taskObj.setFileName(nameTask);
+        taskObj.setProblem(problemTask);
+        taskObj.setSubject(subjectTask);
+        taskObj.setSolution(urlSolution);
+        dataAccessMaterialTask.save(taskObj);
+        List<Task> list = dataAccessMaterialTask.findAll();
+        model.addAttribute("listSubject", getSubjectList(list));
+        List<Task> tasks = new ArrayList<>();
+        for (Task task : list) {
+            if (task.getSubject().equals(taskObj.getSubject())) {
+                tasks.add(task);
+            }
+        }
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("sub", taskObj.getSubject());
+        return "task";
+    }
+
+    @RequestMapping(value = "/task/edit", method = RequestMethod.POST, params = "action=create")
+    public String createTask(String problemTask, String urlSolution, String nameTask, String subjectTask, Model model) {
+        Task taskObj = new Task();
+        taskObj.setFileName(nameTask);
+        taskObj.setProblem(problemTask);
+        taskObj.setSubject(subjectTask);
+        taskObj.setSolution(urlSolution);
+        dataAccessMaterialTask.save(taskObj);
+        List<Task> list = dataAccessMaterialTask.findAll();
+        model.addAttribute("listSubject", getSubjectList(list));
+        List<Task> tasks = new ArrayList<>();
+        for (Task task : list) {
+            if (task.getSubject().equals(taskObj.getSubject())) {
+                tasks.add(task);
+            }
+        }
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("sub", taskObj.getSubject());
+        return "task";
+    }
+
+    @RequestMapping(value = "/task/edit", method = RequestMethod.POST, params = "action=delete")
+    public String deleteTask(String idTask, String subjectTask, Model model) {
+
+        dataAccessMaterialTask.delete(idTask);
+        List<Task> list = dataAccessMaterialTask.findAll();
+        model.addAttribute("listSubject", getSubjectList(list));
+        List<Task> tasks = new ArrayList<>();
+        for (Task task : list) {
+            if (task.getSubject().equals(subjectTask)) {
+                tasks.add(task);
+            }
+        }
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("sub", subjectTask);
         return "task";
     }
 

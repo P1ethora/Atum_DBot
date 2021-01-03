@@ -30,4 +30,8 @@ public class DataAccessMaterialTask implements DataAccessMaterial {
     public void delete(String id) {
         postRepositoryTask.deleteById(id);
     }
+
+    public void save(Task task) {
+        postRepositoryTask.save(task);
+    }
 }
