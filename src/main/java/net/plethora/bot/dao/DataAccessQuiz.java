@@ -37,4 +37,16 @@ public class DataAccessQuiz {
         return postRepositoryQuiz.findByQuestion(questions);
     }
 
+    public List<Quiz> findAll() {
+        return postRepositoryQuiz.findAll();
+    }
+
+    public void delete(String id) {
+        postRepositoryQuiz.deleteById(id);
+    }
+
+    public void save(Quiz quiz) {
+        postRepositoryQuiz.save(quiz);
+    }
+
 }

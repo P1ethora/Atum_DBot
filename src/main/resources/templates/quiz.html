@@ -1,10 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Quiz</title>
 </head>
 <body>
-
+<a href="/">Вернуться в меню</a>
+<div>
+    <div>
+        <form method="post" action="/quiz/edit">
+            <div style="float: left">
+    <textarea style="resize: none" cols="50" rows="20" th:text="${options}" name="option"
+              placeholder="Ответы"></textarea>
+            </div>
+            <div style="float: left">
+                <div>
+                    <a>id Вопроса</a>
+                    <input type="text" th:name="idQ" th:value="${id}" readonly/>
+                </div>
+                <div>
+                    <a>Вопрос</a>
+                    <input type="text" th:name="quest" th:value="${question}"/>
+                </div>
+                <div>
+                    <a>Номер ответа</a>
+                    <input type="text" th:name="answ" th:value="${answer}"/>
+                </div>
+                <button type="submit" name="action" value="update">Обновить</button>
+                <button type="submit" name="action" value="create">Создать</button>
+                <button type="submit" name="action" value="delete">Удалить</button>
+            </div>
+        </form>
+    </div>
+    <div style="float: right; width:300px">
+        <fieldset>
+            <legend>Вопросы</legend>
+            <div th:each="qu : ${quizzes}">
+                <a th:href="'/quiz/' + ${qu.id}" th:text="${qu.question}"></a>
+            </div>
+        </fieldset>
+    </div>
+</div>
 </body>
 </html>
