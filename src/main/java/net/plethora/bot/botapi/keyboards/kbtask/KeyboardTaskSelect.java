@@ -20,22 +20,22 @@ public class KeyboardTaskSelect {
         List<InlineKeyboardButton> rowDown = new ArrayList<>(); //ряд
 
         InlineKeyboardButton keyboardButtonBackToSubject = new InlineKeyboardButton("К разделам");
-        keyboardButtonBackToSubject.setCallbackData(":BackToSubject");
+        keyboardButtonBackToSubject.setCallbackData("task##:BackToSubject");
         rowDown.add(keyboardButtonBackToSubject);
 
         InlineKeyboardButton keyboardButton = new InlineKeyboardButton("Решение"); //кнопка
-        keyboardButton.setCallbackData(":!awr{" + idTask + "}");  //ответка в виде id задачи и небольшога шифра
+        keyboardButton.setCallbackData("task##:!awr{" + idTask + "}");  //ответка в виде id задачи и небольшога шифра
         rowDown.add(keyboardButton);
 
         if (numberTask > 1) {
             InlineKeyboardButton keyboardButtonBack = new InlineKeyboardButton("Назад"); // кнопка
-            keyboardButtonBack.setCallbackData("%b->ac!k{" + subject + "}");
+            keyboardButtonBack.setCallbackData("task##%b->ac!k{" + subject + "}");
             rowTop.add(keyboardButtonBack);
         }
 
         if (numberTask < limit) {
             InlineKeyboardButton keyboardButtonNext = new InlineKeyboardButton("Далее"); //кнопка
-            keyboardButtonNext.setCallbackData("%n->ex!t{" + subject + "}");
+            keyboardButtonNext.setCallbackData("task##%n->ex!t{" + subject + "}");
             rowTop.add(keyboardButtonNext);
         }
 

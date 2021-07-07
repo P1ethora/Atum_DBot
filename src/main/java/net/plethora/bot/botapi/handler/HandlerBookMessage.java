@@ -1,6 +1,6 @@
 package net.plethora.bot.botapi.handler;
 
-import net.plethora.bot.botapi.system.ShiftView;
+import net.plethora.bot.botapi.system.shift.ShiftViewMaterial;
 import net.plethora.bot.dao.DataAccessMaterialBook;
 import net.plethora.bot.dao.DataAccessSaveCell;
 import net.plethora.bot.botapi.system.systemMessage.AgeOptionBookMessage;
@@ -17,13 +17,13 @@ public class HandlerBookMessage<T> {
     private DataAccessMaterialBook dataAccessBook;
     private DataAccessSaveCell dataAccessSaveCell;
     private AgeOptionBookMessage ageOptionBookMessage;
-    private ShiftView shiftView;
+    private ShiftViewMaterial shiftViewMaterial;
 
     public HandlerBookMessage(DataAccessMaterialBook dataAccessBook, AgeOptionBookMessage ageOptionBookMessage,
-                              ShiftView shiftView, DataAccessSaveCell dataAccessSaveCell) {
+                              ShiftViewMaterial shiftViewMaterial, DataAccessSaveCell dataAccessSaveCell) {
         this.dataAccessBook = dataAccessBook;
         this.ageOptionBookMessage = ageOptionBookMessage;
-        this.shiftView = shiftView;
+        this.shiftViewMaterial = shiftViewMaterial;
         this.dataAccessSaveCell = dataAccessSaveCell;
     }
 
@@ -33,14 +33,14 @@ public class HandlerBookMessage<T> {
         String subject = "older";    //TODO изменится когда появиться чек как в Task
 
         if (msgUser.equals("older")) {   //поменять на тему из сообщения (сделать чек как в Task)
-            msg = shiftView.view(chatId, subject, messageId, dataAccessBook, false, false);
+            msg = shiftViewMaterial.view(chatId, subject, messageId, dataAccessBook, false, false);
 
         } else if (msgUser.equals("children")) {
 
         } else if (msgUser.length() >= 8 && msgUser.substring(0, 8).equals("%n->ex!t")) {
-            msg = shiftView.view(chatId, subject, messageId, dataAccessBook, true, false);
+            msg = shiftViewMaterial.view(chatId, subject, messageId, dataAccessBook, true, false);
         } else if (msgUser.length() >= 8 && msgUser.substring(0, 8).equals("%b->ac!k")) {
-            msg = shiftView.view(chatId, subject, messageId, dataAccessBook, false, true);
+            msg = shiftViewMaterial.view(chatId, subject, messageId, dataAccessBook, false, true);
         } else if (msgUser.equals(":previ!ew&")) {
             AnswerCallbackQuery answerCallbackQuery = new AnswerCallbackQuery();
             answerCallbackQuery.setCallbackQueryId(callBackId);

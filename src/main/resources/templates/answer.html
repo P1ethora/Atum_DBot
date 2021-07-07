@@ -1,0 +1,59 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Answer</title>
+</head>
+<body>
+
+<form action="/" method="GET">
+    <button type="submit">Вернуться в меню</button>
+</form>
+
+<div style="float: top">
+    <div style="float: left">
+        <form method="POST" action="/answer/get">
+            <fieldset style="display: inline-block">
+                <legend>Получить объект вопроса</legend>
+                <label>Введите тег:<br><input type="text" name="ask"></label><br>
+            </fieldset>
+            <br><input type="submit"><br>
+        </form>
+    </div>
+    <div style="float: left">
+        <a style="display: inline-block; padding-left: 400px; color: red">error error error error error </a>
+    </div>
+</div>
+<div style="min-width: 1200px">
+    <form method="post" action="/answer/get/update">
+        <fieldset style="display: inline-block">
+            <legend>Объект</legend>
+            <div>
+                <input type="text" th:name="idO" th:value="${id}" readonly/>
+            </div>
+            <div>
+                <a style="padding-right: 340px; padding-left: 150px">Теги</a>
+                <a style="padding-right: 320px">Кнопки</a>
+                <a>Текст ответа</a>
+            </div>
+            <div style="float: left">
+            <textarea style="resize: none" cols="50" rows="20" name="asks" th:text="${asks}"
+                      placeholder="Теги"></textarea><br>
+            </div>
+            <div style="float: left">
+            <textarea style="resize: none" cols="50" rows="20" th:text="${keys}" name="keys"
+                      placeholder="Подсказки кнопки"></textarea><br>
+            </div>
+            <div style="float: left">
+                <textarea style="resize: none" name="answer" cols="50" rows="20" th:text="${answer}"></textarea> <br>
+            </div>
+        </fieldset>
+        <br>
+        <button type="submit" name="action" value="update">Обновить</button>
+        <button type="submit" name="action" value="create">Создать</button>
+        <button type="submit" name="action" value="delete">Удалить</button>
+        <br>
+
+    </form>
+</div>
+</body>
+</html>

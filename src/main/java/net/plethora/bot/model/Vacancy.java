@@ -7,18 +7,21 @@ import lombok.Setter;
 @Setter
 public class Vacancy {
 
-    private String area;
-    private String period;
+    private int id;
     private String title;
     private String address;
     private String salary;
     private String company;
     private String UrlCompany;
     private String experience;
+    private String employment;
     private String description;
     private String[] keySkills;
     private String urlRespond;
     private String urlVacancy;
 
-    public Vacancy() { }
+    public Vacancy() {
+    }
+
 }
+

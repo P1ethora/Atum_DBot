@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+</head>
+<body>
+<a href="/">Вернуться в меню</a>
+<div>
+
+    <div style="float: left">
+        <form method="post" action="/book/edit">
+            <div style="float: left">
+                <img style="height: 350px" th:src="${urlCover}" alt="">
+                <div>
+                    <a th:href="${urlBook}">Открыть книгу</a>
+                </div>
+            </div>
+            <div>
+                <div style="padding-left: 300px; padding-top: 5px; ">
+                    <a>Название</a>
+                    <input type="text" th:name="name" th:value="${name}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 5px; ">
+                    <a>Автор</a>
+                    <input type="text" th:name="author" th:value="${author}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 5px; ">
+                    <a>url Обложки</a>
+                    <input type="text" th:name="urlCoverBook" th:value="${urlCover}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 5px">
+                    <a>url Книги</a>
+                    <input type="text" th:name="urlBook" th:value="${urlBook}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 5px">
+                    <a>id Книги</a>
+                    <input readonly type="text" th:name="idBook" th:value="${idBook}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 5px">
+                    <a>Тема</a>
+                    <input type="text" th:name="subject" th:value="${subjectBook}"/>
+                </div>
+                <div style="padding-left: 300px; padding-top: 5px">
+            <textarea style="resize: none" cols="50" rows="11" th:name="description"
+                      placeholder="description" th:text="${description}"></textarea><br>
+                </div>
+            </div>
+            <div style="padding-left: 300px">
+                <div style="float: left">
+            <button type="submit" name="action" value="update">Обновить</button>
+                </div>
+                <div style="float: left">
+                    <button type="submit" name="action" value="create">Создать</button>
+                </div>
+                <div style="float: left">
+                    <button type="submit" name="action" value="delete">Удалить</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div>
+        <fieldset>
+            <legend>Список книг</legend>
+            <div th:each="el : ${books}">
+                <a th:href="'/book/' + ${el.id}" th:text="${el.name} + ' (' +${el.author} +')' "></a>
+            </div>
+        </fieldset>
+    </div>
+</div>
+</body>
+</html>

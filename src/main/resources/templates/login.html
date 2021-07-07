@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Control panel Java-Samurai</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" type="text/css" media="all"
+          th:href="@{/assets/css/style.css}"/>
+</head>
+
+<body>
+
+<h1>Sign In</h1>
+<div id="wrapper">
+    <form id="signin" method="post" action="login" autocomplete="off">
+        <input type="text" id="user" name="user" placeholder="username"/>
+        <input type="password" id="pass" name="pass" placeholder="password"/>
+        <button type="submit">&#xf0da;</button>
+        <p style="color: red" th:text="*{error}"></p>
+    </form>
+
+
+</div>
+
+</body>
+
+</html>

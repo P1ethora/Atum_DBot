@@ -16,6 +16,8 @@ public class Book extends Material {
     private String description;
     private String urlCoverBook;
     private String subject;
+    private String name;
+    private String author;
 
     public Book(String id, String url, String description,String subject) {
         this.id = id;

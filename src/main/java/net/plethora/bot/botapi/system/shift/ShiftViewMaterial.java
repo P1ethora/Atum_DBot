@@ -1,4 +1,4 @@
-package net.plethora.bot.botapi.system;
+package net.plethora.bot.botapi.system.shift;
 
 import net.plethora.bot.botapi.keyboards.kbbook.KeyboardBookSelect;
 import net.plethora.bot.botapi.keyboards.kbtask.KeyboardTaskSelect;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class ShiftView<T> {
+public class ShiftViewMaterial<T> {
 
     private DataAccessSaveCell dataAccessSaveCell;
     private KeyboardTaskSelect keyboardTaskSelect;
@@ -26,7 +26,7 @@ public class ShiftView<T> {
     private final int NUMBER_NEXT = 1;
     private final int NUMBER_BACK = -1;
 
-    public ShiftView(DataAccessSaveCell dataAccessSaveCell, KeyboardTaskSelect keyboardTaskSelect, KeyboardBookSelect keyboardBookSelect) {
+    public ShiftViewMaterial(DataAccessSaveCell dataAccessSaveCell, KeyboardTaskSelect keyboardTaskSelect, KeyboardBookSelect keyboardBookSelect) {
         this.dataAccessSaveCell = dataAccessSaveCell;
         this.keyboardTaskSelect = keyboardTaskSelect;
         this.keyboardBookSelect = keyboardBookSelect;
@@ -57,6 +57,16 @@ public class ShiftView<T> {
         return msgForSend;
     }
 
+    /**
+     * Сдвиг материала назад<-->вперед
+     * @param chatId
+     * @param messageId
+     * @param subject
+     * @param saveCellMaterial
+     * @param shiftNumber
+     * @param allMaterialSubject
+     * @return
+     */
     private List<T> shift(long chatId, int messageId, String subject, SaveCellMaterial saveCellMaterial, int shiftNumber, List<Material> allMaterialSubject) {
         List<T> msgForSend = new ArrayList<>();
         for (int i = 0; i < allMaterialSubject.size(); i++) {
@@ -70,7 +80,15 @@ public class ShiftView<T> {
         return msgForSend;
     }
 
-
+    /**
+     * Выдает текущий сохраненный материал
+     * @param messageId
+     * @param chatId
+     * @param subject
+     * @param allMaterialSubject
+     * @param saveCellMaterial
+     * @return
+     */
     private List<T> actualMessage(int messageId, long chatId, String subject, List<Material> allMaterialSubject, SaveCellMaterial saveCellMaterial) {
         List<T> messageTexts = new ArrayList<>();
 

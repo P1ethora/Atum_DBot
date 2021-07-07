@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Control Panel</title>
+    <link rel="stylesheet" type="text/css" media="all"
+          th:href="@{/assets/css/style_main.css}"/>
+</head>
+<body>
+<p style="color:white" th:text="'  ' + ${session.username}"></p>
+<ul>
+    <li><a href="/answer">ANSWERS</a></li>
+    <li><a href="/task">TASKS</a></li>
+    <li><a href="/book">BOOKS</a></li>
+    <li><a href="/quiz">QUIZ</a></li>
+    <li><a href="#">DECORATION</a></li>
+</ul>
+</body>
+</html>

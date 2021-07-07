@@ -1,6 +1,7 @@
 package net.plethora.bot.botapi;
 
 import net.plethora.bot.botapi.state.BotState;
+import net.plethora.bot.botapi.state.SubState;
 import net.plethora.bot.service.*;
 import net.plethora.bot.service.menu.*;
 import org.springframework.stereotype.Component;

@@ -14,4 +14,6 @@ public interface PostRepositoryAnswer extends MongoRepository<Answer, String> {
 
     @Query("{ 'ask': ?0}")
    public Answer findAnswerByAsk(String ask);
+
+    public void deleteById(String id);
 }

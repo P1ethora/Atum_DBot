@@ -25,13 +25,13 @@ public class KeyboardSubjectTask {
         InlineKeyboardButton buttonS = new InlineKeyboardButton("Срт-ка массива");  //
         InlineKeyboardButton buttonD = new InlineKeyboardButton("Декомпозиция");    //
 
-        buttonV.setCallbackData("ветвления");           //
-        buttonL.setCallbackData("линейные");            //
-        buttonC.setCallbackData("циклы");               // сообщения
-        buttonM.setCallbackData("массивы");             //  запроса
-        buttonMM.setCallbackData("многомерные массивы");//
-        buttonS.setCallbackData("сортировка массива");  //
-        buttonD.setCallbackData("декомпозиция");        //
+        buttonV.setCallbackData("task##ветвления");           //
+        buttonL.setCallbackData("task##линейные");            //
+        buttonC.setCallbackData("task##циклы");               // сообщения
+        buttonM.setCallbackData("task##массивы");             //  запроса
+        buttonMM.setCallbackData("task##многомерные массивы");//
+        buttonS.setCallbackData("task##сортировка массива");  //
+        buttonD.setCallbackData("task##декомпозиция");        //
 
         row.add(buttonV);  //
         row.add(buttonL);  //

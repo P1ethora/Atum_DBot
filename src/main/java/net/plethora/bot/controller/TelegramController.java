@@ -14,11 +14,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 
 @RestController
-public class WebController {
+public class TelegramController {
 
     private final AtumBot atumBot;
 
-    public WebController(AtumBot atumBot) {
+    public TelegramController(AtumBot atumBot) {
         this.atumBot = atumBot;
     }
 

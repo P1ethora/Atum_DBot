@@ -11,6 +11,9 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 import org.telegram.telegrambots.bots.DefaultBotOptions;
 import org.telegram.telegrambots.meta.ApiContext;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 @Getter
 @Setter
 @Configuration
@@ -28,12 +31,12 @@ public class BotConfig {
     @Bean
     public AtumBot atumBot() {
         DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
-
+        ExecutorService executorService = Executors.newCachedThreadPool();
 //        botOptions.setProxyType(proxyType);
 //        botOptions.setProxyHost(proxyHost);
 //        botOptions.setProxyPort(proxyPort);
 
-        AtumBot atumBot = new AtumBot(botOptions);
+        AtumBot atumBot = new AtumBot(botOptions, executorService);
         atumBot.setBotPath(botPath);
         atumBot.setBotUsername(botUsername);
         atumBot.setBotToken(botToken);
@@ -48,5 +51,4 @@ public class BotConfig {
         messageSource.setDefaultEncoding("UTF-8");
         return messageSource;
     }
-
 }

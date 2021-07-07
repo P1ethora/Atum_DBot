@@ -9,4 +9,6 @@ public interface PostRepositoryQuiz extends MongoRepository<Quiz,String> {
 
    public Quiz findByQuestion(String questions);
 
+   public void deleteById(String id);
+
 }
